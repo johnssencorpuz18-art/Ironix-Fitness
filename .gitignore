@@ -1,0 +1,5 @@
+ironix_cookies.txt
+*.log
+.env
+vendor/
+node_modules/
