@@ -1,5 +1,6 @@
 ironix_cookies.txt
 *.log
 .env
+db_config.php
 vendor/
 node_modules/
