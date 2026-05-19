@@ -80,6 +80,17 @@ button,
   transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
+.secondary-button {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+button.secondary-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: none;
+}
+
 button:hover,
 .button-link:hover {
   background: #ffc05c;
@@ -130,9 +141,12 @@ nav ul {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   list-style: none;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 nav a {
@@ -252,6 +266,10 @@ main,
 .workouts-shell,
 .locked-page {
   padding: 44px 0 72px;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 .locked-page {
@@ -400,6 +418,281 @@ label {
 .workouts-layout {
   grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
   align-items: start;
+}
+
+.setup-planner-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.onboarding-panel {
+  margin-bottom: 22px;
+  padding: 24px;
+}
+
+.onboarding-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.compact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.planner-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.planner-nav a {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.planner-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.planner-controls,
+.exercise-browser,
+.calendar-panel,
+.recommendation-panel,
+.exercise-detail {
+  padding: 24px;
+}
+
+.category-tabs {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.category-tabs button {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  justify-content: flex-start;
+  padding: 9px 12px;
+}
+
+.category-tabs button.active {
+  border-color: rgba(242, 162, 58, 0.45);
+  background: rgba(242, 162, 58, 0.16);
+}
+
+.exercise-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.exercise-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.exercise-card-diagram {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: rgba(255, 255, 255, 0.06);
+  display: grid;
+  place-items: center;
+}
+
+.exercise-card-content {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+}
+
+.exercise-card span,
+.exercise-card p,
+.plan-day span,
+.plan-day p,
+.calendar-day p {
+  color: var(--muted);
+}
+
+.exercise-card h4,
+.plan-day h4,
+.calendar-day h4 {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.exercise-card button {
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+.exercise-detail {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1fr);
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.exercise-demo-media {
+  min-height: 300px;
+}
+
+.anatomy-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.anatomy-svg {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.anatomy-large {
+  min-height: 300px;
+}
+
+.anatomy-card {
+  min-height: 150px;
+}
+
+.anatomy-bg {
+  fill: #050607;
+}
+
+.body-line {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 7;
+}
+
+.muscle {
+  fill: rgba(255, 255, 255, 0.09);
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 2;
+}
+
+.muscle.is-target {
+  fill: rgba(242, 162, 58, 0.92);
+  filter: drop-shadow(0 0 8px rgba(242, 162, 58, 0.35));
+  stroke: rgba(255, 225, 176, 0.9);
+}
+
+.motion-line {
+  fill: none;
+  stroke: rgba(63, 185, 143, 0.9);
+  stroke-dasharray: 8 7;
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+
+.muscle-target-note {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 12px;
+}
+
+.muscle-target-note span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.muscle-target-note strong {
+  display: block;
+  font-size: 1.2rem;
+}
+
+.anatomy-diagram-placeholder {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+}
+
+.exercise-detail h3 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1;
+}
+
+.exercise-detail p {
+  color: var(--muted);
+  margin: 12px 0;
+}
+
+.exercise-detail ol {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0 20px;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.calendar-grid,
+.recommended-plan {
+  display: grid;
+  gap: 12px;
+}
+
+.calendar-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.calendar-day,
+.plan-day {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px;
+}
+
+.calendar-day ul,
+.plan-day ul {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 12px 18px;
+}
+
+.calendar-day li,
+.plan-day li {
+  color: var(--muted);
+}
+
+.calendar-day button,
+.plan-day button {
+  min-height: 36px;
+  padding: 8px 10px;
+  width: 100%;
 }
 
 .workout-form,
@@ -661,12 +954,49 @@ label {
   background: rgba(255, 255, 255, 0.07);
   color: var(--text);
   display: grid;
+  gap: 10px;
   justify-items: start;
+  overflow: hidden;
+  padding: 0;
   text-align: left;
+}
+
+.food-card-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: rgba(255, 255, 255, 0.06);
+  object-fit: cover;
+}
+
+.food-card span,
+.food-card strong,
+.food-card p {
+  padding-inline: 18px;
+}
+
+.food-card p {
+  padding-bottom: 18px;
 }
 
 .food-card p {
   color: var(--muted);
+}
+
+.food-detail-image {
+  width: 100%;
+  max-height: 360px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  object-fit: cover;
+}
+
+.food-credit {
+  color: var(--muted);
+  display: inline-block;
+  font-size: 0.82rem;
+  margin-top: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .food-macro-grid,
@@ -744,8 +1074,15 @@ label {
   .auth-forms,
   .profile-layout,
   .workouts-layout,
+  .setup-planner-grid,
+  .planner-layout,
+  .exercise-detail,
   .bmi-layout {
     grid-template-columns: 1fr;
+  }
+
+  .onboarding-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .workout-hero-panel,
@@ -781,6 +1118,8 @@ label {
 
   .hero-actions,
   .form-pair,
+  .onboarding-grid,
+  .exercise-demo-media,
   .diet-controls,
   .community-search {
     grid-template-columns: 1fr;
@@ -797,7 +1136,13 @@ label {
   .workout-list-panel,
   .progress-recent,
   .leaderboard-panel,
-  .food-detail-panel {
+  .food-detail-panel,
+  .planner-controls,
+  .exercise-browser,
+  .calendar-panel,
+  .recommendation-panel,
+  .exercise-detail,
+  .onboarding-panel {
     padding: 18px;
   }
 }

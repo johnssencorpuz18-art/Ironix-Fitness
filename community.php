@@ -42,8 +42,8 @@ $users = $stmt->get_result();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Community - Ironix</title>
-  <link rel="stylesheet" href="Css/style.css?v=12">
+  <title>Community - IRONIX</title>
+  <link rel="stylesheet" href="Css/style.css?v=16">
 </head>
 <body>
   <header>
@@ -55,7 +55,7 @@ $users = $stmt->get_result();
       <div>
         <span class="eyebrow">Community</span>
         <h2>Search members and see public progress.</h2>
-        <p>Discover other Ironix members by name or goal, then compare workout activity and lifting progress.</p>
+        <p>Discover other IRONIX members by name or goal, then compare workout activity and lifting progress.</p>
       </div>
     </section>
 

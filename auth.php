@@ -1,3 +1,4 @@
+<?php require_once "auth_helpers.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,18 +9,7 @@
 </head>
 <body>
   <header>
-    <nav>
-      <h1>IRONIX</h1>
-      <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="workouts.php">Workouts</a></li>
-        <li><a href="dashboard.php">Progress</a></li>
-        <li><a href="bmi.php">BMI</a></li>
-        <li><a href="diet.php">Diet</a></li>
-        <li><a class="active" href="auth.php">Login</a></li>
-        <li><a class="signup-tab" href="auth.php#signup">Sign Up</a></li>
-      </ul>
-    </nav>
+    <?php render_nav("login"); ?>
   </header>
 
   <main class="auth-page">
@@ -27,14 +17,14 @@
       <div class="auth-copy">
         <span class="eyebrow">Member Access</span>
         <h2>Keep your progress tied to your account.</h2>
-        <p>Free visitors can preview IRONIX. Members unlock workout logging, personal progress, and the full diet database on a PHP/MySQL host.</p>
+        <p>Free visitors can preview IRONIX. Members unlock workout logging, personal progress, and the full diet database.</p>
       </div>
 
       <div class="auth-forms">
         <form id="loginForm" class="login-box auth-box login-auth-box">
           <span class="eyebrow">Returning Member</span>
           <h3>Log In</h3>
-          <p class="auth-note">Use the published PHP app to access saved workouts and progress.</p>
+          <p class="auth-note">Access your saved workouts and progress dashboard.</p>
 
           <input id="loginEmail" type="email" placeholder="Email" required>
           <input id="loginPassword" type="password" placeholder="Password" required>
@@ -46,7 +36,7 @@
           <span id="signup"></span>
           <span class="eyebrow">New Member</span>
           <h3>Sign Up</h3>
-          <p class="auth-note">Create an account when the site is running on PHP with MySQL configured.</p>
+          <p class="auth-note">Unlock all IRONIX tools and start saving your training data.</p>
 
           <input id="registerName" type="text" placeholder="Full Name" required>
           <input id="registerEmail" type="email" placeholder="Email" required>
@@ -67,7 +57,7 @@
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
 
-    loginForm.addEventListener("submit", event => {
+    loginForm.addEventListener("submit", function (event) {
       event.preventDefault();
       submitAuth("login.php", {
         email: document.getElementById("loginEmail").value,
@@ -75,7 +65,7 @@
       }, "loginMessage");
     });
 
-    registerForm.addEventListener("submit", event => {
+    registerForm.addEventListener("submit", function (event) {
       event.preventDefault();
       submitAuth("register.php", {
         name: document.getElementById("registerName").value,
@@ -103,7 +93,7 @@
           }
         })
         .catch(() => {
-          document.getElementById(messageId).textContent = "This page needs a PHP/MySQL host for account actions.";
+          document.getElementById(messageId).textContent = "Unable to connect to the server.";
         });
     }
   </script>

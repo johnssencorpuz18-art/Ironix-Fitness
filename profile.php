@@ -41,8 +41,8 @@ $recent = $recentStmt->get_result();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - Ironix</title>
-  <link rel="stylesheet" href="Css/style.css?v=12">
+  <title>Profile - IRONIX</title>
+  <link rel="stylesheet" href="Css/style.css?v=16">
 </head>
 <body>
   <header>

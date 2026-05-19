@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ironix Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=12">
+  <title>IRONIX Progress</title>
+  <link rel="stylesheet" href="Css/style.css?v=16">
 </head>
 <body>
   <header>
@@ -57,6 +57,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=12"></script>
+  <script src="Js/app.js?v=16"></script>
 </body>
 </html>

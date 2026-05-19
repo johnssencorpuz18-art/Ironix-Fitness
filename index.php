@@ -1,3 +1,4 @@
+<?php require_once "auth_helpers.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,18 +9,7 @@
 </head>
 <body>
   <header>
-    <nav>
-      <h1>IRONIX</h1>
-      <ul>
-        <li><a class="active" href="index.php">Home</a></li>
-        <li><a href="workouts.php">Workouts</a></li>
-        <li><a href="dashboard.php">Progress</a></li>
-        <li><a href="bmi.php">BMI</a></li>
-        <li><a href="diet.php">Diet</a></li>
-        <li><a href="auth.php">Login</a></li>
-        <li><a class="signup-tab" href="auth.php#signup">Sign Up</a></li>
-      </ul>
-    </nav>
+    <?php render_nav("home"); ?>
   </header>
 
   <main class="hero">
@@ -29,7 +19,7 @@
       <p>Log workouts, calculate BMI, review progress, compare leaderboards, and keep diet choices in one focused IRONIX workspace.</p>
       <div class="hero-actions">
         <a class="button-link" href="auth.php#signup">Get Started</a>
-        <a class="button-link secondary" href="bmi.php">Calculate BMI</a>
+        <a class="button-link secondary" href="community.php">View Community</a>
       </div>
     </section>
   </main>

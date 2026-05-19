@@ -1,3 +1,4 @@
+<?php require_once "auth_helpers.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,18 +9,7 @@
 </head>
 <body>
   <header>
-    <nav>
-      <h1>IRONIX</h1>
-      <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="workouts.php">Workouts</a></li>
-        <li><a href="dashboard.php">Progress</a></li>
-        <li><a class="active" href="bmi.php">BMI</a></li>
-        <li><a href="diet.php">Diet</a></li>
-        <li><a href="auth.php">Login</a></li>
-        <li><a class="signup-tab" href="auth.php#signup">Sign Up</a></li>
-      </ul>
-    </nav>
+    <?php render_nav("bmi"); ?>
   </header>
 
   <main class="bmi-page">

@@ -18,10 +18,10 @@ function render_nav($active = "") {
     echo '<nav>';
     echo '<h1>IRONIX</h1>';
     echo '<ul>';
-    echo '<li><a ' . ($active === "home" ? 'class="active"' : '') . ' href="index.html">Home</a></li>';
+    echo '<li><a ' . ($active === "home" ? 'class="active"' : '') . ' href="index.php">Home</a></li>';
     echo '<li><a ' . ($active === "workouts" ? 'class="active"' : '') . ' href="workouts.php">Workouts</a></li>';
     echo '<li><a ' . ($active === "progress" ? 'class="active"' : '') . ' href="dashboard.php">Progress</a></li>';
-    echo '<li><a ' . ($active === "bmi" ? 'class="active"' : '') . ' href="bmi.html">BMI</a></li>';
+    echo '<li><a ' . ($active === "bmi" ? 'class="active"' : '') . ' href="bmi.php">BMI</a></li>';
     echo '<li><a ' . ($active === "diet" ? 'class="active"' : '') . ' href="diet.php">Diet</a></li>';
     echo '<li><a ' . ($active === "community" ? 'class="active"' : '') . ' href="community.php">Community</a></li>';
     echo '<li><a ' . ($active === "leaderboard" ? 'class="active"' : '') . ' href="leaderboard.php">Leaderboard</a></li>';
@@ -30,8 +30,8 @@ function render_nav($active = "") {
         echo '<li><a ' . ($active === "profile" ? 'class="active"' : '') . ' href="profile.php">Profile</a></li>';
         echo '<li><a href="logout.php">Logout</a></li>';
     } else {
-        echo '<li><a ' . ($active === "login" ? 'class="active"' : '') . ' href="login.html">Login</a></li>';
-        echo '<li><a class="signup-tab" href="login.html#signup">Sign Up</a></li>';
+        echo '<li><a ' . ($active === "login" ? 'class="active"' : '') . ' href="auth.php">Login</a></li>';
+        echo '<li><a class="signup-tab" href="auth.php#signup">Sign Up</a></li>';
     }
 
     echo '</ul>';
