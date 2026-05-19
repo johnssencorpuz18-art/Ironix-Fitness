@@ -372,6 +372,7 @@ const exerciseCatalog = [
 const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let selectedExercise = exerciseCatalog[0];
 let selectedCategory = "Upper Body";
+let selectedPlanDay = localStorage.getItem("ironixSelectedPlanDay") || dayNames[0];
 let weeklyPlan = JSON.parse(localStorage.getItem("ironixWeeklyPlan") || "{}");
 let liveSession = JSON.parse(localStorage.getItem("ironixLiveSession") || "[]");
 
@@ -600,6 +601,8 @@ function buildRecommendedPlan(profile) {
         .slice(0, 4)
         .map(exercise => createPlanEntry(exercise));
       weeklyPlan[day] = exercises;
+      selectedPlanDay = day;
+      localStorage.setItem("ironixSelectedPlanDay", selectedPlanDay);
       saveWeeklyPlan();
       renderCalendar();
     });
@@ -627,23 +630,87 @@ function renderCalendar() {
   const calendar = document.getElementById("calendarGrid");
   if (!calendar) return;
 
-  calendar.innerHTML = dayNames.map(day => {
-    const items = normalizePlanEntries(weeklyPlan[day] || []);
-    return `
-      <article class="calendar-day">
-        <h4>${day}</h4>
-        ${items.length ? `
-          <div class="planned-exercise-list">
-            ${items.map((item, index) => renderPlannedExercise(day, item, index)).join("")}
-          </div>
-        ` : '<p>Rest or add exercises.</p>'}
-        <div class="calendar-day-actions">
-          <button type="button" data-day="${day}">Add selected exercise</button>
-          ${items.length ? `<button type="button" class="secondary-button" data-start-day="${day}">Start / Done</button>` : ""}
+  if (!dayNames.includes(selectedPlanDay)) {
+    selectedPlanDay = dayNames[0];
+  }
+
+  const day = selectedPlanDay;
+  const items = normalizePlanEntries(weeklyPlan[day] || []);
+
+  calendar.innerHTML = `
+    <div class="calendar-tabs" role="tablist" aria-label="Weekly plan days">
+      ${dayNames.map(name => `
+        <button type="button" class="${name === day ? "active" : ""}" data-plan-tab="${escapeHtml(name)}" role="tab" aria-selected="${name === day ? "true" : "false"}">
+          <span>${escapeHtml(name.slice(0, 3))}</span>
+          <strong>${normalizePlanEntries(weeklyPlan[name] || []).length}</strong>
+        </button>
+      `).join("")}
+    </div>
+
+    <article class="calendar-day calendar-day-focused">
+      <div class="calendar-day-head">
+        <div>
+          <span class="eyebrow">Selected Day</span>
+          <h4>${escapeHtml(day)}</h4>
         </div>
-      </article>
-    `;
-  }).join("");
+        ${items.length ? `<button type="button" class="secondary-button" data-start-day="${escapeHtml(day)}">Start / Done</button>` : ""}
+      </div>
+
+      ${items.length ? `
+        <div class="planned-exercise-list">
+          ${items.map((item, index) => renderPlannedExercise(day, item, index)).join("")}
+        </div>
+      ` : '<p>Rest day. Add an exercise below when you want to train.</p>'}
+
+      <section class="calendar-add-panel" aria-label="Add exercise to selected day">
+        <div>
+          <span class="eyebrow">Add Exercise</span>
+          <h5>Customize ${escapeHtml(day)}</h5>
+        </div>
+        <label>Exercise
+          <select id="calendarExerciseSelect">${renderExerciseSelectOptions()}</select>
+        </label>
+        <div class="session-input-grid">
+          <label>Sets
+            <input id="calendarSets" type="number" min="1" value="${escapeHtml(selectedExercise.sets)}">
+          </label>
+          <label>Reps
+            <input id="calendarReps" type="number" min="1" value="${escapeHtml(selectedExercise.reps)}">
+          </label>
+          <label>Weight
+            <input id="calendarWeight" type="number" min="0" step="0.5" value="${selectedExercise.equipment === "body only" ? "0" : ""}" placeholder="0">
+          </label>
+          <label>Min
+            <input id="calendarDuration" type="number" min="1" value="${escapeHtml(defaultDurationForExercise(selectedExercise))}">
+          </label>
+        </div>
+        <div class="calendar-day-actions">
+          <button type="button" data-add-to-selected-day="${escapeHtml(day)}">Add To ${escapeHtml(day)}</button>
+          <button type="button" class="secondary-button" data-day="${escapeHtml(day)}">Add Current Library Exercise</button>
+        </div>
+      </section>
+    </article>
+  `;
+
+  const exerciseSelect = document.getElementById("calendarExerciseSelect");
+  if (exerciseSelect) {
+    exerciseSelect.value = selectedExercise.name;
+    exerciseSelect.addEventListener("change", () => {
+      const exercise = exerciseCatalog.find(item => item.name === exerciseSelect.value) || selectedExercise;
+      setValue("calendarSets", exercise.sets);
+      setValue("calendarReps", exercise.reps);
+      setValue("calendarWeight", exercise.equipment === "body only" ? 0 : "");
+      setValue("calendarDuration", defaultDurationForExercise(exercise));
+    });
+  }
+
+  calendar.querySelectorAll("button[data-plan-tab]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedPlanDay = button.dataset.planTab;
+      localStorage.setItem("ironixSelectedPlanDay", selectedPlanDay);
+      renderCalendar();
+    });
+  });
 
   calendar.querySelectorAll("button[data-day]").forEach(button => {
     button.addEventListener("click", () => {
@@ -652,6 +719,10 @@ function renderCalendar() {
       saveWeeklyPlan();
       renderCalendar();
     });
+  });
+
+  calendar.querySelector("[data-add-to-selected-day]")?.addEventListener("click", () => {
+    addCalendarCustomExercise(day);
   });
 
   calendar.querySelectorAll("[data-plan-field]").forEach(input => {
@@ -678,9 +749,42 @@ function renderCalendar() {
   });
 }
 
+function renderExerciseSelectOptions() {
+  const categories = [...new Set(exerciseCatalog.map(exercise => exercise.category))];
+  return categories.map(category => `
+    <optgroup label="${escapeHtml(category)}">
+      ${exerciseCatalog
+        .filter(exercise => exercise.category === category)
+        .map(exercise => `<option value="${escapeHtml(exercise.name)}">${escapeHtml(exercise.name)} - ${escapeHtml(exercise.muscle)}</option>`)
+        .join("")}
+    </optgroup>
+  `).join("");
+}
+
+function addCalendarCustomExercise(day) {
+  const select = document.getElementById("calendarExerciseSelect");
+  const exercise = exerciseCatalog.find(item => item.name === select?.value) || selectedExercise;
+  const entry = createPlanEntry(exercise, {
+    sets: document.getElementById("calendarSets")?.value,
+    reps: document.getElementById("calendarReps")?.value,
+    weight: document.getElementById("calendarWeight")?.value,
+    duration: document.getElementById("calendarDuration")?.value
+  });
+
+  if (Number(entry.sets) <= 0 || Number(entry.reps) <= 0 || Number(entry.duration) <= 0 || Number(entry.weight) < 0) {
+    return;
+  }
+
+  weeklyPlan[day] = [...normalizePlanEntries(weeklyPlan[day] || []), entry];
+  saveWeeklyPlan();
+  renderCalendar();
+}
+
 function addExerciseToNextOpenDay(exercise) {
-  const day = dayNames.find(name => !weeklyPlan[name] || weeklyPlan[name].length < 4) || dayNames[0];
+  const day = selectedPlanDay || dayNames.find(name => !weeklyPlan[name] || weeklyPlan[name].length < 4) || dayNames[0];
   weeklyPlan[day] = [...normalizePlanEntries(weeklyPlan[day] || []), createPlanEntry(exercise)];
+  selectedPlanDay = day;
+  localStorage.setItem("ironixSelectedPlanDay", selectedPlanDay);
   saveWeeklyPlan();
   renderCalendar();
   document.getElementById("weeklyPlanner")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -738,7 +842,7 @@ function openPlanAddPanel(exercise) {
   setText("planAddTitle", exercise.name);
   document.getElementById("planDayChoices").innerHTML = dayNames.map((day, index) => `
     <label class="day-check">
-      <input type="checkbox" value="${escapeHtml(day)}" ${index === 0 ? "checked" : ""}>
+      <input type="checkbox" value="${escapeHtml(day)}" ${day === selectedPlanDay || (!selectedPlanDay && index === 0) ? "checked" : ""}>
       <span>${escapeHtml(day.slice(0, 3))}</span>
     </label>
   `).join("");
@@ -780,6 +884,8 @@ function savePlanExerciseToDays() {
     weeklyPlan[day] = [...normalizePlanEntries(weeklyPlan[day] || []), { ...entry }];
   });
 
+  selectedPlanDay = checked[0];
+  localStorage.setItem("ironixSelectedPlanDay", selectedPlanDay);
   saveWeeklyPlan();
   renderCalendar();
   setMessage(message, `${entry.name} added to ${checked.length} day${checked.length === 1 ? "" : "s"}.`);

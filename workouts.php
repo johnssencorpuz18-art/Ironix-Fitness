@@ -24,7 +24,7 @@ function view_class($name) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=24">
+  <link rel="stylesheet" href="Css/style.css?v=25">
 </head>
 <body class="workouts-body">
   <header>
@@ -340,6 +340,6 @@ function view_class($name) {
     </div>
   </main>
 
-  <script src="Js/app.js?v=24"></script>
+  <script src="Js/app.js?v=25"></script>
 </body>
 </html>
