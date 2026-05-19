@@ -872,6 +872,150 @@ label {
   min-height: 300px;
 }
 
+.exercise-demo-sheet {
+  background: #f4f4f1;
+  border: 1px solid rgba(17, 18, 18, 0.16);
+  border-radius: 8px;
+  color: #161616;
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.demo-sheet-header {
+  align-items: end;
+  border-bottom: 2px solid rgba(17, 18, 18, 0.14);
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  padding-bottom: 12px;
+}
+
+.demo-sheet-header div {
+  display: grid;
+  gap: 2px;
+}
+
+.demo-sheet-header span,
+.demo-sheet-header small,
+.demo-sheet-footer span {
+  color: rgba(17, 18, 18, 0.66);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.demo-sheet-header strong {
+  color: #111;
+  font-size: clamp(1.35rem, 3vw, 2.25rem);
+  line-height: 0.95;
+}
+
+.demo-sheet-header strong::first-letter {
+  color: #d91f26;
+}
+
+.demo-frame-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.demo-frame {
+  background: #fff;
+  border: 1px solid rgba(17, 18, 18, 0.12);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  position: relative;
+}
+
+.demo-frame-number {
+  align-items: center;
+  background: #d6d6d2;
+  color: #fff;
+  display: inline-grid;
+  font-size: 0.92rem;
+  font-weight: 900;
+  height: 28px;
+  justify-items: center;
+  left: 10px;
+  line-height: 1;
+  position: absolute;
+  top: 10px;
+  width: 28px;
+  z-index: 1;
+}
+
+.demo-frame p {
+  color: rgba(17, 18, 18, 0.72);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.demo-pose-svg {
+  aspect-ratio: 200 / 170;
+  width: 100%;
+}
+
+.demo-pose-svg rect:first-child {
+  fill: #fbfbf8;
+}
+
+.demo-body,
+.demo-floor,
+.demo-equipment {
+  fill: none;
+  stroke: #2b2b2b;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.demo-body {
+  stroke-width: 5;
+}
+
+.demo-floor,
+.demo-equipment {
+  stroke-width: 3;
+}
+
+.demo-target {
+  fill: rgba(217, 31, 38, 0.18);
+  stroke: #d91f26;
+  stroke-width: 2;
+}
+
+.demo-equipment-dot,
+.demo-equipment-box {
+  fill: #2b2b2b;
+}
+
+.demo-motion {
+  fill: none;
+  stroke: #d91f26;
+  stroke-dasharray: 7 6;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.demo-sheet-footer {
+  border-top: 2px solid rgba(17, 18, 18, 0.14);
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding-top: 12px;
+}
+
+.demo-sheet-footer strong {
+  color: #d91f26;
+  font-size: 1.05rem;
+}
+
 .anatomy-panel {
   display: grid;
   gap: 12px;
@@ -1876,6 +2020,11 @@ label {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  .demo-frame-grid,
+  .demo-sheet-footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .workout-metrics {
     justify-content: flex-start;
   }
@@ -1904,6 +2053,16 @@ label {
   .exercise-demo-media,
   .diet-controls,
   .community-search {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-sheet-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .demo-frame-grid,
+  .demo-sheet-footer {
     grid-template-columns: 1fr;
   }
 

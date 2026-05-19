@@ -541,15 +541,7 @@ function renderExerciseDetail(exercise, shouldScroll = true) {
   const diagram = document.getElementById("exerciseDiagram");
 
   if (diagram) {
-    diagram.innerHTML = `
-      <div class="anatomy-panel">
-        ${renderAnatomySvg(exercise.muscle, "large")}
-        <div class="muscle-target-note">
-          <span>Target muscle</span>
-          <strong>${escapeHtml(exercise.muscle)}</strong>
-        </div>
-      </div>
-    `;
+    diagram.innerHTML = renderExerciseDemoSheet(exercise);
   }
 
   setText("exerciseMeta", `${exercise.category} | ${exercise.muscle} | ${exercise.equipment}`);
@@ -1270,6 +1262,173 @@ function renderAnatomySvg(muscle, size) {
       </g>
     </svg>
   `;
+}
+
+function renderExerciseDemoSheet(exercise) {
+  const demoSteps = exercise.steps.slice(0, 4);
+  return `
+    <article class="exercise-demo-sheet">
+      <header class="demo-sheet-header">
+        <div>
+          <span>IRONIX DEMO</span>
+          <strong>${escapeHtml(exercise.name)}</strong>
+        </div>
+        <small>${escapeHtml(exercise.muscle)} | ${escapeHtml(exercise.equipment)}</small>
+      </header>
+
+      <div class="demo-frame-grid">
+        ${demoSteps.map((step, index) => `
+          <section class="demo-frame">
+            <span class="demo-frame-number">${index + 1}</span>
+            ${renderExercisePoseSvg(exercise, index)}
+            <p>${escapeHtml(step)}</p>
+          </section>
+        `).join("")}
+      </div>
+
+      <footer class="demo-sheet-footer">
+        <span><strong>${exercise.sets}</strong> sets</span>
+        <span><strong>${exercise.reps}</strong> reps</span>
+        <span>Rest <strong>${suggestRestSeconds(exercise)}</strong> sec</span>
+        <span>Target <strong>${escapeHtml(exercise.muscle)}</strong></span>
+      </footer>
+    </article>
+  `;
+}
+
+function renderExercisePoseSvg(exercise, index) {
+  const pose = demoPoseType(exercise);
+  const target = normalizeMuscle(exercise.muscle);
+  const offset = index % 2;
+  const highlight = renderPoseHighlight(target, pose, offset);
+  const equipment = renderPoseEquipment(exercise.equipment, pose, offset);
+
+  const poses = {
+    push: `
+      <path class="demo-floor" d="M28 138 H172"></path>
+      <circle class="demo-body" cx="${58 + offset * 10}" cy="${86 + offset * 8}" r="10"></circle>
+      <path class="demo-body" d="M68 ${92 + offset * 7} L112 ${104 + offset * 7} L148 ${118 + offset * 5}"></path>
+      <path class="demo-body" d="M92 ${100 + offset * 7} L82 132"></path>
+      <path class="demo-body" d="M102 ${103 + offset * 7} L98 134"></path>
+      <path class="demo-body" d="M145 ${118 + offset * 5} L164 134"></path>
+      <path class="demo-body" d="M132 ${114 + offset * 5} L151 136"></path>
+    `,
+    squat: `
+      <path class="demo-floor" d="M34 150 H166"></path>
+      <circle class="demo-body" cx="93" cy="${42 + offset * 8}" r="11"></circle>
+      <path class="demo-body" d="M94 ${54 + offset * 8} L98 ${90 + offset * 14} L82 ${124 + offset * 5}"></path>
+      <path class="demo-body" d="M98 ${90 + offset * 14} L124 ${122 + offset * 4} L145 149"></path>
+      <path class="demo-body" d="M83 ${124 + offset * 5} L62 149"></path>
+      <path class="demo-body" d="M89 ${65 + offset * 8} L63 ${82 + offset * 8}"></path>
+      <path class="demo-body" d="M101 ${65 + offset * 8} L131 ${82 + offset * 8}"></path>
+    `,
+    pull: `
+      <path class="demo-equipment" d="M38 34 H162"></path>
+      <circle class="demo-body" cx="100" cy="${58 + offset * 6}" r="11"></circle>
+      <path class="demo-body" d="M100 ${70 + offset * 6} L100 116"></path>
+      <path class="demo-body" d="M100 ${78 + offset * 6} L70 ${48 + offset * 14}"></path>
+      <path class="demo-body" d="M100 ${78 + offset * 6} L130 ${48 + offset * 14}"></path>
+      <path class="demo-body" d="M100 116 L78 151"></path>
+      <path class="demo-body" d="M100 116 L122 151"></path>
+    `,
+    curl: `
+      <path class="demo-floor" d="M46 152 H154"></path>
+      <circle class="demo-body" cx="100" cy="38" r="11"></circle>
+      <path class="demo-body" d="M100 50 L100 98"></path>
+      <path class="demo-body" d="M88 66 L74 ${102 - offset * 22}"></path>
+      <path class="demo-body" d="M112 66 L126 ${102 - offset * 22}"></path>
+      <path class="demo-body" d="M100 98 L82 150"></path>
+      <path class="demo-body" d="M100 98 L118 150"></path>
+    `,
+    hinge: `
+      <path class="demo-floor" d="M34 150 H166"></path>
+      <circle class="demo-body" cx="${74 + offset * 10}" cy="${55 + offset * 12}" r="11"></circle>
+      <path class="demo-body" d="M84 ${61 + offset * 10} L126 ${91 + offset * 10} L112 118"></path>
+      <path class="demo-body" d="M126 ${91 + offset * 10} L146 150"></path>
+      <path class="demo-body" d="M112 118 L96 150"></path>
+      <path class="demo-body" d="M113 ${85 + offset * 10} L128 123"></path>
+      <path class="demo-body" d="M103 ${79 + offset * 10} L108 122"></path>
+    `,
+    core: `
+      <path class="demo-floor" d="M28 144 H172"></path>
+      <circle class="demo-body" cx="72" cy="${106 - offset * 18}" r="10"></circle>
+      <path class="demo-body" d="M82 ${110 - offset * 18} L118 ${124 - offset * 12}"></path>
+      <path class="demo-body" d="M116 ${124 - offset * 12} L152 ${116 - offset * 22}"></path>
+      <path class="demo-body" d="M116 ${124 - offset * 12} L150 145"></path>
+      <path class="demo-body" d="M75 ${104 - offset * 18} L62 ${84 - offset * 10}"></path>
+    `
+  };
+
+  return `
+    <svg class="demo-pose-svg" viewBox="0 0 200 170" role="img" aria-label="${escapeHtml(exercise.name)} demo pose ${index + 1}">
+      <rect x="0" y="0" width="200" height="170" rx="8"></rect>
+      ${poses[pose]}
+      ${equipment}
+      ${highlight}
+      <path class="demo-motion" d="${demoMotionPath(pose, offset)}"></path>
+    </svg>
+  `;
+}
+
+function demoPoseType(exercise) {
+  const name = exercise.name.toLowerCase();
+  const muscle = exercise.muscle.toLowerCase();
+  if (name.includes("squat") || name.includes("lunge") || (name.includes("press") && ["quadriceps", "glutes", "hamstrings", "calves"].includes(muscle))) return "squat";
+  if (name.includes("push") || name.includes("press") || name.includes("plank") || name.includes("burpee") || name.includes("climber")) return name.includes("plank") || name.includes("climber") ? "core" : "push";
+  if (name.includes("deadlift") || name.includes("swing") || name.includes("hamstring")) return "hinge";
+  if (name.includes("pulldown") || name.includes("row") || name.includes("raise")) return name.includes("raise") && muscle.includes("shoulder") ? "curl" : "pull";
+  if (name.includes("curl") || name.includes("pushdown")) return "curl";
+  if (muscle.includes("abdominal") || muscle.includes("core")) return "core";
+  if (["quadriceps", "hamstrings", "glutes", "calves"].includes(muscle)) return "squat";
+  return "curl";
+}
+
+function renderPoseHighlight(target, pose, offset) {
+  const points = {
+    chest: pose === "push" ? [[98, 101 + offset * 7, 18, 9]] : [[100, 75, 17, 11]],
+    back: [[103, 91 + offset * 5, 19, 17]],
+    shoulders: [[88, 68 + offset * 3, 9, 9], [112, 68 + offset * 3, 9, 9]],
+    biceps: [[77, 93 - offset * 16, 8, 14], [123, 93 - offset * 16, 8, 14]],
+    triceps: [[86, 103 + offset * 5, 8, 14], [106, 105 + offset * 5, 8, 14]],
+    quadriceps: [[115, 124 + offset * 4, 10, 19], [82, 130 + offset * 4, 10, 18]],
+    hamstrings: [[116, 120 + offset * 5, 10, 18], [135, 126 + offset * 5, 10, 18]],
+    calves: [[69, 143, 8, 13], [141, 143, 8, 13]],
+    glutes: [[102, 102 + offset * 6, 15, 11]],
+    core: [[105, 116 - offset * 13, 19, 11]],
+    abdominals: [[105, 116 - offset * 13, 19, 11]],
+    "posterior-chain": [[104, 91 + offset * 5, 18, 15], [116, 120 + offset * 5, 10, 18], [102, 102 + offset * 6, 15, 11]],
+    "full-body": [[100, 78, 17, 11], [105, 115, 18, 11], [86, 130, 10, 18], [126, 130, 10, 18]]
+  };
+  return (points[target] || points.core).map(([cx, cy, rx, ry]) => (
+    `<ellipse class="demo-target" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"></ellipse>`
+  )).join("");
+}
+
+function renderPoseEquipment(equipment, pose, offset) {
+  if (equipment === "barbell") return `<path class="demo-equipment" d="M52 ${104 - offset * 8} H148"></path><circle class="demo-equipment-dot" cx="46" cy="${104 - offset * 8}" r="7"></circle><circle class="demo-equipment-dot" cx="154" cy="${104 - offset * 8}" r="7"></circle>`;
+  if (equipment === "dumbbell") return `<rect class="demo-equipment-box" x="58" y="${91 - offset * 18}" width="21" height="8" rx="2"></rect><rect class="demo-equipment-box" x="121" y="${91 - offset * 18}" width="21" height="8" rx="2"></rect>`;
+  if (equipment === "kettlebells") return `<circle class="demo-equipment-dot" cx="120" cy="${125 - offset * 6}" r="11"></circle><path class="demo-equipment" d="M112 ${116 - offset * 6} Q120 ${106 - offset * 6} 128 ${116 - offset * 6}"></path>`;
+  if (equipment === "cable" || equipment === "machine") return `<path class="demo-equipment" d="M160 28 V148"></path><path class="demo-equipment" d="M160 46 L126 ${pose === "pull" ? 55 + offset * 10 : 91 - offset * 18}"></path>`;
+  return "";
+}
+
+function demoMotionPath(pose, offset) {
+  const paths = {
+    push: `M82 ${75 + offset * 8} C102 ${58 + offset * 3} 128 ${58 + offset * 3} 150 ${76 + offset * 8}`,
+    squat: `M132 ${61 + offset * 7} C148 ${84 + offset * 8} 148 ${112 + offset * 5} 139 137`,
+    pull: `M72 ${50 + offset * 12} C88 ${31 + offset * 9} 112 ${31 + offset * 9} 128 ${50 + offset * 12}`,
+    curl: `M71 ${108 - offset * 22} C70 ${87 - offset * 16} 80 ${70 - offset * 10} 94 ${59 - offset * 7}`,
+    hinge: `M70 ${52 + offset * 12} C95 ${41 + offset * 12} 126 ${53 + offset * 12} 145 ${76 + offset * 10}`,
+    core: `M76 ${96 - offset * 18} C93 ${78 - offset * 17} 120 ${77 - offset * 15} 145 ${95 - offset * 17}`
+  };
+  return paths[pose] || paths.curl;
+}
+
+function suggestRestSeconds(exercise) {
+  if (exercise.category === "Conditioning") return 45;
+  if (exercise.category === "Mobility") return 30;
+  if (exercise.equipment === "body only") return 60;
+  return 90;
 }
 
 function normalizeMuscle(muscle) {
