@@ -126,15 +126,27 @@ nav {
   gap: 28px;
 }
 
-nav h1 {
-  color: var(--text);
-  font-size: 1.45rem;
-  letter-spacing: 0;
-  white-space: nowrap;
+.brand-logo {
+  align-items: center;
+  border: 0;
+  display: inline-flex;
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 0;
 }
 
-nav h1::first-letter {
-  color: var(--accent);
+.brand-logo img {
+  display: block;
+  height: 54px;
+  object-fit: contain;
+  width: 132px;
+}
+
+.brand-logo:hover,
+.brand-logo.active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 nav ul {
@@ -177,6 +189,21 @@ nav a.signup-tab {
   color: #101216;
 }
 
+nav a.brand-logo {
+  border: 0;
+  border-radius: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+nav a.brand-logo:hover,
+nav a.brand-logo.active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
 main,
 .hero,
 .dashboard {
@@ -193,6 +220,14 @@ main,
 
 .hero-text {
   max-width: 760px;
+}
+
+.hero-logo {
+  display: block;
+  height: auto;
+  margin: 0 0 22px;
+  max-width: min(420px, 100%);
+  width: 100%;
 }
 
 .hero-text h2,

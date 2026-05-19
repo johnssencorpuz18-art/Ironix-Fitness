@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 420" role="img" aria-labelledby="title desc">
+  <title id="title">Ironix logo</title>
+  <desc id="desc">A metallic Ironix wordmark with a barbell and gold X accent.</desc>
+  <defs>
+    <linearGradient id="steel" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8f4e8"/>
+      <stop offset=".22" stop-color="#a9a49b"/>
+      <stop offset=".48" stop-color="#f7f2e6"/>
+      <stop offset=".74" stop-color="#6d6a65"/>
+      <stop offset="1" stop-color="#d8d1c5"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff0a1"/>
+      <stop offset=".38" stop-color="#f7b422"/>
+      <stop offset=".7" stop-color="#a86d07"/>
+      <stop offset="1" stop-color="#ffd761"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".48" r=".55">
+      <stop offset="0" stop-color="#f7b422" stop-opacity=".55"/>
+      <stop offset=".52" stop-color="#f7b422" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000" flood-opacity=".7"/>
+    </filter>
+  </defs>
+
+  <rect width="980" height="420" fill="transparent"/>
+  <ellipse cx="490" cy="185" rx="360" ry="150" fill="url(#glow)"/>
+
+  <g filter="url(#shadow)">
+    <g transform="translate(75 76)">
+      <rect x="0" y="88" width="820" height="22" rx="11" fill="url(#steel)"/>
+      <g fill="#171717" stroke="url(#steel)" stroke-width="8">
+        <circle cx="56" cy="99" r="52"/>
+        <circle cx="764" cy="99" r="52"/>
+      </g>
+      <g fill="#111" stroke="url(#steel)" stroke-width="7">
+        <rect x="18" y="47" width="28" height="104" rx="8"/>
+        <rect x="52" y="37" width="34" height="124" rx="9"/>
+        <rect x="730" y="37" width="34" height="124" rx="9"/>
+        <rect x="770" y="47" width="28" height="104" rx="8"/>
+      </g>
+    </g>
+
+    <g transform="translate(318 36)">
+      <path d="M0 26 H204 L167 72 H126 L126 215 H166 L204 262 H0 L39 215 H78 V72 H39 Z" fill="url(#steel)" stroke="#1d1d1d" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M285 60 H357 L429 145 L512 52 H594 L467 187 L598 338 H520 L426 226 L337 338 H263 L389 189 Z" fill="url(#steel)" stroke="#1d1d1d" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M356 246 L580 38 L610 58 L386 277 Z" fill="url(#gold)" stroke="#7a5004" stroke-width="8" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <g transform="translate(82 277)" filter="url(#shadow)">
+    <text x="0" y="75" font-family="Impact, Arial Black, sans-serif" font-size="98" font-style="italic" letter-spacing="3" fill="url(#steel)" stroke="#111" stroke-width="5">IRONI</text>
+    <text x="710" y="75" font-family="Impact, Arial Black, sans-serif" font-size="100" font-style="italic" letter-spacing="2" fill="url(#gold)" stroke="#7a5004" stroke-width="4">X</text>
+    <text x="210" y="126" font-family="Arial Black, Arial, sans-serif" font-size="30" letter-spacing="12" fill="#f7b422">STRONGER EVERY DAY</text>
+  </g>
+</svg>
