@@ -65,6 +65,10 @@ const foodGrid = document.getElementById("foodGrid");
 const foodDetail = document.getElementById("foodDetail");
 const foodSearch = document.getElementById("foodSearch");
 const foodFilter = document.getElementById("foodFilter");
+const mealDayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack", "Appetizer", "Dessert", "Other"];
+let selectedMealDay = localStorage.getItem("ironixSelectedMealDay") || mealDayNames[0];
+let weeklyMealPlan = JSON.parse(localStorage.getItem("ironixWeeklyMealPlan") || "{}");
 
 if (foodGrid && foodSearch && foodFilter) {
   foodSearch.addEventListener("input", renderFoods);
@@ -72,6 +76,8 @@ if (foodGrid && foodSearch && foodFilter) {
   foodGrid.addEventListener("click", showFoodDetails);
   renderFoods();
 }
+
+setupMealPlanner();
 
 function renderFoods() {
   const search = foodSearch.value.toLowerCase();
@@ -113,4 +119,183 @@ function showFoodDetails(event) {
     </div>
     <a class="food-credit" href="${food.creditUrl}" target="_blank" rel="noopener">Photo: ${food.credit}</a>
   `;
+}
+
+function setupMealPlanner() {
+  const tabs = document.getElementById("mealDayTabs");
+  const foodSelect = document.getElementById("mealFoodSelect");
+  const addButton = document.getElementById("addMealButton");
+  const clearButton = document.getElementById("clearMealPlanButton");
+
+  if (!tabs || !foodSelect || !addButton) return;
+
+  foodSelect.innerHTML = foods.map((food, index) => (
+    `<option value="${index}">${escapeHtml(food.name)} - ${food.calories} kcal, ${food.protein}g protein</option>`
+  )).join("");
+
+  addButton.addEventListener("click", addMealToSelectedDay);
+  clearButton?.addEventListener("click", () => {
+    weeklyMealPlan = {};
+    saveMealPlan();
+    renderMealPlanner();
+  });
+
+  renderMealPlanner();
+}
+
+function renderMealPlanner() {
+  const tabs = document.getElementById("mealDayTabs");
+  const title = document.getElementById("selectedMealDayTitle");
+  const grid = document.getElementById("mealSlotGrid");
+  const totals = document.getElementById("mealDayTotals");
+
+  if (!tabs || !title || !grid || !totals) return;
+
+  if (!mealDayNames.includes(selectedMealDay)) {
+    selectedMealDay = mealDayNames[0];
+  }
+
+  tabs.innerHTML = mealDayNames.map(day => {
+    const count = getMealsForDay(day).length;
+    return `
+      <button type="button" class="${day === selectedMealDay ? "active" : ""}" data-meal-day="${day}" role="tab" aria-selected="${day === selectedMealDay ? "true" : "false"}">
+        <span>${day.slice(0, 3)}</span>
+        <strong>${count}</strong>
+      </button>
+    `;
+  }).join("");
+
+  title.textContent = selectedMealDay;
+  const dayMeals = getMealsForDay(selectedMealDay);
+  const dayTotals = calculateMealTotals(dayMeals);
+  totals.innerHTML = `
+    <span>${formatMacro(dayTotals.calories)} kcal</span>
+    <span>${formatMacro(dayTotals.protein)}g protein</span>
+    <span>${formatMacro(dayTotals.carbs)}g carbs</span>
+    <span>${formatMacro(dayTotals.fat)}g fat</span>
+  `;
+
+  grid.innerHTML = mealTypes.map(type => renderMealSlot(type, dayMeals.filter(meal => meal.type === type))).join("");
+
+  tabs.querySelectorAll("[data-meal-day]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedMealDay = button.dataset.mealDay;
+      localStorage.setItem("ironixSelectedMealDay", selectedMealDay);
+      renderMealPlanner();
+    });
+  });
+
+  grid.querySelectorAll("[data-remove-meal]").forEach(button => {
+    button.addEventListener("click", () => {
+      const meals = getMealsForDay(selectedMealDay);
+      meals.splice(Number(button.dataset.removeMeal), 1);
+      weeklyMealPlan[selectedMealDay] = meals;
+      saveMealPlan();
+      renderMealPlanner();
+    });
+  });
+}
+
+function renderMealSlot(type, meals) {
+  return `
+    <article class="meal-slot">
+      <div class="meal-slot-head">
+        <h5>${type}</h5>
+        <span>${meals.length} item${meals.length === 1 ? "" : "s"}</span>
+      </div>
+      ${meals.length ? `
+        <div class="meal-list">
+          ${meals.map(meal => renderMealItem(meal)).join("")}
+        </div>
+      ` : '<p>No meal added yet.</p>'}
+    </article>
+  `;
+}
+
+function renderMealItem(meal) {
+  const allMeals = getMealsForDay(selectedMealDay);
+  const index = allMeals.indexOf(meal);
+  const totals = mealTotals(meal);
+  return `
+    <div class="meal-item">
+      <div>
+        <strong>${escapeHtml(meal.name)}</strong>
+        <span>${escapeHtml(meal.serving)} x ${meal.servings}${meal.note ? ` | ${escapeHtml(meal.note)}` : ""}</span>
+      </div>
+      <div class="meal-item-macros">
+        <span>${formatMacro(totals.calories)} kcal</span>
+        <span>${formatMacro(totals.protein)}g protein</span>
+      </div>
+      <button type="button" class="delete-workout" data-remove-meal="${index}">Remove</button>
+    </div>
+  `;
+}
+
+function addMealToSelectedDay() {
+  const type = document.getElementById("mealTypeSelect")?.value || "Other";
+  const foodIndex = Number(document.getElementById("mealFoodSelect")?.value || 0);
+  const servings = Number(document.getElementById("mealServingsInput")?.value || 1);
+  const note = document.getElementById("mealNoteInput")?.value.trim() || "";
+  const food = foods[foodIndex] || foods[0];
+
+  if (!food || servings <= 0) return;
+
+  const meal = {
+    type,
+    name: food.name,
+    serving: food.serving,
+    servings,
+    note,
+    calories: food.calories,
+    protein: food.protein,
+    carbs: food.carbs,
+    fat: food.fat
+  };
+
+  weeklyMealPlan[selectedMealDay] = [...getMealsForDay(selectedMealDay), meal];
+  saveMealPlan();
+  document.getElementById("mealNoteInput").value = "";
+  renderMealPlanner();
+}
+
+function getMealsForDay(day) {
+  return Array.isArray(weeklyMealPlan[day]) ? weeklyMealPlan[day] : [];
+}
+
+function mealTotals(meal) {
+  const servings = Number(meal.servings) || 1;
+  return {
+    calories: Number(meal.calories) * servings,
+    protein: Number(meal.protein) * servings,
+    carbs: Number(meal.carbs) * servings,
+    fat: Number(meal.fat) * servings
+  };
+}
+
+function calculateMealTotals(meals) {
+  return meals.reduce((totals, meal) => {
+    const item = mealTotals(meal);
+    totals.calories += item.calories;
+    totals.protein += item.protein;
+    totals.carbs += item.carbs;
+    totals.fat += item.fat;
+    return totals;
+  }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+}
+
+function saveMealPlan() {
+  localStorage.setItem("ironixWeeklyMealPlan", JSON.stringify(weeklyMealPlan));
+}
+
+function formatMacro(value) {
+  return Number(value).toLocaleString(undefined, { maximumFractionDigits: 1 });
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }

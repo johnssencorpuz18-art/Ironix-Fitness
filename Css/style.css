@@ -319,6 +319,148 @@ main,
   padding: 24px;
 }
 
+.meal-planner {
+  margin-top: 24px;
+  padding: 24px;
+}
+
+.meal-day-tabs {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.meal-day-tabs button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  display: grid;
+  gap: 2px;
+  min-height: 58px;
+  padding: 8px;
+}
+
+.meal-day-tabs button.active {
+  border-color: rgba(242, 162, 58, 0.48);
+  background: rgba(242, 162, 58, 0.16);
+}
+
+.meal-day-tabs span {
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.meal-day-tabs strong {
+  color: var(--accent-2);
+}
+
+.meal-day-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.meal-day-head {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.meal-day-head h4 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.meal-day-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.meal-day-totals span,
+.meal-item-macros span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  padding: 6px 9px;
+}
+
+.meal-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 12px;
+}
+
+.meal-slot,
+.meal-add-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.meal-slot-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.meal-slot h5,
+.meal-add-panel h4 {
+  font-size: 1.08rem;
+  line-height: 1.2;
+}
+
+.meal-slot-head span,
+.meal-slot p,
+.meal-item span {
+  color: var(--muted);
+}
+
+.meal-list {
+  display: grid;
+  gap: 10px;
+}
+
+.meal-item {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.meal-item strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.meal-item-macros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meal-add-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.meal-add-panel select,
+.meal-add-panel input {
+  margin-top: 6px;
+}
+
 .login-box {
   width: 100%;
   text-align: left;
@@ -1499,6 +1641,10 @@ label {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  .meal-day-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .workout-metrics {
     justify-content: flex-start;
   }
@@ -1521,6 +1667,8 @@ label {
   .form-pair,
   .onboarding-grid,
   .calendar-tabs,
+  .meal-day-tabs,
+  .meal-add-grid,
   .exercise-demo-media,
   .diet-controls,
   .community-search {
