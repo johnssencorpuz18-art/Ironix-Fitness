@@ -479,14 +479,14 @@ label {
 
 .library-workspace {
   display: grid;
-  grid-template-columns: minmax(240px, 0.45fr) minmax(0, 1.1fr) minmax(330px, 0.75fr);
+  grid-template-columns: minmax(220px, 0.75fr) minmax(320px, 1.15fr) minmax(280px, 0.9fr);
   gap: 18px;
   align-items: start;
   margin-bottom: 22px;
 }
 
 .lower-workout-grid {
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.7fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
 }
 
 .compact-workout-log {
@@ -495,9 +495,22 @@ label {
 
 .dashboard-workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
   gap: 18px;
   margin: 22px 0;
+}
+
+.library-workspace > *,
+.lower-workout-grid > *,
+.dashboard-workspace > *,
+.planner-layout > *,
+.calendar-day,
+.plan-day,
+.planned-exercise,
+.session-exercise,
+.workout-item,
+.workout-metrics {
+  min-width: 0;
 }
 
 .planner-controls,
@@ -507,6 +520,10 @@ label {
 .live-session-panel,
 .exercise-detail {
   padding: 24px;
+}
+
+.live-session-panel {
+  overflow: hidden;
 }
 
 .category-tabs {
@@ -700,7 +717,7 @@ label {
 }
 
 .calendar-grid {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
 }
 
 .calendar-day,
@@ -753,12 +770,18 @@ label {
 .planned-exercise-title {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
 }
 
 .planned-exercise-title strong {
   overflow-wrap: anywhere;
+}
+
+.planned-exercise-title .delete-workout {
+  flex: 0 0 auto;
+  width: auto;
 }
 
 .plan-add-panel {
@@ -871,6 +894,7 @@ label {
 .live-session-list {
   display: grid;
   gap: 12px;
+  overflow: hidden;
 }
 
 .session-exercise {
@@ -878,7 +902,7 @@ label {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.06);
   display: grid;
-  grid-template-columns: 120px minmax(180px, 1fr) minmax(320px, 1.2fr) auto;
+  grid-template-columns: minmax(96px, auto) minmax(160px, 1fr) minmax(260px, 1.1fr) auto;
   gap: 12px;
   align-items: center;
   padding: 14px;
@@ -911,6 +935,7 @@ label {
 .session-exercise-main strong,
 .session-exercise-main span {
   display: block;
+  overflow-wrap: anywhere;
 }
 
 .session-exercise-main span {
@@ -919,7 +944,7 @@ label {
 
 .session-input-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(70px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
   gap: 8px;
 }
 
@@ -1297,6 +1322,23 @@ label {
   border-radius: 8px;
   padding: 18px;
   text-align: center;
+}
+
+@media (max-width: 1180px) {
+  .library-workspace,
+  .session-exercise {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-detail {
+    position: static;
+  }
+
+  .session-check,
+  .session-exercise .remove-session-item,
+  .planned-exercise-title .delete-workout {
+    width: 100%;
+  }
 }
 
 @media (max-width: 900px) {

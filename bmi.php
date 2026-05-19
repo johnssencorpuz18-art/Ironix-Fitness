@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BMI Calculator - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=23">
+  <link rel="stylesheet" href="Css/style.css?v=24">
 </head>
 <body>
   <header>
