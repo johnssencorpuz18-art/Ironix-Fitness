@@ -1449,7 +1449,7 @@ function renderWorkoutList(workouts) {
         <span>${Number(workout.set_counts)} sets</span>
         <span>${Number(workout.rep_count)} reps</span>
         <span>${formatNumber(workout.weight_kg)} kg</span>
-        <span>${formatNumber(workout.calories_burned)} kcal</span>
+        <span>Workout burned: ${formatNumber(workout.calories_burned)} kcal</span>
       </div>
       <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
     </li>
@@ -1496,6 +1496,7 @@ function renderProgressPage(workouts) {
         <span>${Number(workout.set_counts)} sets</span>
         <span>${Number(workout.rep_count)} reps</span>
         <span>${formatNumber(workout.weight_kg)} kg</span>
+        <span>Workout burned: ${formatNumber(workout.calories_burned)} kcal</span>
       </div>
       <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
     </li>
@@ -1537,7 +1538,7 @@ function renderTodayWorkouts(workouts) {
         <span>${Number(workout.set_counts)} sets</span>
         <span>${Number(workout.rep_count)} reps</span>
         <span>${formatNumber(workout.weight_kg)} kg</span>
-        <span>${formatNumber(workout.calories_burned)} kcal</span>
+        <span>Workout burned: ${formatNumber(workout.calories_burned)} kcal</span>
       </div>
       <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
     </li>

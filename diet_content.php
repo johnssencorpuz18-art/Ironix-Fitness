@@ -2,8 +2,8 @@
   <section class="diet-hero">
     <div>
       <span class="eyebrow">Food Database</span>
-      <h2>Filipino meals and fitness foods with calories and protein.</h2>
-      <p>Search food, filter by goal, and click any meal to see estimated nutrition per serving.</p>
+      <h2>Filipino meals and fitness foods with food calories and protein.</h2>
+      <p>Search food, filter by goal, and click any meal to see estimated intake per serving.</p>
     </div>
   </section>
 
@@ -23,7 +23,7 @@
   <section class="food-detail-panel" id="foodDetail">
     <span class="eyebrow">Food Details</span>
     <h3>Select a food</h3>
-    <p>Click a card to view calories, protein, carbs, and fats per serving.</p>
+    <p>Click a card to view food calories, protein, carbs, and fats per serving.</p>
   </section>
 
   <section class="meal-planner panel" id="weeklyMealPlanner">
@@ -97,14 +97,14 @@
         <div class="meal-day-tabs" id="mealDayTabs" role="tablist" aria-label="Meal plan days"></div>
 
         <div class="meal-monitor-block">
-          <span class="eyebrow">Day Totals</span>
+          <span class="eyebrow">Food Eaten Today</span>
           <div class="meal-day-totals" id="mealDayTotals"></div>
         </div>
 
         <div class="meal-monitor-block">
-          <span class="eyebrow">End Of Day Estimate</span>
+          <span class="eyebrow">Food Vs Workout Estimate</span>
           <div class="meal-result-grid" id="mealDayResult"></div>
-          <p class="meal-result-note">Estimate uses a normal 45-minute strength workout and your profile details when available.</p>
+          <p class="meal-result-note">Food calories are eaten. Workout calories are burned estimates from a normal 45-minute strength session and your profile details when available.</p>
         </div>
       </aside>
     </div>

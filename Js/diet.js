@@ -133,7 +133,7 @@ function renderFoods() {
       <img class="food-card-image" src="${food.image}" alt="${food.name}" loading="lazy">
       <span>${food.serving}</span>
       <strong>${food.name}</strong>
-      <p>${food.calories} kcal | ${food.protein}g protein</p>
+      <p>Food: ${food.calories} kcal | ${food.protein}g protein</p>
     </button>
   `).join("");
 }
@@ -152,7 +152,7 @@ function showFoodDetails(event) {
     <h3>${food.name}</h3>
     <p>Serving: ${food.serving}</p>
     <div class="food-macro-grid">
-      <strong>${food.calories}<span>kcal</span></strong>
+      <strong>${food.calories}<span>food kcal</span></strong>
       <strong>${food.protein}g<span>protein</span></strong>
       <strong>${food.carbs}g<span>carbs</span></strong>
       <strong>${food.fat}g<span>fat</span></strong>
@@ -209,7 +209,7 @@ function renderMealFoodOptions() {
   const visibleFoods = matches.length ? matches : getMealTypeFoods(document.getElementById("mealTypeSelect")?.value || "Other");
 
   foodSelect.innerHTML = visibleFoods.map(({ food, index }) => (
-    `<option value="${index}">${escapeHtml(food.name)} - ${food.calories} kcal, ${food.protein}g protein</option>`
+    `<option value="${index}">${escapeHtml(food.name)} - food ${food.calories} kcal, ${food.protein}g protein</option>`
   )).join("");
 
   if (visibleFoods.some(({ index }) => String(index) === String(current))) {
@@ -308,7 +308,7 @@ function renderMealPlanner() {
   const dayMeals = getMealsForDay(selectedMealDay);
   const dayTotals = calculateMealTotals(dayMeals);
   totals.innerHTML = `
-    <span>${formatMacro(dayTotals.calories)} kcal</span>
+    <span>Food eaten: ${formatMacro(dayTotals.calories)} kcal</span>
     <span>${formatMacro(dayTotals.protein)}g protein</span>
     <span>${formatMacro(dayTotals.carbs)}g carbs</span>
     <span>${formatMacro(dayTotals.fat)}g fat</span>
@@ -352,22 +352,22 @@ function renderDayResult(dayTotals) {
 
   return `
     <div>
-      <span>Meals</span>
+      <span>Food Calories Eaten</span>
       <strong>${formatMacro(dayTotals.calories)} kcal</strong>
     </div>
     <div>
-      <span>Normal Workout</span>
+      <span>Workout Calories Burned</span>
       <strong>-${formatMacro(workoutBurn)} kcal</strong>
     </div>
     <div>
-      <span>After Workout</span>
+      <span>Food Minus Workout</span>
       <strong>${formatMacro(netAfterWorkout)} kcal</strong>
     </div>
     <div>
-      <span>Vs Maintenance</span>
+      <span>Daily Balance Vs Maintenance</span>
       <strong>${balance >= 0 ? "+" : "-"}${formatMacro(Math.abs(balance))} kcal</strong>
     </div>
-    <p>${direction === "deficit" ? "Estimated deficit" : "Estimated surplus"} equals about ${formatMacro(fatEquivalentKg)} kg of fat energy, not instant scale change.</p>
+    <p>${direction === "deficit" ? "Estimated deficit" : "Estimated surplus"} after food eaten, workout calories burned, and maintenance equals about ${formatMacro(fatEquivalentKg)} kg of fat energy, not instant scale change.</p>
   `;
 }
 
@@ -398,7 +398,7 @@ function renderMealItem(meal) {
         <span>${escapeHtml(meal.serving)} x ${meal.servings}${meal.note ? ` | ${escapeHtml(meal.note)}` : ""}</span>
       </div>
       <div class="meal-item-macros">
-        <span>${formatMacro(totals.calories)} kcal</span>
+        <span>Food: ${formatMacro(totals.calories)} kcal</span>
         <span>${formatMacro(totals.protein)}g protein</span>
       </div>
       <button type="button" class="delete-workout" data-remove-meal="${index}">Remove</button>

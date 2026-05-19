@@ -31,7 +31,7 @@
         </div>
         <div class="stats">
           <div class="stat-card">
-            <h3>Calories Burned</h3>
+            <h3>Workout Calories Burned</h3>
             <p id="progressCalories">0 kcal</p>
           </div>
 
@@ -59,7 +59,7 @@
         </div>
         <div class="stats today-stats">
           <div class="stat-card">
-            <h3>Calories Today</h3>
+            <h3>Workout Calories Burned Today</h3>
             <p id="todayProgressCalories">0 kcal</p>
           </div>
 
@@ -139,6 +139,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=37"></script>
+  <script src="Js/app.js?v=38"></script>
 </body>
 </html>

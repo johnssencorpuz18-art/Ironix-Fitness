@@ -32,6 +32,6 @@ $conn->close();
       "weightKg" => isset($dietProfile["weight_kg"]) ? (float)$dietProfile["weight_kg"] : null
     ]); ?>;
   </script>
-  <script src="Js/diet.js?v=34"></script>
+  <script src="Js/diet.js?v=35"></script>
 </body>
 </html>
