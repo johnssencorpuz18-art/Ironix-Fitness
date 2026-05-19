@@ -518,11 +518,9 @@ function renderExerciseCards() {
 
   grid.innerHTML = exercises.map(exercise => `
     <article class="exercise-card">
-      <div class="exercise-card-diagram" aria-hidden="true">${renderAnatomySvg(exercise.muscle, "card")}</div>
       <div class="exercise-card-content">
-        <span>${escapeHtml(exercise.muscle)} | ${escapeHtml(exercise.equipment)}</span>
         <h4>${escapeHtml(exercise.name)}</h4>
-        <p>${exercise.sets} sets x ${exercise.reps} reps</p>
+        <p>${escapeHtml(exercise.muscle)} | ${exercise.sets} x ${exercise.reps}</p>
         <button type="button" data-exercise="${escapeHtml(exercise.name)}">View Demo</button>
       </div>
     </article>
@@ -544,13 +542,13 @@ function renderExerciseDetail(exercise, shouldScroll = true) {
     diagram.innerHTML = renderExerciseDemoSheet(exercise);
   }
 
-  setText("exerciseMeta", `${exercise.category} | ${exercise.muscle} | ${exercise.equipment}`);
+  setText("exerciseMeta", `${exercise.muscle} | ${exercise.equipment}`);
   setText("exerciseName", exercise.name);
-  setText("exerciseSummary", `Suggested target: ${exercise.sets} sets of ${exercise.reps} reps. Choose a load that leaves 1-3 controlled reps in reserve.`);
+  setText("exerciseSummary", `${exercise.sets} sets x ${exercise.reps} reps.`);
 
   const steps = document.getElementById("exerciseSteps");
   if (steps) {
-    steps.innerHTML = exercise.steps.map(step => `<li>${escapeHtml(step)}</li>`).join("");
+    steps.innerHTML = exercise.steps.slice(0, 3).map(step => `<li>${escapeHtml(step)}</li>`).join("");
   }
 
   if (shouldScroll) {
@@ -1265,99 +1263,15 @@ function renderAnatomySvg(muscle, size) {
 }
 
 function renderExerciseDemoSheet(exercise) {
-  const demoSteps = exercise.steps.slice(0, 4);
   return `
     <article class="exercise-demo-sheet">
-      <header class="demo-sheet-header">
-        <div>
-          <span>IRONIX DEMO</span>
-          <strong>${escapeHtml(exercise.name)}</strong>
-        </div>
-        <small>${escapeHtml(exercise.muscle)} | ${escapeHtml(exercise.equipment)}</small>
-      </header>
-
-      ${renderHumanAnatomyChart(exercise)}
-
-      <ol class="demo-instruction-list">
-        ${demoSteps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}
-      </ol>
-
-      <footer class="demo-sheet-footer">
-        <span><strong>${exercise.sets}</strong> sets</span>
-        <span><strong>${exercise.reps}</strong> reps</span>
-        <span>Rest <strong>${suggestRestSeconds(exercise)}</strong> sec</span>
-        <span>Target <strong>${escapeHtml(exercise.muscle)}</strong></span>
-      </footer>
+      <img class="demo-reference-image" src="Assets/anatomy/plain-muscles.png" alt="Plain anterior and posterior muscular system reference">
+      <div class="demo-target-row">
+        <span>Target</span>
+        <strong>${escapeHtml(exercise.muscle)}</strong>
+      </div>
     </article>
   `;
-}
-
-function renderHumanAnatomyChart(exercise) {
-  const target = normalizeMuscle(exercise.muscle);
-  const muscles = ["Chest", "Back", "Shoulders", "Biceps", "Triceps", "Core", "Quadriceps", "Hamstrings", "Glutes", "Calves"];
-  const chartMuscles = muscles.filter(label => chartExercisesForMuscle(label).length > 0);
-  return `
-    <section class="demo-workout-chart" aria-label="${escapeHtml(exercise.muscle)} workout chart">
-      <div class="demo-chart-title">
-        <span>IRONIX CHART</span>
-        <strong>${escapeHtml(exercise.category)} Exercises</strong>
-      </div>
-
-      <div class="demo-muscle-strip">
-        ${chartMuscles.map(label => {
-          const key = normalizeMuscle(label);
-          return `
-            <button type="button" class="${isTargetMuscle(target, key) ? "is-active" : ""}" data-muscle-chart="${escapeHtml(label)}">
-              <span>${escapeHtml(label)}</span>
-              ${renderAnatomySvg(label === "Core" ? "Abdominals" : label, "card")}
-            </button>
-          `;
-        }).join("")}
-      </div>
-
-      <div class="demo-chart-layout">
-        <div class="demo-chart-reference">
-          <img class="demo-reference-image" src="Assets/anatomy/plain-muscles.png" alt="Plain anterior and posterior muscular system reference">
-        </div>
-
-        <div class="demo-exercise-chart-grid">
-          ${chartMuscles.map(label => renderExerciseChartColumn(label, target)).join("")}
-        </div>
-      </div>
-
-      <a class="demo-credit" href="https://commons.wikimedia.org/wiki/File:1105_Anterior_and_Posterior_Views_of_Muscles.jpg" target="_blank" rel="noopener">
-        Anatomy reference adapted from OpenStax, CC BY-SA 4.0. Chart layout and exercise list are original to Ironix.
-      </a>
-    </section>
-  `;
-}
-
-function renderExerciseChartColumn(muscle, target) {
-  const items = chartExercisesForMuscle(muscle);
-  const isActive = isTargetMuscle(target, normalizeMuscle(muscle));
-  return `
-    <section class="demo-chart-column ${isActive ? "is-active" : ""}">
-      <h4>${escapeHtml(muscle)}</h4>
-      ${items.map(item => `
-        <article class="${item.name === selectedExercise.name ? "is-selected" : ""}">
-          <span>${escapeHtml(item.name)}</span>
-          <small>${item.sets} x ${item.reps}</small>
-        </article>
-      `).join("")}
-    </section>
-  `;
-}
-
-function chartExercisesForMuscle(muscle) {
-  const key = normalizeMuscle(muscle);
-  return exerciseCatalog
-    .filter(item => {
-      const itemKey = normalizeMuscle(item.muscle);
-      if (key === "core") return itemKey === "core" || itemKey === "abdominals";
-      if (key === "back") return itemKey === "back" || itemKey === "posterior-chain";
-      return itemKey === key;
-    })
-    .slice(0, 6);
 }
 
 function isTargetMuscle(target, name) {
