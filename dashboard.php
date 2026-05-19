@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=17">
+  <link rel="stylesheet" href="Css/style.css?v=18">
 </head>
 <body>
   <header>
@@ -57,6 +57,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=17"></script>
+  <script src="Js/app.js?v=18"></script>
 </body>
 </html>

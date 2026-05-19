@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diet Planner - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=17">
+  <link rel="stylesheet" href="Css/style.css?v=18">
 </head>
 <body>
   <header>
@@ -14,6 +14,6 @@
 
   <?php include "diet_content.php"; ?>
 
-  <script src="Js/diet.js?v=17"></script>
+  <script src="Js/diet.js?v=18"></script>
 </body>
 </html>

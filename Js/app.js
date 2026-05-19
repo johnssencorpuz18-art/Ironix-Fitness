@@ -373,10 +373,12 @@ const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 let selectedExercise = exerciseCatalog[0];
 let selectedCategory = "Upper Body";
 let weeklyPlan = JSON.parse(localStorage.getItem("ironixWeeklyPlan") || "{}");
+let liveSession = JSON.parse(localStorage.getItem("ironixLiveSession") || "[]");
 
 document.addEventListener("DOMContentLoaded", () => {
   setupOnboarding();
   setupPlanner();
+  setupLiveSession();
   setupExercisePicker();
   setupWorkoutForm();
   loadWorkouts();
@@ -448,6 +450,7 @@ function setupPlanner() {
   search?.addEventListener("input", renderExerciseCards);
 
   document.getElementById("startExerciseButton")?.addEventListener("click", () => prefillWorkout(selectedExercise));
+  document.getElementById("addToSessionButton")?.addEventListener("click", () => addExerciseToSession(selectedExercise));
   document.getElementById("addToCalendarButton")?.addEventListener("click", () => addExerciseToNextOpenDay(selectedExercise));
   document.getElementById("clearCalendarButton")?.addEventListener("click", () => {
     weeklyPlan = {};
@@ -459,6 +462,18 @@ function setupPlanner() {
   renderExerciseCards();
   renderExerciseDetail(selectedExercise, false);
   renderCalendar();
+}
+
+function setupLiveSession() {
+  document.getElementById("addSelectedToSessionButton")?.addEventListener("click", () => addExerciseToSession(selectedExercise));
+  document.getElementById("clearSessionButton")?.addEventListener("click", () => {
+    liveSession = [];
+    saveLiveSession();
+    renderLiveSession();
+    setMessage(document.getElementById("sessionMessage"), "");
+  });
+  document.getElementById("saveSessionButton")?.addEventListener("click", saveFinishedSession);
+  renderLiveSession();
 }
 
 function renderMuscleOptions() {
@@ -634,6 +649,187 @@ function addExerciseToNextOpenDay(exercise) {
   document.getElementById("weeklyPlanner")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function addExerciseToSession(exercise) {
+  liveSession.push({
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    name: exercise.name,
+    muscle: exercise.muscle,
+    equipment: exercise.equipment,
+    plannedSets: exercise.sets,
+    plannedReps: exercise.reps,
+    sets: exercise.sets,
+    reps: exercise.reps,
+    weight: exercise.equipment === "body only" ? 0 : "",
+    duration: defaultDurationForExercise(exercise),
+    done: false
+  });
+  saveLiveSession();
+  renderLiveSession();
+  document.getElementById("liveSession")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function defaultDurationForExercise(exercise) {
+  if (exercise.category === "Conditioning") return 20;
+  if (exercise.category === "Mobility") return 10;
+  return 8;
+}
+
+function renderLiveSession() {
+  const list = document.getElementById("liveSessionList");
+  if (!list) return;
+
+  const doneCount = liveSession.filter(item => item.done).length;
+  const volume = liveSession.reduce((total, item) => {
+    return total + ((Number(item.sets) || 0) * (Number(item.reps) || 0) * (Number(item.weight) || 0));
+  }, 0);
+
+  setText("sessionExerciseCount", liveSession.length);
+  setText("sessionDoneCount", doneCount);
+  setText("sessionVolume", `${formatNumber(volume)} kg`);
+
+  if (liveSession.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        Add exercises from the exercise detail panel or recommended plan to start a live workout.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = liveSession.map((item, index) => `
+    <article class="session-exercise ${item.done ? "is-done" : ""}" data-session-id="${escapeHtml(item.id)}">
+      <label class="session-check">
+        <input type="checkbox" data-session-field="done" ${item.done ? "checked" : ""}>
+        <span>${item.done ? "Done" : "Mark done"}</span>
+      </label>
+
+      <div class="session-exercise-main">
+        <strong>${index + 1}. ${escapeHtml(item.name)}</strong>
+        <span>${escapeHtml(item.muscle)} | planned ${item.plannedSets}x${item.plannedReps}</span>
+      </div>
+
+      <div class="session-input-grid">
+        <label>Sets
+          <input type="number" min="1" data-session-field="sets" value="${escapeHtml(item.sets)}">
+        </label>
+        <label>Reps
+          <input type="number" min="1" data-session-field="reps" value="${escapeHtml(item.reps)}">
+        </label>
+        <label>Weight
+          <input type="number" min="0" step="0.5" data-session-field="weight" value="${escapeHtml(item.weight)}" placeholder="0">
+        </label>
+        <label>Min
+          <input type="number" min="1" data-session-field="duration" value="${escapeHtml(item.duration)}">
+        </label>
+      </div>
+
+      <button type="button" class="delete-workout" data-remove-session="${escapeHtml(item.id)}">Remove</button>
+    </article>
+  `).join("");
+
+  list.querySelectorAll("[data-session-field]").forEach(input => {
+    input.addEventListener("change", updateSessionItem);
+    input.addEventListener("input", updateSessionItem);
+  });
+
+  list.querySelectorAll("[data-remove-session]").forEach(button => {
+    button.addEventListener("click", () => {
+      liveSession = liveSession.filter(item => item.id !== button.dataset.removeSession);
+      saveLiveSession();
+      renderLiveSession();
+    });
+  });
+}
+
+function updateSessionItem(event) {
+  const row = event.target.closest("[data-session-id]");
+  if (!row) return;
+
+  const item = liveSession.find(entry => entry.id === row.dataset.sessionId);
+  if (!item) return;
+
+  const field = event.target.dataset.sessionField;
+  if (field === "done") {
+    item.done = event.target.checked;
+  } else {
+    item[field] = event.target.value;
+  }
+
+  saveLiveSession();
+  renderLiveSession();
+}
+
+function saveLiveSession() {
+  localStorage.setItem("ironixLiveSession", JSON.stringify(liveSession));
+}
+
+function saveFinishedSession() {
+  const message = document.getElementById("sessionMessage");
+  const finished = liveSession.filter(item => item.done);
+
+  if (finished.length === 0) {
+    setMessage(message, "Mark at least one exercise done before saving.");
+    return;
+  }
+
+  const invalid = finished.find(item => !item.name || Number(item.sets) <= 0 || Number(item.reps) <= 0 || Number(item.duration) <= 0 || Number(item.weight) < 0);
+  if (invalid) {
+    setMessage(message, "Check sets, reps, weight, and minutes for every finished exercise.");
+    return;
+  }
+
+  setMessage(message, "Saving finished workout...");
+  document.getElementById("saveSessionButton").disabled = true;
+
+  saveSessionQueue(finished)
+    .then(() => {
+      const finishedIds = new Set(finished.map(item => item.id));
+      liveSession = liveSession.filter(item => !finishedIds.has(item.id));
+      saveLiveSession();
+      renderLiveSession();
+      loadWorkouts();
+      setMessage(message, "Finished workout saved. Progress dashboard updated.");
+      document.getElementById("savedHistory")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    })
+    .catch(error => {
+      setMessage(message, error.message);
+    })
+    .finally(() => {
+      document.getElementById("saveSessionButton").disabled = false;
+    });
+}
+
+function saveSessionQueue(items) {
+  return items.reduce((chain, item) => {
+    return chain.then(() => saveWorkoutEntry({
+      workout: item.name,
+      sets: item.sets,
+      reps: item.reps,
+      weight: item.weight || "0",
+      duration: item.duration
+    }));
+  }, Promise.resolve());
+}
+
+function saveWorkoutEntry(fields) {
+  const formData = new URLSearchParams();
+  formData.set("workout", fields.workout);
+  formData.set("sets", fields.sets);
+  formData.set("reps", fields.reps);
+  formData.set("weight", fields.weight || "0");
+  formData.set("duration", fields.duration);
+
+  return fetch("save_workout.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formData.toString()
+  }).then(async response => {
+    const text = await response.text();
+    if (!response.ok) throw new Error(text || "Workout could not be saved");
+    return text;
+  });
+}
+
 function saveWeeklyPlan() {
   localStorage.setItem("ironixWeeklyPlan", JSON.stringify(weeklyPlan));
 }
@@ -798,23 +994,13 @@ function addWorkout() {
 
   setMessage(message, "Saving workout...");
 
-  const formData = new URLSearchParams();
-  formData.set("workout", document.getElementById("exercise").value.trim());
-  formData.set("sets", document.getElementById("sets").value);
-  formData.set("reps", document.getElementById("reps").value);
-  formData.set("weight", document.getElementById("weight").value || "0");
-  formData.set("duration", document.getElementById("duration").value);
-
-  fetch("save_workout.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: formData.toString()
+  saveWorkoutEntry({
+    workout: document.getElementById("exercise").value.trim(),
+    sets: document.getElementById("sets").value,
+    reps: document.getElementById("reps").value,
+    weight: document.getElementById("weight").value || "0",
+    duration: document.getElementById("duration").value
   })
-    .then(async response => {
-      const text = await response.text();
-      if (!response.ok) throw new Error(text || "Workout could not be saved");
-      return text;
-    })
     .then(text => {
       setMessage(message, text);
       form.reset();

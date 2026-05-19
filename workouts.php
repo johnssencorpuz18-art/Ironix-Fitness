@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=17">
+  <link rel="stylesheet" href="Css/style.css?v=18">
 </head>
 <body class="workouts-body">
   <header>
@@ -32,6 +32,7 @@
       <a href="#setupPlanner">Setup</a>
       <a href="#exercisePlanner">Exercise Library</a>
       <a href="#weeklyPlanner">Calendar</a>
+      <a href="#liveSession">Live Session</a>
       <a href="#workoutLog">Save Workout</a>
       <a href="#savedHistory">History</a>
     </section>
@@ -149,8 +150,44 @@
         <ol id="exerciseSteps"></ol>
         <div class="detail-actions">
           <button type="button" id="startExerciseButton">Start / Prefill Log</button>
+          <button type="button" class="secondary-button" id="addToSessionButton">Add To Live Session</button>
           <button type="button" class="secondary-button" id="addToCalendarButton">Add To Calendar</button>
         </div>
+      </div>
+    </section>
+
+    <section class="panel live-session-panel" id="liveSession">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">Live Session</span>
+          <h3>Finish and Save Workout</h3>
+        </div>
+        <div class="session-actions">
+          <button type="button" class="secondary-button" id="addSelectedToSessionButton">Add Selected</button>
+          <button type="button" class="secondary-button" id="clearSessionButton">Clear</button>
+        </div>
+      </div>
+
+      <div class="session-status-grid">
+        <div>
+          <span>Exercises</span>
+          <strong id="sessionExerciseCount">0</strong>
+        </div>
+        <div>
+          <span>Finished</span>
+          <strong id="sessionDoneCount">0</strong>
+        </div>
+        <div>
+          <span>Estimated Volume</span>
+          <strong id="sessionVolume">0 kg</strong>
+        </div>
+      </div>
+
+      <div class="live-session-list" id="liveSessionList"></div>
+
+      <div class="session-footer">
+        <p class="form-message" id="sessionMessage" aria-live="polite"></p>
+        <button type="button" id="saveSessionButton">Save Finished Workout</button>
       </div>
     </section>
 
@@ -280,6 +317,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=17"></script>
+  <script src="Js/app.js?v=18"></script>
 </body>
 </html>

@@ -475,6 +475,7 @@ label {
 .exercise-browser,
 .calendar-panel,
 .recommendation-panel,
+.live-session-panel,
 .exercise-detail {
   padding: 24px;
 }
@@ -693,6 +694,124 @@ label {
   min-height: 36px;
   padding: 8px 10px;
   width: 100%;
+}
+
+.live-session-panel {
+  margin-bottom: 22px;
+}
+
+.session-actions,
+.session-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.session-actions button {
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+.session-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.session-status-grid > div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px;
+}
+
+.session-status-grid span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.session-status-grid strong {
+  display: block;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.live-session-list {
+  display: grid;
+  gap: 12px;
+}
+
+.session-exercise {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  display: grid;
+  grid-template-columns: 120px minmax(180px, 1fr) minmax(320px, 1.2fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+}
+
+.session-exercise.is-done {
+  border-color: rgba(63, 185, 143, 0.42);
+  background: rgba(63, 185, 143, 0.1);
+}
+
+.session-check {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 10px;
+}
+
+.session-check input {
+  width: 18px;
+  min-height: 18px;
+  margin: 0;
+  accent-color: var(--accent-2);
+}
+
+.session-exercise-main strong,
+.session-exercise-main span {
+  display: block;
+}
+
+.session-exercise-main span {
+  color: var(--muted);
+}
+
+.session-input-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(70px, 1fr));
+  gap: 8px;
+}
+
+.session-input-grid label {
+  margin: 0;
+}
+
+.session-input-grid input {
+  min-height: 40px;
+  margin-top: 4px;
+  padding: 8px 10px;
+}
+
+.session-footer {
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.session-footer .form-message {
+  margin: 0;
 }
 
 .workout-form,
@@ -1098,6 +1217,15 @@ label {
     grid-template-columns: 1fr;
   }
 
+  .session-exercise,
+  .session-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .session-status-grid {
+    grid-template-columns: 1fr;
+  }
+
   .workout-metrics {
     justify-content: flex-start;
   }
@@ -1141,6 +1269,7 @@ label {
   .exercise-browser,
   .calendar-panel,
   .recommendation-panel,
+  .live-session-panel,
   .exercise-detail,
   .onboarding-panel {
     padding: 18px;
