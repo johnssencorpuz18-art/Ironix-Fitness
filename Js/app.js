@@ -1265,11 +1265,16 @@ function renderAnatomySvg(muscle, size) {
 function renderExerciseDemoSheet(exercise) {
   const pose = demoPoseForExercise(exercise);
   const cues = formCuesForExercise(exercise);
+  const demo = demoImageForExercise(pose, exercise);
   return `
     <article class="exercise-demo-sheet">
-      <div class="movement-demo-card">
-        ${renderMovementDemoSvg(pose, exercise)}
-      </div>
+      <figure class="real-demo-card real-demo-${escapeHtml(pose)}">
+        <img class="real-demo-image" src="${escapeHtml(demo.src)}" alt="${escapeHtml(demo.alt)}" loading="lazy">
+        <figcaption>
+          <span>Form demo</span>
+          <strong>${escapeHtml(demo.label)}</strong>
+        </figcaption>
+      </figure>
       <div class="demo-target-row">
         <span>Target</span>
         <strong>${escapeHtml(exercise.muscle)}</strong>
@@ -1292,82 +1297,45 @@ function demoPoseForExercise(exercise) {
   return "press";
 }
 
-function renderMovementDemoSvg(pose, exercise) {
-  const label = escapeHtml(exercise.name);
-  const scenes = {
-    press: `
-      <g class="demo-person demo-press-person">
-        <ellipse class="demo-skin" cx="76" cy="78" rx="13" ry="15"></ellipse>
-        <path class="demo-suit" d="M89 96 C120 88 153 97 173 121 L162 143 C133 129 104 124 82 125 Z"></path>
-        <path class="demo-limb-fill" d="M115 111 C135 91 162 79 185 79 L190 95 C168 98 145 109 125 127 Z"></path>
-        <path class="demo-limb-fill" d="M118 126 C144 132 168 145 190 164 L178 177 C157 160 136 148 109 143 Z"></path>
-        <path class="demo-limb-fill" d="M80 121 C61 131 49 150 42 171 L58 178 C67 160 78 146 96 138 Z"></path>
-      </g>
-      <path class="demo-guide-arrow" d="M106 64 C132 42 164 41 194 58"></path>
-    `,
-    squat: `
-      <g class="demo-person demo-squat-person">
-        <ellipse class="demo-skin" cx="132" cy="46" rx="14" ry="16"></ellipse>
-        <path class="demo-suit" d="M112 65 C132 54 154 63 161 86 C167 108 159 128 142 135 C121 132 107 112 102 91 C99 79 102 70 112 65 Z"></path>
-        <path class="demo-limb-fill" d="M114 130 C96 151 87 177 78 205 L98 210 C109 183 121 160 140 142 Z"></path>
-        <path class="demo-limb-fill" d="M145 132 C165 151 181 174 193 203 L174 211 C161 185 146 163 127 145 Z"></path>
-        <path class="demo-limb-fill" d="M113 78 C88 86 74 99 64 119 L80 129 C93 110 105 101 129 95 Z"></path>
-        <path class="demo-limb-fill" d="M153 78 C176 87 190 100 200 120 L184 130 C171 111 159 101 136 95 Z"></path>
-      </g>
-      <path class="demo-guide-arrow" d="M202 67 C219 104 218 153 198 190"></path>
-    `,
-    hinge: `
-      <g class="demo-person demo-hinge-person">
-        <ellipse class="demo-skin" cx="92" cy="64" rx="13" ry="15"></ellipse>
-        <path class="demo-suit" d="M104 76 C134 79 164 96 181 121 C174 140 156 145 136 132 C116 119 99 100 91 83 Z"></path>
-        <path class="demo-limb-fill" d="M156 130 C171 153 180 181 187 210 L168 214 C158 185 148 160 132 138 Z"></path>
-        <path class="demo-limb-fill" d="M132 130 C119 153 111 181 105 211 L86 207 C92 177 102 151 118 130 Z"></path>
-        <path class="demo-limb-fill" d="M139 109 C137 135 127 154 113 171 L99 159 C112 143 119 127 121 104 Z"></path>
-      </g>
-      <path class="demo-guide-arrow" d="M74 73 C111 47 159 55 196 88"></path>
-    `,
-    pull: `
-      <path class="demo-equipment-line" d="M62 44 H218"></path>
-      <g class="demo-person demo-pull-person">
-        <ellipse class="demo-skin" cx="140" cy="74" rx="13" ry="15"></ellipse>
-        <path class="demo-suit" d="M119 94 C133 84 153 84 166 96 L162 150 C149 164 130 164 117 150 Z"></path>
-        <path class="demo-limb-fill" d="M121 101 C101 88 86 73 73 51 L88 43 C101 62 114 75 132 88 Z"></path>
-        <path class="demo-limb-fill" d="M160 101 C180 88 195 73 208 51 L193 43 C180 62 167 75 149 88 Z"></path>
-        <path class="demo-limb-fill" d="M123 149 C112 171 105 190 101 213 L120 216 C125 193 132 174 143 154 Z"></path>
-        <path class="demo-limb-fill" d="M158 149 C169 171 176 190 180 213 L161 216 C156 193 149 174 138 154 Z"></path>
-      </g>
-      <path class="demo-guide-arrow" d="M206 60 C196 94 177 120 151 137"></path>
-    `,
-    core: `
-      <g class="demo-person demo-core-person">
-        <ellipse class="demo-skin" cx="79" cy="132" rx="13" ry="15"></ellipse>
-        <path class="demo-suit" d="M93 130 C119 122 149 128 171 144 C169 164 153 174 131 166 C112 159 96 149 85 141 Z"></path>
-        <path class="demo-limb-fill" d="M161 149 C184 143 205 141 226 146 L224 164 C203 161 184 163 165 169 Z"></path>
-        <path class="demo-limb-fill" d="M139 162 C158 177 174 190 187 209 L171 219 C158 201 144 189 126 175 Z"></path>
-        <path class="demo-limb-fill" d="M87 132 C70 118 59 105 50 88 L65 78 C76 95 88 107 104 120 Z"></path>
-      </g>
-      <path class="demo-guide-arrow" d="M79 101 C112 78 163 82 197 109"></path>
-    `,
-    arm: `
-      <g class="demo-person demo-arm-person">
-        <ellipse class="demo-skin" cx="136" cy="48" rx="14" ry="16"></ellipse>
-        <path class="demo-suit" d="M114 70 C131 59 153 61 166 75 L161 139 C147 151 126 151 112 139 Z"></path>
-        <path class="demo-limb-fill demo-curl-arm" d="M111 82 C90 99 81 123 76 151 L94 157 C101 130 112 110 131 94 Z"></path>
-        <path class="demo-limb-fill demo-curl-arm alt" d="M166 82 C187 99 196 123 201 151 L183 157 C176 130 165 110 146 94 Z"></path>
-        <path class="demo-limb-fill" d="M120 139 C111 161 105 183 101 210 L119 214 C126 187 132 165 141 145 Z"></path>
-        <path class="demo-limb-fill" d="M158 139 C167 161 173 183 177 210 L159 214 C152 187 146 165 137 145 Z"></path>
-      </g>
-      <path class="demo-guide-arrow" d="M74 146 C73 112 90 88 118 73"></path>
-    `
+function demoImageForExercise(pose, exercise) {
+  const demos = {
+    press: {
+      src: "Assets/exercise-demos/pushup.jpg",
+      label: "Push-up posture reference",
+      alt: "Real human push-up form reference with a straight body line"
+    },
+    squat: {
+      src: "Assets/exercise-demos/squat.jpg",
+      label: "Squat posture reference",
+      alt: "Real human squat form reference with knees bent and chest lifted"
+    },
+    hinge: {
+      src: "Assets/exercise-demos/deadlift.jpg",
+      label: "Hip hinge reference",
+      alt: "Real human deadlift form reference showing a hip hinge"
+    },
+    pull: {
+      src: "Assets/exercise-demos/lat-pulldown.jpg",
+      label: "Pull movement reference",
+      alt: "Real gym pull-down station used as a pulling exercise reference"
+    },
+    core: {
+      src: "Assets/exercise-demos/plank.jpg",
+      label: "Core brace reference",
+      alt: "Real human plank form reference with a braced torso"
+    },
+    arm: {
+      src: "Assets/exercise-demos/biceps-curl.gif",
+      label: "Arm curl reference",
+      alt: "Real human biceps curl form reference on a preacher bench"
+    }
   };
 
-  return `
-    <svg class="movement-demo-svg" viewBox="0 0 280 240" role="img" aria-label="${label} animated form demo">
-      <rect class="demo-stage" x="0" y="0" width="280" height="240" rx="10"></rect>
-      <path class="demo-floor-line" d="M38 214 H240"></path>
-      ${scenes[pose] || scenes.press}
-    </svg>
-  `;
+  return demos[pose] || {
+    src: "Assets/exercise-demos/pushup.jpg",
+    label: `${exercise.name} posture reference`,
+    alt: `Real human exercise form reference for ${exercise.name}`
+  };
 }
 
 function formCuesForExercise(exercise) {

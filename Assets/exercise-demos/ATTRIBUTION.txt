@@ -1,0 +1,31 @@
+Ironix exercise demo photos
+Downloaded from Wikimedia Commons on 2026-05-19 for local demo/reference cards.
+
+squat.jpg
+Source: https://commons.wikimedia.org/wiki/File:Stay_fit_anywhere,_anytime_(6186146).jpg
+Author: U.S. Air Force photo by Senior Airman Christopher S. Sparks
+License/status: Public domain, U.S. Air Force work
+
+pushup.jpg
+Source: https://commons.wikimedia.org/wiki/File:Marines_do_pushups.jpg
+Author: PFC Charlie Chavez / MCRD San Diego
+License/status: Public domain
+
+lat-pulldown.jpg
+Source: https://commons.wikimedia.org/wiki/File:PulldownMachineExercise.JPG
+Author: GeorgeStepanek
+License/status: GFDL 1.2 or later / Creative Commons Attribution-Share Alike 3.0 Unported
+
+plank.jpg
+Source: https://commons.wikimedia.org/wiki/File:Plankphoto.JPG
+Author/license: See Wikimedia Commons file page for full attribution and license terms.
+
+deadlift.jpg
+Source: https://commons.wikimedia.org/wiki/File:Deadlift_is_King_(7980587).jpg
+Author: U.S. Army
+License/status: Public domain, U.S. Army work
+
+biceps-curl.gif
+Source: https://commons.wikimedia.org/wiki/File:PreacherBenchBicepsCurl.gif
+Author: Mohamed Ouda
+License/status: GFDL 1.2 or later / Creative Commons Attribution-Share Alike 3.0 Unported
