@@ -1520,6 +1520,8 @@ function renderTodayWorkouts(workouts) {
     localStorage.setItem("ironixDoneTodayCount", String(today.length));
   }
 
+  renderTodayProgress(today);
+
   if (today.length === 0) {
     list.innerHTML = '<li class="empty-state">No completed exercises saved today.</li>';
     return;
@@ -1542,6 +1544,14 @@ function renderTodayWorkouts(workouts) {
   `).join("");
 
   bindWorkoutDeleteButtons(list);
+}
+
+function renderTodayProgress(today) {
+  const summary = calculateSummary(today);
+  setText("todayProgressCalories", `${formatNumber(summary.calories)} kcal`);
+  setText("todayProgressWorkouts", `${summary.workouts} ${summary.workouts === 1 ? "Exercise" : "Exercises"}`);
+  setText("todayProgressVolume", `${formatNumber(summary.volume)} kg`);
+  setText("todayProgressSets", `${summary.sets} ${summary.sets === 1 ? "Set" : "Sets"}`);
 }
 
 function resetDoneCounterIfNewDay() {

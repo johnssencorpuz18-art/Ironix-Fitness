@@ -1406,6 +1406,25 @@ label {
   padding: 20px;
 }
 
+.progress-split {
+  display: grid;
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.progress-stat-panel {
+  padding: 20px;
+}
+
+.progress-stat-panel .stats {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.today-stats .stat-card {
+  border-color: rgba(242, 162, 58, 0.24);
+  background: rgba(242, 162, 58, 0.08);
+}
+
 .summary-card {
   display: grid;
   gap: 4px;
