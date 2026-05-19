@@ -1294,100 +1294,29 @@ function renderExerciseDemoSheet(exercise) {
 
 function renderHumanAnatomyChart(exercise) {
   const target = normalizeMuscle(exercise.muscle);
+  const muscles = ["Chest", "Back", "Shoulders", "Biceps", "Triceps", "Core", "Quadriceps", "Hamstrings", "Glutes", "Calves"];
   return `
     <section class="demo-anatomy-chart" aria-label="${escapeHtml(exercise.muscle)} anatomy target chart">
       <div class="demo-anatomy-title">
-        <span>Target Anatomy</span>
+        <span>OpenStax Anatomy Reference</span>
         <strong>${escapeHtml(exercise.muscle)}</strong>
       </div>
-      <div class="demo-human-grid">
-        <div class="demo-human-panel">
-          ${renderHumanFigureSvg(target, "front")}
-          <span>Front View</span>
-        </div>
-        <div class="demo-human-panel">
-          ${renderHumanFigureSvg(target, "back")}
-          <span>Back View</span>
-        </div>
-        <div class="demo-human-panel">
-          ${renderHumanFigureSvg(target, "side")}
-          <span>Side View</span>
-        </div>
+
+      <div class="demo-reference-image-wrap">
+        <img class="demo-reference-image" src="Assets/anatomy/openstax-muscles.jpg" alt="OpenStax anterior and posterior muscular system chart">
       </div>
+
       <div class="demo-muscle-key">
-        ${["Chest", "Back", "Shoulders", "Biceps", "Triceps", "Core", "Quadriceps", "Hamstrings", "Glutes", "Calves"].map(label => {
+        ${muscles.map(label => {
           const key = normalizeMuscle(label);
           return `<span class="${isTargetMuscle(target, key) ? "is-active" : ""}">${label}</span>`;
         }).join("")}
       </div>
+
+      <a class="demo-credit" href="https://commons.wikimedia.org/wiki/File:1105_Anterior_and_Posterior_Views_of_Muscles.jpg" target="_blank" rel="noopener">
+        Anatomy image: OpenStax, CC BY-SA 4.0
+      </a>
     </section>
-  `;
-}
-
-function renderHumanFigureSvg(target, side) {
-  const cls = name => isTargetMuscle(target, name) ? "is-target" : "";
-  const posterior = side === "back";
-  const lateral = side === "side";
-
-  if (lateral) {
-    return `
-      <svg class="demo-human-svg" viewBox="0 0 260 420" role="img" aria-label="Side human anatomy figure">
-        <rect x="0" y="0" width="260" height="420" rx="8"></rect>
-        <path class="human-silhouette" d="M128 18 C151 18 166 36 163 58 C161 74 151 83 138 88 L139 104 C158 109 172 126 178 151 C184 180 178 213 165 236 C157 249 151 262 152 281 L161 356 C164 381 153 403 135 404 C119 405 111 389 115 361 L122 285 C124 270 117 257 108 242 C93 217 86 181 92 151 C97 126 109 110 126 104 L126 88 C112 82 103 70 102 54 C101 34 111 18 128 18 Z"></path>
-        <ellipse class="human-muscle ${cls("shoulders")}" cx="143" cy="119" rx="19" ry="25"></ellipse>
-        <path class="human-muscle ${cls("chest")}" d="M127 129 C146 128 158 141 159 161 C144 166 129 157 121 143 Z"></path>
-        <path class="human-muscle ${cls("back")}" d="M107 124 C121 111 142 113 151 131 C135 140 119 148 105 156 Z"></path>
-        <path class="human-muscle ${cls("core")}" d="M116 151 C136 144 154 153 158 176 C156 199 146 218 132 228 C118 211 111 179 116 151 Z"></path>
-        <path class="human-muscle ${cls("glutes")}" d="M111 226 C135 219 157 231 164 249 C150 263 124 261 106 244 Z"></path>
-        <path class="human-muscle ${cls("quadriceps")}" d="M130 252 C153 264 158 324 145 356 C125 329 116 280 130 252 Z"></path>
-        <path class="human-muscle ${cls("hamstrings")}" d="M108 252 C126 270 128 327 116 356 C100 329 96 278 108 252 Z"></path>
-        <path class="human-muscle ${cls("calves")}" d="M121 350 C143 357 143 393 128 407 C110 389 108 365 121 350 Z"></path>
-        <path class="human-muscle ${cls("biceps")}" d="M158 146 C174 157 179 189 170 212 C153 196 151 166 158 146 Z"></path>
-        <path class="human-muscle ${cls("triceps")}" d="M140 143 C153 157 154 191 143 210 C130 191 130 160 140 143 Z"></path>
-        <path class="human-detail" d="M132 91 C134 154 137 198 133 233"></path>
-        <path class="human-detail" d="M119 167 C136 170 149 171 159 167 M119 185 C136 189 148 189 157 184 M123 203 C137 207 146 207 153 201"></path>
-      </svg>
-    `;
-  }
-
-  return `
-    <svg class="demo-human-svg" viewBox="0 0 260 420" role="img" aria-label="${posterior ? "Back" : "Front"} human anatomy figure">
-      <rect x="0" y="0" width="260" height="420" rx="8"></rect>
-      <path class="human-silhouette" d="M130 16 C154 16 170 34 168 58 C166 77 154 89 139 94 L141 110 C168 114 190 132 200 164 C209 194 205 231 195 258 C187 281 177 306 181 336 L189 386 C193 407 176 416 160 405 C146 394 145 369 143 344 L138 283 C137 272 123 272 122 283 L117 344 C115 369 114 394 100 405 C84 416 67 407 71 386 L79 336 C83 306 73 281 65 258 C55 231 51 194 60 164 C70 132 92 114 119 110 L121 94 C106 89 94 77 92 58 C90 34 106 16 130 16 Z"></path>
-
-      ${posterior ? `
-        <path class="human-muscle ${cls("back")}" d="M91 103 C112 90 148 90 169 103 C160 139 149 166 130 184 C111 166 100 139 91 103 Z"></path>
-        <path class="human-muscle ${cls("back")}" d="M100 127 C113 133 122 150 126 181 C109 169 96 151 88 132 Z"></path>
-        <path class="human-muscle ${cls("back")}" d="M160 127 C147 133 138 150 134 181 C151 169 164 151 172 132 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M70 112 C83 93 108 99 114 119 C103 133 80 132 70 112 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M190 112 C177 93 152 99 146 119 C157 133 180 132 190 112 Z"></path>
-        <path class="human-muscle ${cls("triceps")}" d="M63 145 C83 158 87 201 71 230 C52 210 49 170 63 145 Z"></path>
-        <path class="human-muscle ${cls("triceps")}" d="M197 145 C177 158 173 201 189 230 C208 210 211 170 197 145 Z"></path>
-        <path class="human-muscle ${cls("core")}" d="M106 184 C118 193 142 193 154 184 C153 209 143 227 130 237 C117 227 107 209 106 184 Z"></path>
-        <ellipse class="human-muscle ${cls("glutes")}" cx="109" cy="239" rx="26" ry="29"></ellipse>
-        <ellipse class="human-muscle ${cls("glutes")}" cx="151" cy="239" rx="26" ry="29"></ellipse>
-        <path class="human-muscle ${cls("hamstrings")}" d="M94 274 C119 287 122 354 101 383 C78 347 77 295 94 274 Z"></path>
-        <path class="human-muscle ${cls("hamstrings")}" d="M166 274 C141 287 138 354 159 383 C182 347 183 295 166 274 Z"></path>
-      ` : `
-        <path class="human-muscle ${cls("chest")}" d="M87 113 C101 96 124 101 128 124 C118 141 95 139 83 124 Z"></path>
-        <path class="human-muscle ${cls("chest")}" d="M173 113 C159 96 136 101 132 124 C142 141 165 139 177 124 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M69 112 C82 92 107 98 114 118 C102 133 78 132 69 112 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M191 112 C178 92 153 98 146 118 C158 133 182 132 191 112 Z"></path>
-        <path class="human-muscle ${cls("biceps")}" d="M63 145 C82 157 85 198 69 226 C51 205 49 169 63 145 Z"></path>
-        <path class="human-muscle ${cls("biceps")}" d="M197 145 C178 157 175 198 191 226 C209 205 211 169 197 145 Z"></path>
-        <path class="human-muscle ${cls("core")}" d="M103 142 C120 132 140 132 157 142 C156 187 146 217 130 236 C114 217 104 187 103 142 Z"></path>
-        <path class="human-detail" d="M113 160 H147 M110 179 H150 M112 198 H148 M119 218 H141"></path>
-        <path class="human-muscle ${cls("quadriceps")}" d="M94 274 C119 288 123 354 102 383 C77 347 77 295 94 274 Z"></path>
-        <path class="human-muscle ${cls("quadriceps")}" d="M166 274 C141 288 137 354 158 383 C183 347 183 295 166 274 Z"></path>
-      `}
-
-      <path class="human-muscle ${cls("calves")}" d="M92 356 C116 363 115 401 97 413 C78 393 78 368 92 356 Z"></path>
-      <path class="human-muscle ${cls("calves")}" d="M168 356 C144 363 145 401 163 413 C182 393 182 368 168 356 Z"></path>
-
-      <path class="human-detail" d="M130 94 V258"></path>
-      <path class="human-detail" d="M94 275 C112 302 112 352 100 383"></path>
-      <path class="human-detail" d="M166 275 C148 302 148 352 160 383"></path>
-    </svg>
   `;
 }
 
