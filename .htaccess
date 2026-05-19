@@ -1,1 +1,5 @@
 DirectoryIndex index.php index.html
+
+<RequireAll>
+  Require local
+</RequireAll>

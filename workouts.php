@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=16">
+  <link rel="stylesheet" href="Css/style.css?v=17">
 </head>
 <body class="workouts-body">
   <header>
@@ -280,6 +280,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=16"></script>
+  <script src="Js/app.js?v=17"></script>
 </body>
 </html>
