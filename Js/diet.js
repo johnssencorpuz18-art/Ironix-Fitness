@@ -175,6 +175,7 @@ function setupMealPlanner() {
   renderMealFoodOptions();
   renderMealSuggestions();
   foodSearchInput?.addEventListener("input", () => {
+    autoSwitchMealTypeFromSearch();
     renderMealFoodOptions();
     renderMealSuggestions();
   });
@@ -238,10 +239,23 @@ function renderMealSuggestions() {
 function getVisibleMealFoods() {
   const type = document.getElementById("mealTypeSelect")?.value || "Other";
   const search = (document.getElementById("mealFoodSearch")?.value || "").trim().toLowerCase();
-  return getMealTypeFoods(type).filter(({ food }) => {
+  const sourceFoods = search ? foods.map((food, index) => ({ food, index })) : getMealTypeFoods(type);
+  return sourceFoods.filter(({ food }) => {
     if (!search) return true;
     return food.name.toLowerCase().includes(search) || food.group.toLowerCase().includes(search);
   });
+}
+
+function autoSwitchMealTypeFromSearch() {
+  const mealTypeSelect = document.getElementById("mealTypeSelect");
+  const search = (document.getElementById("mealFoodSearch")?.value || "").trim().toLowerCase();
+  if (!mealTypeSelect || search.length < 2) return;
+
+  const match = foods.find(food => food.name.toLowerCase().includes(search));
+  const preferredType = match?.meals?.[0];
+  if (preferredType && mealTypes.includes(preferredType) && mealTypeSelect.value !== preferredType) {
+    mealTypeSelect.value = preferredType;
+  }
 }
 
 function getMealTypeFoods(type) {

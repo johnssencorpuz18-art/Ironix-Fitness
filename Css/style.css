@@ -1393,6 +1393,55 @@ label {
   gap: 18px;
 }
 
+.profile-insight-grid,
+.profile-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.profile-insight-grid article,
+.profile-detail-grid > div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+}
+
+.profile-insight-grid span,
+.profile-detail-grid span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.profile-insight-grid strong,
+.profile-detail-grid strong {
+  font-size: 1.2rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.profile-insight-grid small,
+.profile-detail-grid small {
+  color: var(--muted);
+}
+
+.progress-bar {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar span {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  display: block;
+  height: 100%;
+}
+
 .workout-list {
   display: grid;
   gap: 12px;
