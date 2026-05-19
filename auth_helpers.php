@@ -27,6 +27,8 @@ function render_nav($active = "") {
         echo '<li><a ' . ($active === "workouts" ? 'class="active"' : '') . ' href="workouts.php">Plan</a></li>';
         echo '<li><a ' . ($active === "diet" ? 'class="active"' : '') . ' href="diet.php">Diet</a></li>';
         echo '<li><a ' . ($active === "bmi" ? 'class="active"' : '') . ' href="bmi.php">BMI</a></li>';
+        echo '<li><a ' . ($active === "community" ? 'class="active"' : '') . ' href="community.php">Community</a></li>';
+        echo '<li><a ' . ($active === "leaderboard" ? 'class="active"' : '') . ' href="leaderboard.php">Leaders</a></li>';
         echo '<li><a ' . ($active === "profile" ? 'class="active"' : '') . ' href="profile.php">Profile</a></li>';
         echo '<li><a href="logout.php">Logout</a></li>';
     } else {
