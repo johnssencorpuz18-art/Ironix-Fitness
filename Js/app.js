@@ -1303,7 +1303,7 @@ function renderHumanAnatomyChart(exercise) {
       </div>
 
       <div class="demo-reference-image-wrap">
-        <img class="demo-reference-image" src="Assets/anatomy/openstax-muscles.jpg" alt="OpenStax anterior and posterior muscular system chart">
+        <img class="demo-reference-image" src="Assets/anatomy/plain-muscles.png" alt="Plain anterior and posterior muscular system chart">
       </div>
 
       <div class="demo-muscle-key">
@@ -1314,7 +1314,7 @@ function renderHumanAnatomyChart(exercise) {
       </div>
 
       <a class="demo-credit" href="https://commons.wikimedia.org/wiki/File:1105_Anterior_and_Posterior_Views_of_Muscles.jpg" target="_blank" rel="noopener">
-        Anatomy image: OpenStax, CC BY-SA 4.0
+        Anatomy reference adapted from OpenStax, CC BY-SA 4.0
       </a>
     </section>
   `;

@@ -1,4 +1,4 @@
-openstax-muscles.jpg
+plain-muscles.png
 
 Title: 1105 Anterior and Posterior Views of Muscles.jpg
 Author: OpenStax
@@ -6,3 +6,4 @@ License: Creative Commons Attribution-Share Alike 4.0 International
 Source: https://commons.wikimedia.org/wiki/File:1105_Anterior_and_Posterior_Views_of_Muscles.jpg
 
 Used in Ironix as an exercise-library anatomy reference image.
+Adaptation: cropped to the anterior/posterior human figures and cleaned to remove visible label text.

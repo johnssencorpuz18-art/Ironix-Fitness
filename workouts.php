@@ -341,6 +341,6 @@ function view_class($name) {
     </div>
   </main>
 
-  <script src="Js/app.js?v=43"></script>
+  <script src="Js/app.js?v=44"></script>
 </body>
 </html>

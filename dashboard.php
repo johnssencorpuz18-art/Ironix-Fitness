@@ -139,6 +139,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=43"></script>
+  <script src="Js/app.js?v=44"></script>
 </body>
 </html>
