@@ -373,6 +373,7 @@ const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 let selectedExercise = exerciseCatalog[0];
 let selectedCategory = "Upper Body";
 let selectedPlanDay = localStorage.getItem("ironixSelectedPlanDay") || dayNames[0];
+let selectedPlanCategory = localStorage.getItem("ironixSelectedPlanCategory") || "Upper Body";
 let weeklyPlan = JSON.parse(localStorage.getItem("ironixWeeklyPlan") || "{}");
 let liveSession = JSON.parse(localStorage.getItem("ironixLiveSession") || "[]");
 
@@ -636,6 +637,14 @@ function renderCalendar() {
 
   const day = selectedPlanDay;
   const items = normalizePlanEntries(weeklyPlan[day] || []);
+  const planCategories = [...new Set(exerciseCatalog.map(exercise => exercise.category))];
+
+  if (!planCategories.includes(selectedPlanCategory)) {
+    selectedPlanCategory = planCategories[0];
+  }
+
+  const planCategoryExercises = exerciseCatalog.filter(exercise => exercise.category === selectedPlanCategory);
+  const planSelectedExercise = planCategoryExercises.find(exercise => exercise.name === selectedExercise.name) || planCategoryExercises[0] || selectedExercise;
 
   calendar.innerHTML = `
     <div class="calendar-tabs" role="tablist" aria-label="Weekly plan days">
@@ -667,21 +676,26 @@ function renderCalendar() {
           <span class="eyebrow">Add Exercise</span>
           <h5>Customize ${escapeHtml(day)}</h5>
         </div>
+        <div class="calendar-category-tabs" id="calendarCategoryTabs" aria-label="Exercise categories">
+          ${planCategories.map(category => `
+            <button type="button" class="${category === selectedPlanCategory ? "active" : ""}" data-calendar-category="${escapeHtml(category)}">${escapeHtml(category)}</button>
+          `).join("")}
+        </div>
         <label>Exercise
-          <select id="calendarExerciseSelect">${renderExerciseSelectOptions()}</select>
+          <select id="calendarExerciseSelect">${renderExerciseSelectOptions(selectedPlanCategory)}</select>
         </label>
         <div class="session-input-grid">
           <label>Sets
-            <input id="calendarSets" type="number" min="1" value="${escapeHtml(selectedExercise.sets)}">
+            <input id="calendarSets" type="number" min="1" value="${escapeHtml(planSelectedExercise.sets)}">
           </label>
           <label>Reps
-            <input id="calendarReps" type="number" min="1" value="${escapeHtml(selectedExercise.reps)}">
+            <input id="calendarReps" type="number" min="1" value="${escapeHtml(planSelectedExercise.reps)}">
           </label>
           <label>Weight
-            <input id="calendarWeight" type="number" min="0" step="0.5" value="${selectedExercise.equipment === "body only" ? "0" : ""}" placeholder="0">
+            <input id="calendarWeight" type="number" min="0" step="0.5" value="${planSelectedExercise.equipment === "body only" ? "0" : ""}" placeholder="0">
           </label>
           <label>Min
-            <input id="calendarDuration" type="number" min="1" value="${escapeHtml(defaultDurationForExercise(selectedExercise))}">
+            <input id="calendarDuration" type="number" min="1" value="${escapeHtml(defaultDurationForExercise(planSelectedExercise))}">
           </label>
         </div>
         <div class="calendar-day-actions">
@@ -694,15 +708,27 @@ function renderCalendar() {
 
   const exerciseSelect = document.getElementById("calendarExerciseSelect");
   if (exerciseSelect) {
-    exerciseSelect.value = selectedExercise.name;
+    exerciseSelect.value = planSelectedExercise.name;
     exerciseSelect.addEventListener("change", () => {
       const exercise = exerciseCatalog.find(item => item.name === exerciseSelect.value) || selectedExercise;
-      setValue("calendarSets", exercise.sets);
-      setValue("calendarReps", exercise.reps);
-      setValue("calendarWeight", exercise.equipment === "body only" ? 0 : "");
-      setValue("calendarDuration", defaultDurationForExercise(exercise));
+      selectedExercise = exercise;
+      selectedPlanCategory = exercise.category;
+      localStorage.setItem("ironixSelectedPlanCategory", selectedPlanCategory);
+      setCalendarExerciseDefaults(exercise);
     });
   }
+
+  calendar.querySelectorAll("[data-calendar-category]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedPlanCategory = button.dataset.calendarCategory;
+      localStorage.setItem("ironixSelectedPlanCategory", selectedPlanCategory);
+      const nextExercise = exerciseCatalog.find(exercise => exercise.category === selectedPlanCategory);
+      if (nextExercise) {
+        selectedExercise = nextExercise;
+      }
+      renderCalendar();
+    });
+  });
 
   calendar.querySelectorAll("button[data-plan-tab]").forEach(button => {
     button.addEventListener("click", () => {
@@ -749,16 +775,18 @@ function renderCalendar() {
   });
 }
 
-function renderExerciseSelectOptions() {
-  const categories = [...new Set(exerciseCatalog.map(exercise => exercise.category))];
-  return categories.map(category => `
-    <optgroup label="${escapeHtml(category)}">
-      ${exerciseCatalog
-        .filter(exercise => exercise.category === category)
-        .map(exercise => `<option value="${escapeHtml(exercise.name)}">${escapeHtml(exercise.name)} - ${escapeHtml(exercise.muscle)}</option>`)
-        .join("")}
-    </optgroup>
-  `).join("");
+function renderExerciseSelectOptions(category) {
+  return exerciseCatalog
+    .filter(exercise => !category || exercise.category === category)
+    .map(exercise => `<option value="${escapeHtml(exercise.name)}">${escapeHtml(exercise.name)} - ${escapeHtml(exercise.muscle)}</option>`)
+    .join("");
+}
+
+function setCalendarExerciseDefaults(exercise) {
+  setValue("calendarSets", exercise.sets);
+  setValue("calendarReps", exercise.reps);
+  setValue("calendarWeight", exercise.equipment === "body only" ? 0 : "");
+  setValue("calendarDuration", defaultDurationForExercise(exercise));
 }
 
 function addCalendarCustomExercise(day) {

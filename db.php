@@ -53,7 +53,7 @@ if ($conn->connect_error) {
     } elseif ($isApi) {
         echo "Database connection failed. Check db_config.php and import database.sql.";
     } else {
-        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>IRONIX Setup Needed</title><link rel="stylesheet" href="Css/style.css?v=28"></head><body><main class="locked-page"><section class="locked-panel"><span class="eyebrow">Setup Needed</span><h2>Database connection failed.</h2><p>Start MySQL in XAMPP, import database.sql, and confirm db_config.php points to the correct database.</p><a class="button-link" href="index.php">Back Home</a></section></main></body></html>';
+        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>IRONIX Setup Needed</title><link rel="stylesheet" href="Css/style.css?v=29"></head><body><main class="locked-page"><section class="locked-panel"><span class="eyebrow">Setup Needed</span><h2>Database connection failed.</h2><p>Start MySQL in XAMPP, import database.sql, and confirm db_config.php points to the correct database.</p><a class="button-link" href="index.php">Back Home</a></section></main></body></html>';
     }
 
     exit;

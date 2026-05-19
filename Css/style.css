@@ -992,6 +992,26 @@ label {
   padding: 14px;
 }
 
+.calendar-category-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.calendar-category-tabs button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+.calendar-category-tabs button.active {
+  border-color: rgba(242, 162, 58, 0.48);
+  background: rgba(242, 162, 58, 0.16);
+}
+
 .calendar-add-panel select {
   margin-top: 6px;
 }
