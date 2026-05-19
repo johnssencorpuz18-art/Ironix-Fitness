@@ -11,13 +11,13 @@
     <nav>
       <h1>IRONIX</h1>
       <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="workouts.php">Workouts</a></li>
-        <li><a href="dashboard.php">Progress</a></li>
-        <li><a href="bmi.php">BMI</a></li>
-        <li><a href="diet.php">Diet</a></li>
-        <li><a class="active" href="auth.php">Login</a></li>
-        <li><a class="signup-tab" href="auth.php#signup">Sign Up</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="workouts.html">Workouts</a></li>
+        <li><a href="dashboard.html">Progress</a></li>
+        <li><a href="bmi.html">BMI</a></li>
+        <li><a href="diet.html">Diet</a></li>
+        <li><a class="active" href="login.html">Login</a></li>
+        <li><a class="signup-tab" href="login.html#signup">Sign Up</a></li>
       </ul>
     </nav>
   </header>
@@ -99,7 +99,7 @@
           document.getElementById(messageId).textContent = result.message;
 
           if (result.ok) {
-            window.location.href = "workouts.php?onboarding=1";
+            window.location.href = "workouts.html?onboarding=1";
           }
         })
         .catch(() => {
