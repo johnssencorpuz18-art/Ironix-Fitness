@@ -103,7 +103,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=35">
+  <link rel="stylesheet" href="Css/style.css?v=36">
 </head>
 <body>
   <header>
@@ -130,40 +130,38 @@ $consistency = min(100, round(($activeDays / 7) * 100));
     <section class="profile-layout">
       <form class="panel profile-form" action="profile_update.php" method="POST">
         <div class="panel-title">
-          <span class="eyebrow">Details</span>
-          <h3>Edit Profile</h3>
+          <div>
+            <span class="eyebrow">Details</span>
+            <h3>Edit Profile</h3>
+          </div>
         </div>
 
-        <label>Name</label>
-        <input name="name" value="<?php echo htmlspecialchars($user["name"]); ?>" required>
-
-        <label>Bio</label>
-        <textarea name="bio" rows="4" placeholder="Tell the community about your training."><?php echo htmlspecialchars($user["bio"] ?? ""); ?></textarea>
-
-        <div class="form-pair">
-          <div>
-            <label>Age</label>
+        <div class="profile-compact-grid">
+          <label>Name
+            <input name="name" value="<?php echo htmlspecialchars($user["name"]); ?>" required>
+          </label>
+          <label>Age
             <input name="age" type="number" value="<?php echo htmlspecialchars($user["age"] ?? ""); ?>">
-          </div>
-          <div>
-            <label>Height (cm)</label>
-            <input name="height_cm" type="number" step="0.1" value="<?php echo htmlspecialchars($user["height_cm"] ?? ""); ?>">
-          </div>
+          </label>
+          <label>Height
+            <input name="height_cm" type="number" step="0.1" value="<?php echo htmlspecialchars($user["height_cm"] ?? ""); ?>" placeholder="cm">
+          </label>
+          <label>Weight
+            <input name="weight_kg" type="number" step="0.1" value="<?php echo htmlspecialchars($user["weight_kg"] ?? ""); ?>" placeholder="kg">
+          </label>
         </div>
 
-        <div class="form-pair">
-          <div>
-            <label>Weight (kg)</label>
-            <input name="weight_kg" type="number" step="0.1" value="<?php echo htmlspecialchars($user["weight_kg"] ?? ""); ?>">
-          </div>
-          <div>
-            <label>Goal</label>
-            <input name="fitness_goal" value="<?php echo htmlspecialchars($user["fitness_goal"] ?? ""); ?>" placeholder="Build muscle">
-          </div>
-        </div>
+        <label>Goal
+          <input name="fitness_goal" value="<?php echo htmlspecialchars($user["fitness_goal"] ?? ""); ?>" placeholder="Build muscle">
+        </label>
 
-        <label>Profile Image URL</label>
-        <input name="avatar_url" value="<?php echo htmlspecialchars($user["avatar_url"] ?? ""); ?>" placeholder="https://...">
+        <label>Bio
+          <textarea name="bio" rows="2" placeholder="Training focus, limits, or notes"><?php echo htmlspecialchars($user["bio"] ?? ""); ?></textarea>
+        </label>
+
+        <label>Profile Image URL
+          <input name="avatar_url" value="<?php echo htmlspecialchars($user["avatar_url"] ?? ""); ?>" placeholder="https://...">
+        </label>
 
         <button type="submit">Save Profile</button>
       </form>

@@ -16,7 +16,7 @@ $conn->close();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diet Planner - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=35">
+  <link rel="stylesheet" href="Css/style.css?v=36">
 </head>
 <body>
   <header>
@@ -32,6 +32,6 @@ $conn->close();
       "weightKg" => isset($dietProfile["weight_kg"]) ? (float)$dietProfile["weight_kg"] : null
     ]); ?>;
   </script>
-  <script src="Js/diet.js?v=32"></script>
+  <script src="Js/diet.js?v=33"></script>
 </body>
 </html>
