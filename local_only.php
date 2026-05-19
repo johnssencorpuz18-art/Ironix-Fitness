@@ -33,7 +33,7 @@ function enforce_local_only() {
     if ($isApi) {
         echo "Ironix local access only. Open the app from http://localhost/ironix/.";
     } else {
-        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ironix Local Only</title><link rel="stylesheet" href="Css/style.css?v=38"></head><body><main class="locked-page"><section class="locked-panel"><span class="eyebrow">Local Access Only</span><h2>This Ironix app only runs on this computer.</h2><p>Open it from http://localhost/ironix/ on this machine. Network visitors are blocked.</p></section></main></body></html>';
+        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ironix Local Only</title><link rel="stylesheet" href="Css/style.css?v=39"></head><body><main class="locked-page"><section class="locked-panel"><span class="eyebrow">Local Access Only</span><h2>This Ironix app only runs on this computer.</h2><p>Open it from http://localhost/ironix/ on this machine. Network visitors are blocked.</p></section></main></body></html>';
     }
 
     exit;

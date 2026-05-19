@@ -1306,56 +1306,70 @@ function renderExercisePoseSvg(exercise, index) {
   const poses = {
     push: `
       <path class="demo-floor" d="M28 138 H172"></path>
-      <circle class="demo-body" cx="${58 + offset * 10}" cy="${86 + offset * 8}" r="10"></circle>
-      <path class="demo-body" d="M68 ${92 + offset * 7} L112 ${104 + offset * 7} L148 ${118 + offset * 5}"></path>
-      <path class="demo-body" d="M92 ${100 + offset * 7} L82 132"></path>
-      <path class="demo-body" d="M102 ${103 + offset * 7} L98 134"></path>
-      <path class="demo-body" d="M145 ${118 + offset * 5} L164 134"></path>
-      <path class="demo-body" d="M132 ${114 + offset * 5} L151 136"></path>
+      <ellipse class="demo-head" cx="${56 + offset * 10}" cy="${80 + offset * 8}" rx="10" ry="12" transform="rotate(18 ${56 + offset * 10} ${80 + offset * 8})"></ellipse>
+      <path class="demo-torso" d="M70 ${88 + offset * 7} C88 ${88 + offset * 7} 108 ${94 + offset * 7} 122 ${104 + offset * 6} C117 ${112 + offset * 5} 103 ${115 + offset * 5} 86 ${109 + offset * 6} C72 ${104 + offset * 6} 62 ${98 + offset * 7} 70 ${88 + offset * 7} Z"></path>
+      <path class="demo-limb" d="M86 ${101 + offset * 6} L78 132"></path>
+      <path class="demo-limb" d="M103 ${104 + offset * 6} L99 134"></path>
+      <path class="demo-limb" d="M120 ${105 + offset * 6} L145 ${118 + offset * 5} L164 134"></path>
+      <path class="demo-limb" d="M107 ${102 + offset * 6} L132 ${114 + offset * 5} L151 136"></path>
+      <circle class="demo-joint" cx="78" cy="132" r="4"></circle>
+      <circle class="demo-joint" cx="99" cy="134" r="4"></circle>
     `,
     squat: `
       <path class="demo-floor" d="M34 150 H166"></path>
-      <circle class="demo-body" cx="93" cy="${42 + offset * 8}" r="11"></circle>
-      <path class="demo-body" d="M94 ${54 + offset * 8} L98 ${90 + offset * 14} L82 ${124 + offset * 5}"></path>
-      <path class="demo-body" d="M98 ${90 + offset * 14} L124 ${122 + offset * 4} L145 149"></path>
-      <path class="demo-body" d="M83 ${124 + offset * 5} L62 149"></path>
-      <path class="demo-body" d="M89 ${65 + offset * 8} L63 ${82 + offset * 8}"></path>
-      <path class="demo-body" d="M101 ${65 + offset * 8} L131 ${82 + offset * 8}"></path>
+      <ellipse class="demo-head" cx="93" cy="${42 + offset * 8}" rx="10" ry="12"></ellipse>
+      <path class="demo-neck" d="M93 ${54 + offset * 8} L94 ${63 + offset * 9}"></path>
+      <path class="demo-torso" d="M82 ${62 + offset * 8} C97 ${55 + offset * 9} 112 ${66 + offset * 10} 113 ${88 + offset * 13} C114 ${103 + offset * 8} 103 ${111 + offset * 6} 90 ${102 + offset * 8} C79 ${94 + offset * 10} 72 ${72 + offset * 9} 82 ${62 + offset * 8} Z"></path>
+      <path class="demo-limb" d="M86 ${71 + offset * 9} L63 ${84 + offset * 8}"></path>
+      <path class="demo-limb" d="M104 ${72 + offset * 9} L131 ${83 + offset * 8}"></path>
+      <path class="demo-limb" d="M94 ${101 + offset * 8} L82 ${124 + offset * 5} L62 149"></path>
+      <path class="demo-limb" d="M108 ${100 + offset * 8} L126 ${122 + offset * 4} L145 149"></path>
+      <ellipse class="demo-foot" cx="62" cy="149" rx="11" ry="4"></ellipse>
+      <ellipse class="demo-foot" cx="145" cy="149" rx="11" ry="4"></ellipse>
     `,
     pull: `
       <path class="demo-equipment" d="M38 34 H162"></path>
-      <circle class="demo-body" cx="100" cy="${58 + offset * 6}" r="11"></circle>
-      <path class="demo-body" d="M100 ${70 + offset * 6} L100 116"></path>
-      <path class="demo-body" d="M100 ${78 + offset * 6} L70 ${48 + offset * 14}"></path>
-      <path class="demo-body" d="M100 ${78 + offset * 6} L130 ${48 + offset * 14}"></path>
-      <path class="demo-body" d="M100 116 L78 151"></path>
-      <path class="demo-body" d="M100 116 L122 151"></path>
+      <ellipse class="demo-head" cx="100" cy="${58 + offset * 6}" rx="10" ry="12"></ellipse>
+      <path class="demo-torso" d="M84 ${74 + offset * 5} C96 ${68 + offset * 5} 111 ${68 + offset * 5} 119 ${77 + offset * 5} L116 115 C106 124 92 123 84 115 Z"></path>
+      <path class="demo-limb" d="M87 ${80 + offset * 5} L70 ${49 + offset * 13}"></path>
+      <path class="demo-limb" d="M115 ${80 + offset * 5} L130 ${49 + offset * 13}"></path>
+      <path class="demo-limb" d="M93 116 L78 151"></path>
+      <path class="demo-limb" d="M109 116 L122 151"></path>
+      <ellipse class="demo-foot" cx="78" cy="151" rx="10" ry="4"></ellipse>
+      <ellipse class="demo-foot" cx="122" cy="151" rx="10" ry="4"></ellipse>
     `,
     curl: `
       <path class="demo-floor" d="M46 152 H154"></path>
-      <circle class="demo-body" cx="100" cy="38" r="11"></circle>
-      <path class="demo-body" d="M100 50 L100 98"></path>
-      <path class="demo-body" d="M88 66 L74 ${102 - offset * 22}"></path>
-      <path class="demo-body" d="M112 66 L126 ${102 - offset * 22}"></path>
-      <path class="demo-body" d="M100 98 L82 150"></path>
-      <path class="demo-body" d="M100 98 L118 150"></path>
+      <ellipse class="demo-head" cx="100" cy="38" rx="10" ry="12"></ellipse>
+      <path class="demo-torso" d="M84 56 C96 50 111 51 119 59 L116 98 C106 106 92 106 84 98 Z"></path>
+      <path class="demo-limb" d="M87 66 L74 ${102 - offset * 22}"></path>
+      <path class="demo-limb" d="M113 66 L126 ${102 - offset * 22}"></path>
+      <path class="demo-limb" d="M92 99 L82 150"></path>
+      <path class="demo-limb" d="M108 99 L118 150"></path>
+      <ellipse class="demo-foot" cx="82" cy="150" rx="10" ry="4"></ellipse>
+      <ellipse class="demo-foot" cx="118" cy="150" rx="10" ry="4"></ellipse>
     `,
     hinge: `
       <path class="demo-floor" d="M34 150 H166"></path>
-      <circle class="demo-body" cx="${74 + offset * 10}" cy="${55 + offset * 12}" r="11"></circle>
-      <path class="demo-body" d="M84 ${61 + offset * 10} L126 ${91 + offset * 10} L112 118"></path>
-      <path class="demo-body" d="M126 ${91 + offset * 10} L146 150"></path>
-      <path class="demo-body" d="M112 118 L96 150"></path>
-      <path class="demo-body" d="M113 ${85 + offset * 10} L128 123"></path>
-      <path class="demo-body" d="M103 ${79 + offset * 10} L108 122"></path>
+      <ellipse class="demo-head" cx="${74 + offset * 10}" cy="${55 + offset * 12}" rx="10" ry="12" transform="rotate(25 ${74 + offset * 10} ${55 + offset * 12})"></ellipse>
+      <path class="demo-torso" d="M84 ${64 + offset * 10} C101 ${64 + offset * 10} 122 ${75 + offset * 10} 132 ${89 + offset * 10} C130 ${102 + offset * 9} 119 ${108 + offset * 7} 106 ${98 + offset * 8} C96 ${91 + offset * 8} 83 ${76 + offset * 9} 84 ${64 + offset * 10} Z"></path>
+      <path class="demo-limb" d="M119 ${96 + offset * 8} L146 150"></path>
+      <path class="demo-limb" d="M108 ${100 + offset * 8} L96 150"></path>
+      <path class="demo-limb" d="M111 ${84 + offset * 10} L128 123"></path>
+      <path class="demo-limb" d="M99 ${78 + offset * 10} L108 122"></path>
+      <ellipse class="demo-foot" cx="146" cy="150" rx="11" ry="4"></ellipse>
+      <ellipse class="demo-foot" cx="96" cy="150" rx="11" ry="4"></ellipse>
     `,
     core: `
       <path class="demo-floor" d="M28 144 H172"></path>
-      <circle class="demo-body" cx="72" cy="${106 - offset * 18}" r="10"></circle>
-      <path class="demo-body" d="M82 ${110 - offset * 18} L118 ${124 - offset * 12}"></path>
-      <path class="demo-body" d="M116 ${124 - offset * 12} L152 ${116 - offset * 22}"></path>
-      <path class="demo-body" d="M116 ${124 - offset * 12} L150 145"></path>
-      <path class="demo-body" d="M75 ${104 - offset * 18} L62 ${84 - offset * 10}"></path>
+      <ellipse class="demo-head" cx="72" cy="${106 - offset * 18}" rx="10" ry="12" transform="rotate(-18 72 ${106 - offset * 18})"></ellipse>
+      <path class="demo-torso" d="M84 ${110 - offset * 18} C99 ${108 - offset * 16} 114 ${114 - offset * 14} 124 ${126 - offset * 12} C119 ${136 - offset * 8} 104 ${139 - offset * 8} 91 ${132 - offset * 10} C80 ${126 - offset * 13} 76 ${115 - offset * 17} 84 ${110 - offset * 18} Z"></path>
+      <path class="demo-limb" d="M119 ${126 - offset * 12} L152 ${116 - offset * 22}"></path>
+      <path class="demo-limb" d="M116 ${129 - offset * 10} L150 145"></path>
+      <path class="demo-limb" d="M83 ${109 - offset * 18} L62 ${84 - offset * 10}"></path>
+      <path class="demo-limb" d="M91 ${112 - offset * 18} L71 ${91 - offset * 10}"></path>
+      <ellipse class="demo-foot" cx="152" cy="${116 - offset * 22}" rx="10" ry="4"></ellipse>
+      <ellipse class="demo-foot" cx="150" cy="145" rx="10" ry="4"></ellipse>
     `
   };
 

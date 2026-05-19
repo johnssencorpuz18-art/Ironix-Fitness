@@ -36,7 +36,7 @@ $leaders = $stmt->get_result();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leaderboards - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=38">
+  <link rel="stylesheet" href="Css/style.css?v=39">
 </head>
 <body>
   <header>

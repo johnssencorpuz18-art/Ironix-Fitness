@@ -966,7 +966,6 @@ label {
   fill: #fbfbf8;
 }
 
-.demo-body,
 .demo-floor,
 .demo-equipment {
   fill: none;
@@ -975,13 +974,41 @@ label {
   stroke-linejoin: round;
 }
 
-.demo-body {
-  stroke-width: 5;
-}
-
 .demo-floor,
 .demo-equipment {
   stroke-width: 3;
+}
+
+.demo-head,
+.demo-torso,
+.demo-limb,
+.demo-neck,
+.demo-foot,
+.demo-joint {
+  fill: #f7f7f4;
+  stroke: #252525;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.demo-head,
+.demo-torso {
+  stroke-width: 3;
+}
+
+.demo-limb {
+  fill: none;
+  stroke-width: 13;
+}
+
+.demo-neck {
+  fill: none;
+  stroke-width: 7;
+}
+
+.demo-foot,
+.demo-joint {
+  stroke-width: 2;
 }
 
 .demo-target {
