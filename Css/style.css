@@ -1481,21 +1481,24 @@ label {
 }
 
 .delete-workout {
+  border: 1px solid rgba(242, 162, 58, 0.24);
   min-height: 38px;
-  background: rgba(255, 107, 107, 0.14);
-  color: #ffd7d7;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
   padding: 8px 12px;
 }
 
 .delete-workout:hover {
-  background: rgba(255, 107, 107, 0.26);
+  border-color: rgba(242, 162, 58, 0.45);
+  background: rgba(242, 162, 58, 0.14);
+  color: var(--text);
   box-shadow: none;
 }
 
 .delete-workout.is-armed {
-  border-color: rgba(255, 214, 102, 0.55);
-  background: rgba(255, 214, 102, 0.16);
-  color: #ffe7a3;
+  border-color: rgba(255, 107, 107, 0.55);
+  background: rgba(255, 107, 107, 0.14);
+  color: #ffd7d7;
 }
 
 .section-title,
