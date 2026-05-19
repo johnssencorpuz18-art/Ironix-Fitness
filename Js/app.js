@@ -653,7 +653,7 @@ function renderCalendar() {
           <span class="eyebrow">Selected Day</span>
           <h4>${escapeHtml(day)}</h4>
         </div>
-        ${items.length ? `<button type="button" class="secondary-button" data-start-day="${escapeHtml(day)}">Start / Done</button>` : ""}
+        ${items.length ? `<button type="button" class="secondary-button" data-start-day="${escapeHtml(day)}">Load To Live Session</button>` : ""}
       </div>
 
       ${items.length ? `
@@ -910,7 +910,7 @@ function addCalendarDayToSession(day) {
   saveLiveSession();
   renderLiveSession();
   if (liveSession.length > before) {
-    localStorage.setItem("ironixPendingSessionMessage", `${items.length} exercises from ${day} were added. Enter missing weight/details, then check Done.`);
+    localStorage.setItem("ironixPendingSessionMessage", `${items.length} exercises from ${day} loaded. Continue your workout here, enter missing details, then check Done.`);
   }
   window.location.href = "dashboard.php#liveSession";
 }
@@ -949,7 +949,7 @@ function createSessionItem(exercise) {
     sets: exercise.sets,
     reps: exercise.reps,
     weight: exercise.weight ?? (exercise.equipment === "body only" ? 0 : ""),
-    duration: defaultDurationForExercise(exercise),
+    duration: exercise.duration ?? defaultDurationForExercise(exercise),
     needsWeight: exercise.equipment !== "body only",
     done: false
   };

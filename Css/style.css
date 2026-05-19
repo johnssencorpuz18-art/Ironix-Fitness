@@ -495,7 +495,7 @@ label {
 
 .dashboard-workspace {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  grid-template-columns: 1fr;
   gap: 18px;
   margin: 22px 0;
 }
@@ -911,6 +911,12 @@ label {
   padding: 24px;
 }
 
+.today-saved-panel .section-title,
+.dashboard-session-panel .section-title {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
 .compact-link {
   min-height: 38px;
   padding: 8px 12px;
@@ -920,11 +926,23 @@ label {
   grid-template-columns: 1fr;
 }
 
+.compact-workout-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+
+.compact-workout-list .workout-metrics {
+  justify-content: flex-start;
+}
+
 .session-actions,
 .session-footer {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.session-actions {
+  justify-content: flex-end;
 }
 
 .session-actions button {
@@ -974,6 +992,10 @@ label {
   gap: 12px;
   align-items: center;
   padding: 14px;
+}
+
+.dashboard-session-panel .session-exercise {
+  grid-template-columns: minmax(110px, auto) minmax(220px, 0.85fr) minmax(360px, 1.15fr) auto;
 }
 
 .session-exercise.is-done {
@@ -1394,7 +1416,8 @@ label {
 
 @media (max-width: 1180px) {
   .library-workspace,
-  .session-exercise {
+  .session-exercise,
+  .dashboard-session-panel .session-exercise {
     grid-template-columns: 1fr;
   }
 

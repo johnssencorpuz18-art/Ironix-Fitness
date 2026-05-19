@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=25">
+  <link rel="stylesheet" href="Css/style.css?v=26">
 </head>
 <body>
   <header>
@@ -53,7 +53,8 @@
             <h3>Live Session</h3>
           </div>
           <div class="session-actions">
-            <a class="button-link secondary compact-link" href="workouts.php#exercisePlanner">Add Exercises</a>
+            <a class="button-link secondary compact-link" href="workouts.php?view=calendar">Weekly Plan</a>
+            <a class="button-link secondary compact-link" href="workouts.php?view=library">Add Exercises</a>
             <button type="button" class="secondary-button" id="clearSessionButton">Clear</button>
           </div>
         </div>
@@ -102,6 +103,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=25"></script>
+  <script src="Js/app.js?v=26"></script>
 </body>
 </html>
