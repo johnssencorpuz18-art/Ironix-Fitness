@@ -916,40 +916,85 @@ label {
   color: #d91f26;
 }
 
-.demo-anatomy-chart {
+.demo-workout-chart {
   background: #fbfbf8;
   border: 1px solid rgba(17, 18, 18, 0.12);
   border-radius: 8px;
   display: grid;
-  gap: 14px;
+  gap: 16px;
   padding: 14px;
 }
 
-.demo-anatomy-title {
+.demo-chart-title {
   align-items: baseline;
   display: flex;
   gap: 10px;
   justify-content: space-between;
 }
 
-.demo-anatomy-title span {
+.demo-chart-title span {
+  background: #d91f26;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 7px 9px;
+  text-transform: uppercase;
+}
+
+.demo-chart-title strong {
+  color: #111;
+  font-size: clamp(1.55rem, 4vw, 2.7rem);
+  line-height: 0.95;
+}
+
+.demo-muscle-strip {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
+}
+
+.demo-muscle-strip button {
+  background: #fff;
+  border: 1px solid rgba(17, 18, 18, 0.12);
+  border-radius: 6px;
+  color: rgba(17, 18, 18, 0.7);
+  display: grid;
+  gap: 6px;
+  min-height: 128px;
+  padding: 8px;
+  place-items: center;
+}
+
+.demo-muscle-strip button.is-active {
+  border-color: rgba(217, 31, 38, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(217, 31, 38, 0.12);
+}
+
+.demo-muscle-strip span {
   color: rgba(17, 18, 18, 0.58);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
-.demo-anatomy-title strong {
-  color: #d91f26;
-  font-size: 1.15rem;
-  line-height: 1;
+.demo-muscle-strip .anatomy-svg {
+  background: #f2f2ef;
+  max-height: 82px;
 }
 
-.demo-reference-image-wrap {
+.demo-chart-layout {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(180px, 0.55fr) minmax(0, 1fr);
+}
+
+.demo-chart-reference {
   background: #fff;
   border: 1px solid rgba(17, 18, 18, 0.1);
   border-radius: 8px;
   display: grid;
+  align-content: center;
   justify-items: center;
   overflow: auto;
   padding: 12px;
@@ -958,9 +1003,73 @@ label {
 .demo-reference-image {
   display: block;
   height: auto;
-  max-height: 620px;
+  max-height: 500px;
   max-width: 100%;
   object-fit: contain;
+}
+
+.demo-exercise-chart-grid {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+}
+
+.demo-chart-column {
+  border: 1px solid rgba(17, 18, 18, 0.16);
+  border-right: 0;
+  display: grid;
+  grid-auto-rows: minmax(62px, auto);
+  min-width: 0;
+}
+
+.demo-chart-column:last-child {
+  border-right: 1px solid rgba(17, 18, 18, 0.16);
+}
+
+.demo-chart-column h4 {
+  align-items: center;
+  background: #ededeb;
+  color: rgba(17, 18, 18, 0.72);
+  display: grid;
+  font-size: 0.8rem;
+  min-height: 38px;
+  padding: 8px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.demo-chart-column.is-active h4 {
+  background: rgba(217, 31, 38, 0.14);
+  color: #a91319;
+}
+
+.demo-chart-column article {
+  align-content: center;
+  background: #fff;
+  border-top: 1px solid rgba(17, 18, 18, 0.12);
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 8px;
+  text-align: center;
+}
+
+.demo-chart-column article.is-selected {
+  background: rgba(217, 31, 38, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(217, 31, 38, 0.28);
+}
+
+.demo-chart-column article span {
+  color: #1f1f1f;
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.demo-chart-column article small {
+  color: rgba(17, 18, 18, 0.52);
+  font-size: 0.68rem;
+  font-weight: 800;
 }
 
 .demo-instruction-list {
@@ -976,30 +1085,6 @@ label {
 
 .demo-instruction-list li {
   line-height: 1.35;
-}
-
-.demo-muscle-key {
-  display: grid;
-  gap: 7px;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-.demo-muscle-key span {
-  background: #ededeb;
-  border: 1px solid rgba(17, 18, 18, 0.1);
-  border-radius: 6px;
-  color: rgba(17, 18, 18, 0.66);
-  font-size: 0.72rem;
-  font-weight: 800;
-  overflow-wrap: anywhere;
-  padding: 7px 8px;
-  text-align: center;
-}
-
-.demo-muscle-key span.is-active {
-  background: rgba(217, 31, 38, 0.12);
-  border-color: rgba(217, 31, 38, 0.45);
-  color: #a91319;
 }
 
 .demo-credit {
@@ -2030,8 +2115,8 @@ label {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .demo-muscle-key {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .demo-chart-layout {
+    grid-template-columns: 1fr;
   }
 
   .workout-metrics {
@@ -2074,7 +2159,12 @@ label {
     grid-template-columns: 1fr;
   }
 
-  .demo-muscle-key {
+  .demo-chart-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .demo-exercise-chart-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
