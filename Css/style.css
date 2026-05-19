@@ -484,6 +484,27 @@ main,
   margin-top: 6px;
 }
 
+.meal-suggestion-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meal-suggestion-list button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  min-height: 34px;
+  padding: 7px 10px;
+  width: auto;
+}
+
+.meal-suggestion-list button:hover {
+  border-color: rgba(242, 162, 58, 0.45);
+  background: rgba(242, 162, 58, 0.16);
+}
+
 .meal-monitor-block {
   display: grid;
   gap: 10px;

@@ -65,15 +65,23 @@
               </select>
             </label>
 
-            <label>Food
-              <select id="mealFoodSelect"></select>
+            <label>Search Food
+              <input id="mealFoodSearch" type="search" placeholder="Search egg, rice, yogurt, fish...">
             </label>
           </div>
 
           <div class="meal-add-grid">
+            <label>Food
+              <select id="mealFoodSelect"></select>
+            </label>
             <label>Servings
               <input id="mealServingsInput" type="number" min="0.25" step="0.25" value="1">
             </label>
+          </div>
+
+          <div class="meal-suggestion-list" id="mealSuggestions" aria-label="Meal suggestions"></div>
+
+          <div class="meal-add-grid">
             <label>Note
               <input id="mealNoteInput" type="text" placeholder="Optional prep note">
             </label>

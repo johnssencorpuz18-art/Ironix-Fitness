@@ -58,7 +58,38 @@ const foods = [
   { name: "Oatmeal", group: "carb fatLoss", serving: "1 cup cooked", calories: 154, protein: 6, carbs: 27, fat: 3, ...photos.oatmeal },
   { name: "Banana", group: "carb", serving: "1 medium", calories: 105, protein: 1, carbs: 27, fat: 0, ...photos.banana },
   { name: "Sweet Potato", group: "carb fatLoss", serving: "1 medium", calories: 112, protein: 2, carbs: 26, fat: 0, ...photos.sweetPotato },
-  { name: "Greek Yogurt", group: "protein fatLoss", serving: "170g", calories: 100, protein: 17, carbs: 6, fat: 0, ...photos.oatmeal }
+  { name: "Greek Yogurt", group: "protein fatLoss", serving: "170g", calories: 100, protein: 17, carbs: 6, fat: 0, ...photos.oatmeal },
+  { name: "Scrambled Eggs", group: "protein fatLoss", serving: "2 eggs", calories: 180, protein: 13, carbs: 2, fat: 13, meals: ["Breakfast"], ...photos.egg },
+  { name: "Egg White Omelet", group: "protein fatLoss", serving: "4 egg whites", calories: 90, protein: 18, carbs: 1, fat: 0, meals: ["Breakfast"], ...photos.egg },
+  { name: "Tapsilog", group: "filipino protein carb", serving: "1 plate", calories: 620, protein: 32, carbs: 68, fat: 24, meals: ["Breakfast", "Lunch"], ...photos.rice },
+  { name: "Longsilog", group: "filipino carb", serving: "1 plate", calories: 690, protein: 24, carbs: 72, fat: 34, meals: ["Breakfast"], ...photos.rice },
+  { name: "Tocilog", group: "filipino carb", serving: "1 plate", calories: 650, protein: 26, carbs: 75, fat: 26, meals: ["Breakfast"], ...photos.rice },
+  { name: "Pandisal", group: "filipino carb", serving: "2 pieces", calories: 260, protein: 8, carbs: 48, fat: 4, meals: ["Breakfast", "Snack"], ...photos.rice },
+  { name: "Peanut Butter Toast", group: "carb", serving: "2 slices", calories: 340, protein: 13, carbs: 36, fat: 18, meals: ["Breakfast", "Snack"], ...photos.oatmeal },
+  { name: "Protein Smoothie", group: "protein fatLoss", serving: "1 glass", calories: 280, protein: 28, carbs: 30, fat: 5, meals: ["Breakfast", "Snack"], ...photos.banana },
+  { name: "Avocado Toast", group: "carb fatLoss", serving: "1 serving", calories: 320, protein: 10, carbs: 34, fat: 17, meals: ["Breakfast", "Snack"], ...photos.oatmeal },
+  { name: "Chicken Tinola with Rice", group: "filipino protein carb fatLoss", serving: "1 bowl + 1 cup rice", calories: 425, protein: 29, carbs: 53, fat: 9, meals: ["Lunch", "Dinner"], ...photos.tinola },
+  { name: "Grilled Chicken Rice Bowl", group: "protein carb fatLoss", serving: "1 bowl", calories: 520, protein: 42, carbs: 58, fat: 12, meals: ["Lunch", "Dinner"], ...photos.inasal },
+  { name: "Chicken Adobo Rice Plate", group: "filipino protein carb", serving: "1 plate", calories: 560, protein: 32, carbs: 55, fat: 22, meals: ["Lunch", "Dinner"], ...photos.adobo },
+  { name: "Sinigang with Rice", group: "filipino carb", serving: "1 bowl + 1 cup rice", calories: 505, protein: 26, carbs: 57, fat: 18, meals: ["Lunch", "Dinner"], ...photos.sinigang },
+  { name: "Salmon Rice Bowl", group: "protein carb fatLoss", serving: "1 bowl", calories: 540, protein: 36, carbs: 52, fat: 20, meals: ["Lunch", "Dinner"], ...photos.tilapia },
+  { name: "Beef Steak Tagalog", group: "filipino protein", serving: "1 cup", calories: 380, protein: 32, carbs: 12, fat: 22, meals: ["Lunch", "Dinner"], ...photos.adobo },
+  { name: "Chicken Caesar Salad", group: "protein fatLoss", serving: "1 bowl", calories: 410, protein: 35, carbs: 16, fat: 24, meals: ["Lunch", "Dinner"], ...photos.inasal },
+  { name: "Tuna Sandwich", group: "protein carb", serving: "1 sandwich", calories: 390, protein: 28, carbs: 38, fat: 14, meals: ["Lunch", "Snack"], ...photos.tilapia },
+  { name: "Vegetable Stir Fry", group: "fatLoss", serving: "1 plate", calories: 240, protein: 9, carbs: 30, fat: 9, meals: ["Lunch", "Dinner"], ...photos.pinakbet },
+  { name: "Turkey Wrap", group: "protein carb fatLoss", serving: "1 wrap", calories: 430, protein: 32, carbs: 42, fat: 14, meals: ["Lunch"], ...photos.inasal },
+  { name: "Chicken Sopas", group: "filipino carb", serving: "1 bowl", calories: 360, protein: 20, carbs: 42, fat: 12, meals: ["Dinner", "Snack"], ...photos.tinola },
+  { name: "Grilled Pork Chop", group: "protein", serving: "1 piece", calories: 430, protein: 38, carbs: 0, fat: 30, meals: ["Lunch", "Dinner"], ...photos.inasal },
+  { name: "Fruit Salad", group: "filipino carb", serving: "1 cup", calories: 220, protein: 3, carbs: 42, fat: 5, meals: ["Dessert", "Snack"], ...photos.banana },
+  { name: "Halo-Halo", group: "filipino carb", serving: "1 glass", calories: 430, protein: 8, carbs: 78, fat: 10, meals: ["Dessert"], ...photos.banana },
+  { name: "Leche Flan", group: "filipino", serving: "1 slice", calories: 280, protein: 7, carbs: 38, fat: 11, meals: ["Dessert"], ...photos.egg },
+  { name: "Mango Graham", group: "filipino carb", serving: "1 slice", calories: 320, protein: 5, carbs: 48, fat: 12, meals: ["Dessert"], ...photos.banana },
+  { name: "Fresh Mango", group: "carb fatLoss", serving: "1 cup", calories: 100, protein: 1, carbs: 25, fat: 1, meals: ["Dessert", "Snack"], ...photos.banana },
+  { name: "Mixed Nuts", group: "protein", serving: "30g", calories: 180, protein: 6, carbs: 6, fat: 16, meals: ["Snack", "Appetizer"], ...photos.oatmeal },
+  { name: "Cottage Cheese", group: "protein fatLoss", serving: "1 cup", calories: 220, protein: 28, carbs: 8, fat: 9, meals: ["Snack", "Breakfast"], ...photos.oatmeal },
+  { name: "Edamame", group: "protein fatLoss", serving: "1 cup", calories: 190, protein: 17, carbs: 15, fat: 8, meals: ["Snack", "Appetizer"], ...photos.pinakbet },
+  { name: "Cucumber Salad", group: "fatLoss", serving: "1 cup", calories: 70, protein: 2, carbs: 10, fat: 3, meals: ["Appetizer", "Snack"], ...photos.pinakbet },
+  { name: "Vegetable Soup", group: "fatLoss", serving: "1 bowl", calories: 120, protein: 5, carbs: 20, fat: 3, meals: ["Appetizer", "Dinner"], ...photos.sinigang }
 ];
 
 const foodGrid = document.getElementById("foodGrid");
@@ -67,6 +98,15 @@ const foodSearch = document.getElementById("foodSearch");
 const foodFilter = document.getElementById("foodFilter");
 const mealDayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack", "Appetizer", "Dessert", "Other"];
+const mealFallbacks = {
+  Breakfast: ["Oatmeal", "Boiled Egg", "Scrambled Eggs", "Tapsilog", "Pandisal", "Greek Yogurt"],
+  Lunch: ["Chicken Adobo Rice Plate", "Tinolang Manok", "Grilled Chicken Rice Bowl", "Tuna Sandwich", "Vegetable Stir Fry", "Brown Rice"],
+  Dinner: ["Sinigang with Rice", "Chicken Tinola with Rice", "Grilled Bangus", "Salmon Rice Bowl", "Chicken Sopas", "Pinakbet"],
+  Snack: ["Banana", "Greek Yogurt", "Protein Smoothie", "Pandisal", "Mixed Nuts", "Fresh Mango"],
+  Appetizer: ["Lumpiang Shanghai", "Cucumber Salad", "Vegetable Soup", "Edamame", "Boiled Egg"],
+  Dessert: ["Fruit Salad", "Halo-Halo", "Leche Flan", "Mango Graham", "Fresh Mango", "Banana"],
+  Other: ["Chicken Breast", "Steamed White Rice", "Sweet Potato", "Tuna", "Tilapia", "Brown Rice"]
+};
 let selectedMealDay = localStorage.getItem("ironixSelectedMealDay") || mealDayNames[0];
 let weeklyMealPlan = JSON.parse(localStorage.getItem("ironixWeeklyMealPlan") || "{}");
 
@@ -124,15 +164,31 @@ function showFoodDetails(event) {
 function setupMealPlanner() {
   const tabs = document.getElementById("mealDayTabs");
   const foodSelect = document.getElementById("mealFoodSelect");
+  const foodSearchInput = document.getElementById("mealFoodSearch");
+  const mealTypeSelect = document.getElementById("mealTypeSelect");
+  const suggestions = document.getElementById("mealSuggestions");
   const addButton = document.getElementById("addMealButton");
   const clearButton = document.getElementById("clearMealPlanButton");
 
   if (!tabs || !foodSelect || !addButton) return;
 
-  foodSelect.innerHTML = foods.map((food, index) => (
-    `<option value="${index}">${escapeHtml(food.name)} - ${food.calories} kcal, ${food.protein}g protein</option>`
-  )).join("");
-
+  renderMealFoodOptions();
+  renderMealSuggestions();
+  foodSearchInput?.addEventListener("input", () => {
+    renderMealFoodOptions();
+    renderMealSuggestions();
+  });
+  mealTypeSelect?.addEventListener("change", () => {
+    renderMealFoodOptions();
+    renderMealSuggestions();
+  });
+  suggestions?.addEventListener("click", event => {
+    const button = event.target.closest("[data-meal-food]");
+    if (!button) return;
+    foodSelect.value = button.dataset.mealFood;
+    foodSearchInput.value = foods[Number(button.dataset.mealFood)]?.name || "";
+    renderMealFoodOptions();
+  });
   addButton.addEventListener("click", addMealToSelectedDay);
   clearButton?.addEventListener("click", () => {
     weeklyMealPlan = {};
@@ -141,6 +197,74 @@ function setupMealPlanner() {
   });
 
   renderMealPlanner();
+}
+
+function renderMealFoodOptions() {
+  const foodSelect = document.getElementById("mealFoodSelect");
+  if (!foodSelect) return;
+
+  const current = foodSelect.value;
+  const matches = getVisibleMealFoods();
+  const visibleFoods = matches.length ? matches : getMealTypeFoods(document.getElementById("mealTypeSelect")?.value || "Other");
+
+  foodSelect.innerHTML = visibleFoods.map(({ food, index }) => (
+    `<option value="${index}">${escapeHtml(food.name)} - ${food.calories} kcal, ${food.protein}g protein</option>`
+  )).join("");
+
+  if (visibleFoods.some(({ index }) => String(index) === String(current))) {
+    foodSelect.value = current;
+  }
+}
+
+function renderMealSuggestions() {
+  const suggestions = document.getElementById("mealSuggestions");
+  if (!suggestions) return;
+
+  const type = document.getElementById("mealTypeSelect")?.value || "Other";
+  const matches = getVisibleMealFoods().slice(0, 8);
+  const fallback = mealFallbacks[type] || mealFallbacks.Other;
+  const suggestionItems = matches.length ? matches : fallback
+    .map(name => {
+      const index = foods.findIndex(food => food.name === name);
+      return index >= 0 ? { food: foods[index], index } : null;
+    })
+    .filter(Boolean);
+
+  suggestions.innerHTML = suggestionItems.map(({ food, index }) => (
+    `<button type="button" data-meal-food="${index}">${escapeHtml(food.name)}</button>`
+  )).join("");
+}
+
+function getVisibleMealFoods() {
+  const type = document.getElementById("mealTypeSelect")?.value || "Other";
+  const search = (document.getElementById("mealFoodSearch")?.value || "").trim().toLowerCase();
+  return getMealTypeFoods(type).filter(({ food }) => {
+    if (!search) return true;
+    return food.name.toLowerCase().includes(search) || food.group.toLowerCase().includes(search);
+  });
+}
+
+function getMealTypeFoods(type) {
+  return foods
+    .map((food, index) => ({ food, index }))
+    .filter(({ food }) => matchesMealType(food, type));
+}
+
+function matchesMealType(food, type) {
+  if (type === "Other") return true;
+  if (food.meals?.includes(type)) return true;
+
+  const name = food.name.toLowerCase();
+  const group = food.group.toLowerCase();
+
+  if (type === "Breakfast") return ["egg", "oat", "yogurt", "banana", "silog", "pandisal", "smoothie", "toast"].some(term => name.includes(term));
+  if (type === "Lunch") return group.includes("protein") || group.includes("carb") || ["rice", "sandwich", "wrap", "salad"].some(term => name.includes(term));
+  if (type === "Dinner") return group.includes("filipino") || ["soup", "grilled", "bowl", "salad"].some(term => name.includes(term));
+  if (type === "Snack") return ["banana", "yogurt", "toast", "nuts", "pandisal", "smoothie", "mango"].some(term => name.includes(term));
+  if (type === "Appetizer") return ["lumpia", "soup", "salad", "egg", "edamame"].some(term => name.includes(term));
+  if (type === "Dessert") return ["fruit", "halo", "flan", "mango", "banana", "champorado"].some(term => name.includes(term));
+
+  return true;
 }
 
 function renderMealPlanner() {
