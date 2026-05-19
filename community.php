@@ -43,7 +43,7 @@ $users = $stmt->get_result();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=39">
+  <link rel="stylesheet" href="Css/style.css?v=40">
 </head>
 <body>
   <header>

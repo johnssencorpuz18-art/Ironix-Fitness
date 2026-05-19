@@ -922,6 +922,113 @@ label {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.demo-anatomy-chart {
+  background: #fbfbf8;
+  border: 1px solid rgba(17, 18, 18, 0.12);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+.demo-anatomy-title {
+  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.demo-anatomy-title span,
+.demo-human-panel span {
+  color: rgba(17, 18, 18, 0.58);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.demo-anatomy-title strong {
+  color: #d91f26;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.demo-human-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.demo-human-panel {
+  align-items: center;
+  border: 1px solid rgba(17, 18, 18, 0.1);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  min-width: 0;
+  padding: 10px;
+}
+
+.demo-human-svg {
+  max-height: 330px;
+  width: min(100%, 210px);
+}
+
+.demo-human-svg rect:first-child {
+  fill: #f5f5f2;
+}
+
+.human-outline {
+  fill: #e6e6e0;
+  stroke: #4b4b4b;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+}
+
+.human-muscle {
+  fill: #b9bab6;
+  stroke: rgba(35, 35, 35, 0.54);
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+
+.human-muscle.is-target {
+  fill: #d91f26;
+  stroke: #8f0f14;
+}
+
+.human-detail {
+  fill: none;
+  stroke: rgba(35, 35, 35, 0.38);
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.demo-muscle-key {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.demo-muscle-key span {
+  background: #ededeb;
+  border: 1px solid rgba(17, 18, 18, 0.1);
+  border-radius: 6px;
+  color: rgba(17, 18, 18, 0.66);
+  font-size: 0.72rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  padding: 7px 8px;
+  text-align: center;
+}
+
+.demo-muscle-key span.is-active {
+  background: rgba(217, 31, 38, 0.12);
+  border-color: rgba(217, 31, 38, 0.45);
+  color: #a91319;
+}
+
 .demo-frame {
   background: #fff;
   border: 1px solid rgba(17, 18, 18, 0.12);
@@ -2048,8 +2155,13 @@ label {
   }
 
   .demo-frame-grid,
+  .demo-human-grid,
   .demo-sheet-footer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .demo-muscle-key {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .workout-metrics {
@@ -2089,8 +2201,13 @@ label {
   }
 
   .demo-frame-grid,
+  .demo-human-grid,
   .demo-sheet-footer {
     grid-template-columns: 1fr;
+  }
+
+  .demo-muscle-key {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .hero-actions {
