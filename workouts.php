@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=18">
+  <link rel="stylesheet" href="Css/style.css?v=19">
 </head>
 <body class="workouts-body">
   <header>
@@ -32,7 +32,7 @@
       <a href="#setupPlanner">Setup</a>
       <a href="#exercisePlanner">Exercise Library</a>
       <a href="#weeklyPlanner">Calendar</a>
-      <a href="#liveSession">Live Session</a>
+      <a href="dashboard.php#liveSession">Live Session</a>
       <a href="#workoutLog">Save Workout</a>
       <a href="#savedHistory">History</a>
     </section>
@@ -125,11 +125,11 @@
       </aside>
     </section>
 
-    <section class="planner-layout" id="exercisePlanner">
+    <section class="exercise-workspace" id="exercisePlanner">
       <section class="panel exercise-browser">
         <div class="section-title">
           <div>
-            <span class="eyebrow">Exercise Demos</span>
+            <span class="eyebrow">Exercise Library</span>
             <h3 id="exerciseBrowserTitle">Recommended exercises</h3>
           </div>
           <span id="exerciseCount">0 exercises</span>
@@ -137,61 +137,26 @@
 
         <div class="exercise-card-grid" id="exerciseCardGrid"></div>
       </section>
+
+      <section class="panel exercise-detail" id="exerciseDetail">
+        <div class="exercise-demo-media" id="exerciseDiagram" aria-label="Exercise muscle diagram">
+          <div class="anatomy-diagram-placeholder">Select an exercise</div>
+        </div>
+        <div>
+          <span class="eyebrow" id="exerciseMeta">Exercise</span>
+          <h3 id="exerciseName">Select an exercise</h3>
+          <p id="exerciseSummary">Pick a movement to see setup notes, follow-along steps, and quick actions.</p>
+          <ol id="exerciseSteps"></ol>
+          <div class="detail-actions">
+            <button type="button" id="startExerciseButton">Manual Log</button>
+            <button type="button" class="secondary-button" id="addToSessionButton">Add To Dashboard</button>
+            <button type="button" class="secondary-button" id="addToCalendarButton">Add To Calendar</button>
+          </div>
+        </div>
+      </section>
     </section>
 
-    <section class="panel exercise-detail" id="exerciseDetail">
-      <div class="exercise-demo-media" id="exerciseDiagram" aria-label="Exercise muscle diagram">
-        <div class="anatomy-diagram-placeholder">Select an exercise</div>
-      </div>
-      <div>
-        <span class="eyebrow" id="exerciseMeta">Exercise</span>
-        <h3 id="exerciseName">Select an exercise</h3>
-        <p id="exerciseSummary">Pick a movement to see setup notes, follow-along steps, and quick actions.</p>
-        <ol id="exerciseSteps"></ol>
-        <div class="detail-actions">
-          <button type="button" id="startExerciseButton">Start / Prefill Log</button>
-          <button type="button" class="secondary-button" id="addToSessionButton">Add To Live Session</button>
-          <button type="button" class="secondary-button" id="addToCalendarButton">Add To Calendar</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel live-session-panel" id="liveSession">
-      <div class="section-title">
-        <div>
-          <span class="eyebrow">Live Session</span>
-          <h3>Finish and Save Workout</h3>
-        </div>
-        <div class="session-actions">
-          <button type="button" class="secondary-button" id="addSelectedToSessionButton">Add Selected</button>
-          <button type="button" class="secondary-button" id="clearSessionButton">Clear</button>
-        </div>
-      </div>
-
-      <div class="session-status-grid">
-        <div>
-          <span>Exercises</span>
-          <strong id="sessionExerciseCount">0</strong>
-        </div>
-        <div>
-          <span>Finished</span>
-          <strong id="sessionDoneCount">0</strong>
-        </div>
-        <div>
-          <span>Estimated Volume</span>
-          <strong id="sessionVolume">0 kg</strong>
-        </div>
-      </div>
-
-      <div class="live-session-list" id="liveSessionList"></div>
-
-      <div class="session-footer">
-        <p class="form-message" id="sessionMessage" aria-live="polite"></p>
-        <button type="button" id="saveSessionButton">Save Finished Workout</button>
-      </div>
-    </section>
-
-    <section class="planner-layout" id="weeklyPlanner">
+    <section class="planner-layout lower-workout-grid" id="weeklyPlanner">
       <section class="panel calendar-panel">
         <div class="section-title">
           <div>
@@ -212,7 +177,7 @@
       </section>
     </section>
 
-    <section class="workouts-layout" id="workoutLog">
+    <section class="workouts-layout compact-workout-log" id="workoutLog">
       <aside class="panel workout-entry-panel">
         <div class="panel-title">
           <span class="eyebrow">Save Session</span>
@@ -317,6 +282,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=18"></script>
+  <script src="Js/app.js?v=19"></script>
 </body>
 </html>

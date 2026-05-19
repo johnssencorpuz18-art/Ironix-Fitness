@@ -471,6 +471,29 @@ label {
   margin-bottom: 22px;
 }
 
+.exercise-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.75fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.lower-workout-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.7fr);
+}
+
+.compact-workout-log {
+  margin-top: 22px;
+}
+
+.dashboard-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  margin: 22px 0;
+}
+
 .planner-controls,
 .exercise-browser,
 .calendar-panel,
@@ -502,8 +525,11 @@ label {
 
 .exercise-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 14px;
+  max-height: 720px;
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .exercise-card {
@@ -549,9 +575,11 @@ label {
 
 .exercise-detail {
   display: grid;
-  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 22px;
   margin-bottom: 22px;
+  position: sticky;
+  top: 96px;
 }
 
 .exercise-demo-media {
@@ -698,6 +726,23 @@ label {
 
 .live-session-panel {
   margin-bottom: 22px;
+}
+
+.dashboard-session-panel {
+  margin-bottom: 0;
+}
+
+.today-saved-panel {
+  padding: 24px;
+}
+
+.compact-link {
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+.compact-workout-list .workout-item {
+  grid-template-columns: 1fr;
 }
 
 .session-actions,
@@ -1194,10 +1239,17 @@ label {
   .profile-layout,
   .workouts-layout,
   .setup-planner-grid,
+  .exercise-workspace,
   .planner-layout,
+  .lower-workout-grid,
+  .dashboard-workspace,
   .exercise-detail,
   .bmi-layout {
     grid-template-columns: 1fr;
+  }
+
+  .exercise-detail {
+    position: static;
   }
 
   .onboarding-grid {

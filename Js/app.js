@@ -665,7 +665,7 @@ function addExerciseToSession(exercise) {
   });
   saveLiveSession();
   renderLiveSession();
-  document.getElementById("liveSession")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  setMessage(document.getElementById("formMessage"), `${exercise.name} added to your dashboard session.`);
 }
 
 function defaultDurationForExercise(exercise) {
@@ -678,7 +678,8 @@ function renderLiveSession() {
   const list = document.getElementById("liveSessionList");
   if (!list) return;
 
-  const doneCount = liveSession.filter(item => item.done).length;
+  resetDoneCounterIfNewDay();
+  const doneCount = Number(localStorage.getItem("ironixDoneTodayCount") || 0);
   const volume = liveSession.reduce((total, item) => {
     return total + ((Number(item.sets) || 0) * (Number(item.reps) || 0) * (Number(item.weight) || 0));
   }, 0);
@@ -699,8 +700,8 @@ function renderLiveSession() {
   list.innerHTML = liveSession.map((item, index) => `
     <article class="session-exercise ${item.done ? "is-done" : ""}" data-session-id="${escapeHtml(item.id)}">
       <label class="session-check">
-        <input type="checkbox" data-session-field="done" ${item.done ? "checked" : ""}>
-        <span>${item.done ? "Done" : "Mark done"}</span>
+        <input type="checkbox" data-session-field="done">
+        <span>Done</span>
       </label>
 
       <div class="session-exercise-main">
@@ -729,7 +730,9 @@ function renderLiveSession() {
 
   list.querySelectorAll("[data-session-field]").forEach(input => {
     input.addEventListener("change", updateSessionItem);
-    input.addEventListener("input", updateSessionItem);
+    if (input.type !== "checkbox") {
+      input.addEventListener("input", updateSessionItem);
+    }
   });
 
   list.querySelectorAll("[data-remove-session]").forEach(button => {
@@ -750,13 +753,48 @@ function updateSessionItem(event) {
 
   const field = event.target.dataset.sessionField;
   if (field === "done") {
-    item.done = event.target.checked;
+    if (event.target.checked) {
+      saveCheckedSessionItem(item);
+    }
+    return;
   } else {
     item[field] = event.target.value;
   }
 
   saveLiveSession();
   renderLiveSession();
+}
+
+function saveCheckedSessionItem(item) {
+  const message = document.getElementById("sessionMessage");
+  const invalid = !item.name || Number(item.sets) <= 0 || Number(item.reps) <= 0 || Number(item.duration) <= 0 || Number(item.weight) < 0;
+
+  if (invalid) {
+    setMessage(message, "Check sets, reps, weight, and minutes before marking done.");
+    renderLiveSession();
+    return;
+  }
+
+  setMessage(message, `Saving ${item.name}...`);
+  saveWorkoutEntry({
+    workout: item.name,
+    sets: item.sets,
+    reps: item.reps,
+    weight: item.weight || "0",
+    duration: item.duration
+  })
+    .then(() => {
+      liveSession = liveSession.filter(entry => entry.id !== item.id);
+      localStorage.setItem("ironixDoneTodayCount", String(Number(localStorage.getItem("ironixDoneTodayCount") || 0) + 1));
+      saveLiveSession();
+      renderLiveSession();
+      loadWorkouts();
+      setMessage(message, `${item.name} saved to progress.`);
+    })
+    .catch(error => {
+      setMessage(message, error.message);
+      renderLiveSession();
+    });
 }
 
 function saveLiveSession() {
@@ -1019,11 +1057,13 @@ function loadWorkouts() {
       renderWorkoutList(workouts);
       renderWorkoutSummary(workouts);
       renderProgressPage(workouts);
+      renderTodayWorkouts(workouts);
     })
     .catch(() => {
       renderWorkoutList([]);
       renderWorkoutSummary([]);
       renderProgressPage([]);
+      renderTodayWorkouts([]);
     });
 }
 
@@ -1074,6 +1114,7 @@ function renderProgressPage(workouts) {
   const recent = document.getElementById("progressRecent");
   if (!recent && !document.getElementById("progressCalories")) return;
 
+  resetDoneCounterIfNewDay();
   const summary = calculateSummary(workouts);
   const activeDays = new Set(workouts.map(workout => String(workout.created_at).slice(0, 10))).size;
 
@@ -1102,6 +1143,58 @@ function renderProgressPage(workouts) {
       </div>
     </li>
   `).join("");
+}
+
+function renderTodayWorkouts(workouts) {
+  const list = document.getElementById("todayWorkoutList");
+  const count = document.getElementById("todayWorkoutCount");
+  if (!list) return;
+
+  const todayKey = localDateKey(new Date());
+  const today = workouts.filter(workout => String(workout.created_at || "").slice(0, 10) === todayKey);
+
+  if (count) {
+    count.textContent = `${today.length} saved`;
+  }
+  if (document.getElementById("sessionDoneCount")) {
+    setText("sessionDoneCount", today.length);
+    localStorage.setItem("ironixDoneTodayCount", String(today.length));
+  }
+
+  if (today.length === 0) {
+    list.innerHTML = '<li class="empty-state">No completed exercises saved today.</li>';
+    return;
+  }
+
+  list.innerHTML = today.map(workout => `
+    <li class="workout-item">
+      <div class="workout-info">
+        <strong>${escapeHtml(workout.workout_name)}</strong>
+        <small>${escapeHtml(workout.created_at)}</small>
+      </div>
+      <div class="workout-metrics">
+        <span>${Number(workout.set_counts)} sets</span>
+        <span>${Number(workout.rep_count)} reps</span>
+        <span>${formatNumber(workout.weight_kg)} kg</span>
+        <span>${formatNumber(workout.calories_burned)} kcal</span>
+      </div>
+    </li>
+  `).join("");
+}
+
+function resetDoneCounterIfNewDay() {
+  const todayKey = localDateKey(new Date());
+  if (localStorage.getItem("ironixDoneTodayDate") !== todayKey) {
+    localStorage.setItem("ironixDoneTodayDate", todayKey);
+    localStorage.setItem("ironixDoneTodayCount", "0");
+  }
+}
+
+function localDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function deleteWorkout(id) {
