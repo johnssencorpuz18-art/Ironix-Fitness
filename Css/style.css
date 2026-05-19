@@ -361,6 +361,29 @@ main,
   gap: 16px;
 }
 
+.meal-planner-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.35fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.meal-monitor-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  position: sticky;
+  top: 92px;
+}
+
+.meal-monitor-panel h4 {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
 .meal-day-head {
   display: flex;
   align-items: flex-start;
@@ -378,7 +401,7 @@ main,
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .meal-day-totals span,
@@ -459,6 +482,41 @@ main,
 .meal-add-panel select,
 .meal-add-panel input {
   margin-top: 6px;
+}
+
+.meal-monitor-block {
+  display: grid;
+  gap: 10px;
+}
+
+.meal-result-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.meal-result-grid > div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+}
+
+.meal-result-grid span,
+.meal-result-note {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.meal-result-grid strong {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.meal-result-grid p {
+  color: var(--muted);
+  margin: 0;
 }
 
 .login-box {
@@ -1639,6 +1697,15 @@ label {
 
   .calendar-tabs {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .meal-planner-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-monitor-panel {
+    order: -1;
+    position: static;
   }
 
   .meal-day-tabs {

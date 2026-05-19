@@ -958,7 +958,11 @@ function createSessionItem(exercise) {
 function defaultDurationForExercise(exercise) {
   if (exercise.category === "Conditioning") return 20;
   if (exercise.category === "Mobility") return 10;
-  return 8;
+  const sets = Number(exercise.sets) || 3;
+  const reps = Number(exercise.reps) || 10;
+  const restMinutes = exercise.equipment === "body only" ? 1 : 1.5;
+  const workMinutes = Math.max(0.5, reps * 0.06);
+  return Math.max(6, Math.ceil(sets * (workMinutes + restMinutes)));
 }
 
 function renderLiveSession() {
@@ -1316,7 +1320,7 @@ function prefillWorkout(exercise) {
   setValue("sets", exercise.sets);
   setValue("reps", exercise.reps);
   if (!document.getElementById("weight")?.value) setValue("weight", exercise.equipment === "body only" ? 0 : "");
-  if (!document.getElementById("duration")?.value) setValue("duration", 45);
+  if (!document.getElementById("duration")?.value) setValue("duration", defaultDurationForExercise(exercise));
   document.getElementById("workoutLog")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 

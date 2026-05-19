@@ -33,3 +33,5 @@ Without `db_config.php`, the app keeps using the local XAMPP defaults:
 ```php
 localhost / root / empty password / ironix_db
 ```
+
+Workout calories are estimates. The app uses the member's profile weight when available and a MET-style active-calorie calculation based on workout minutes, so the duration field should include work time and normal rest between sets.

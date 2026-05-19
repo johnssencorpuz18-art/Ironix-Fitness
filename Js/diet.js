@@ -148,6 +148,7 @@ function renderMealPlanner() {
   const title = document.getElementById("selectedMealDayTitle");
   const grid = document.getElementById("mealSlotGrid");
   const totals = document.getElementById("mealDayTotals");
+  const result = document.getElementById("mealDayResult");
 
   if (!tabs || !title || !grid || !totals) return;
 
@@ -174,6 +175,9 @@ function renderMealPlanner() {
     <span>${formatMacro(dayTotals.carbs)}g carbs</span>
     <span>${formatMacro(dayTotals.fat)}g fat</span>
   `;
+  if (result) {
+    result.innerHTML = renderDayResult(dayTotals);
+  }
 
   grid.innerHTML = mealTypes.map(type => renderMealSlot(type, dayMeals.filter(meal => meal.type === type))).join("");
 
@@ -194,6 +198,39 @@ function renderMealPlanner() {
       renderMealPlanner();
     });
   });
+}
+
+function renderDayResult(dayTotals) {
+  const profile = window.ironixDietProfile || {};
+  const weightKg = validNumber(profile.weightKg, 70);
+  const heightCm = validNumber(profile.heightCm, 170);
+  const age = validNumber(profile.age, 25);
+  const maintenance = estimateMaintenanceCalories(weightKg, heightCm, age);
+  const workoutBurn = estimateNormalWorkoutBurn(weightKg);
+  const netAfterWorkout = dayTotals.calories - workoutBurn;
+  const balance = netAfterWorkout - maintenance;
+  const fatEquivalentKg = Math.abs(balance) / 7700;
+  const direction = balance >= 0 ? "surplus" : "deficit";
+
+  return `
+    <div>
+      <span>Meals</span>
+      <strong>${formatMacro(dayTotals.calories)} kcal</strong>
+    </div>
+    <div>
+      <span>Normal Workout</span>
+      <strong>-${formatMacro(workoutBurn)} kcal</strong>
+    </div>
+    <div>
+      <span>After Workout</span>
+      <strong>${formatMacro(netAfterWorkout)} kcal</strong>
+    </div>
+    <div>
+      <span>Vs Maintenance</span>
+      <strong>${balance >= 0 ? "+" : "-"}${formatMacro(Math.abs(balance))} kcal</strong>
+    </div>
+    <p>${direction === "deficit" ? "Estimated deficit" : "Estimated surplus"} equals about ${formatMacro(fatEquivalentKg)} kg of fat energy, not instant scale change.</p>
+  `;
 }
 
 function renderMealSlot(type, meals) {
@@ -289,6 +326,22 @@ function saveMealPlan() {
 
 function formatMacro(value) {
   return Number(value).toLocaleString(undefined, { maximumFractionDigits: 1 });
+}
+
+function estimateNormalWorkoutBurn(weightKg) {
+  const normalStrengthMet = 4.5;
+  const minutes = 45;
+  return Math.round(((normalStrengthMet - 1) * 3.5 * weightKg / 200) * minutes);
+}
+
+function estimateMaintenanceCalories(weightKg, heightCm, age) {
+  const neutralBmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 80;
+  return Math.round(neutralBmr * 1.35);
+}
+
+function validNumber(value, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : fallback;
 }
 
 function escapeHtml(value) {

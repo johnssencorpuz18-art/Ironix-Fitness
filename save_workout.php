@@ -23,7 +23,31 @@ if ($workout === '' || $sets <= 0 || $reps <= 0 || $weight < 0 || $duration <= 0
     exit;
 }
 
-$calories = ($sets * $reps * $weight * 0.1) + ($duration * 5);
+$profileStmt = $conn->prepare("SELECT weight_kg FROM users WHERE id = ?");
+$profileStmt->bind_param("i", $userId);
+$profileStmt->execute();
+$profile = $profileStmt->get_result()->fetch_assoc();
+$profileStmt->close();
+
+$bodyWeightKg = (float)($profile["weight_kg"] ?? 0);
+if ($bodyWeightKg <= 0) {
+    $bodyWeightKg = 70.0;
+}
+
+$totalReps = $sets * $reps;
+$relativeLoad = $bodyWeightKg > 0 ? $weight / $bodyWeightKg : 0;
+$workDensity = $duration > 0 ? $totalReps / $duration : 0;
+$met = 3.5;
+
+if ($relativeLoad >= 0.75 || $workDensity >= 5) {
+    $met = 6.0;
+} elseif ($relativeLoad >= 0.4 || $workDensity >= 3) {
+    $met = 4.5;
+}
+
+// Active-calorie estimate: MET method minus resting burn, using total minutes including rest.
+$calories = (($met - 1) * 3.5 * $bodyWeightKg / 200) * $duration;
+$calories = max(1, round($calories, 1));
 
 $sql = "
     INSERT INTO workout
@@ -36,7 +60,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("isiidid", $userId, $workout, $sets, $reps, $weight, $duration, $calories);
 
 if ($stmt->execute()) {
-    echo "Workout saved. Calories burned: " . round($calories);
+    echo "Workout saved. Estimated active calories: " . round($calories);
 } else {
     http_response_code(500);
     echo "Save failed";

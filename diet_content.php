@@ -35,54 +35,70 @@
       <button type="button" class="secondary-button" id="clearMealPlanButton">Clear Meals</button>
     </div>
 
-    <div class="meal-day-tabs" id="mealDayTabs" role="tablist" aria-label="Meal plan days"></div>
-
-    <section class="meal-day-panel">
-      <div class="meal-day-head">
-        <div>
-          <span class="eyebrow">Selected Day</span>
-          <h4 id="selectedMealDayTitle">Monday</h4>
-        </div>
-        <div class="meal-day-totals" id="mealDayTotals"></div>
-      </div>
-
-      <div class="meal-slot-grid" id="mealSlotGrid"></div>
-
-      <section class="meal-add-panel" aria-label="Add meal to selected day">
-        <div>
-          <span class="eyebrow">Add Meal</span>
-          <h4>Customize the selected day</h4>
+    <div class="meal-planner-layout">
+      <section class="meal-day-panel">
+        <div class="meal-day-head">
+          <div>
+            <span class="eyebrow">Selected Day</span>
+            <h4 id="selectedMealDayTitle">Monday</h4>
+          </div>
         </div>
 
-        <div class="meal-add-grid">
-          <label>Meal Type
-            <select id="mealTypeSelect">
-              <option value="Breakfast">Breakfast</option>
-              <option value="Lunch">Lunch</option>
-              <option value="Dinner">Dinner</option>
-              <option value="Snack">Snack</option>
-              <option value="Appetizer">Appetizer</option>
-              <option value="Dessert">Dessert</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
+        <div class="meal-slot-grid" id="mealSlotGrid"></div>
 
-          <label>Food
-            <select id="mealFoodSelect"></select>
-          </label>
-        </div>
+        <section class="meal-add-panel" aria-label="Add meal to selected day">
+          <div>
+            <span class="eyebrow">Add Meal</span>
+            <h4>Customize the selected day</h4>
+          </div>
 
-        <div class="meal-add-grid">
-          <label>Servings
-            <input id="mealServingsInput" type="number" min="0.25" step="0.25" value="1">
-          </label>
-          <label>Note
-            <input id="mealNoteInput" type="text" placeholder="Optional prep note">
-          </label>
-        </div>
+          <div class="meal-add-grid">
+            <label>Meal Type
+              <select id="mealTypeSelect">
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Snack">Snack</option>
+                <option value="Appetizer">Appetizer</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
 
-        <button type="button" id="addMealButton">Add To Day</button>
+            <label>Food
+              <select id="mealFoodSelect"></select>
+            </label>
+          </div>
+
+          <div class="meal-add-grid">
+            <label>Servings
+              <input id="mealServingsInput" type="number" min="0.25" step="0.25" value="1">
+            </label>
+            <label>Note
+              <input id="mealNoteInput" type="text" placeholder="Optional prep note">
+            </label>
+          </div>
+
+          <button type="button" id="addMealButton">Add To Day</button>
+        </section>
       </section>
-    </section>
+
+      <aside class="meal-monitor-panel" aria-label="Meal plan monitor">
+        <span class="eyebrow">Monitor</span>
+        <h4>Week Tabs</h4>
+        <div class="meal-day-tabs" id="mealDayTabs" role="tablist" aria-label="Meal plan days"></div>
+
+        <div class="meal-monitor-block">
+          <span class="eyebrow">Day Totals</span>
+          <div class="meal-day-totals" id="mealDayTotals"></div>
+        </div>
+
+        <div class="meal-monitor-block">
+          <span class="eyebrow">End Of Day Estimate</span>
+          <div class="meal-result-grid" id="mealDayResult"></div>
+          <p class="meal-result-note">Estimate uses a normal 45-minute strength workout and your profile details when available.</p>
+        </div>
+      </aside>
+    </div>
   </section>
 </main>
