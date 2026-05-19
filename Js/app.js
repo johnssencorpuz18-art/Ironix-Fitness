@@ -1427,9 +1427,7 @@ function renderWorkoutList(workouts) {
     </li>
   `).join("");
 
-  list.querySelectorAll(".delete-workout").forEach(button => {
-    button.addEventListener("click", () => deleteWorkout(button.dataset.id));
-  });
+  bindWorkoutDeleteButtons(list);
 }
 
 function renderWorkoutSummary(workouts) {
@@ -1471,8 +1469,11 @@ function renderProgressPage(workouts) {
         <span>${Number(workout.rep_count)} reps</span>
         <span>${formatNumber(workout.weight_kg)} kg</span>
       </div>
+      <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
     </li>
   `).join("");
+
+  bindWorkoutDeleteButtons(recent);
 }
 
 function renderTodayWorkouts(workouts) {
@@ -1508,8 +1509,11 @@ function renderTodayWorkouts(workouts) {
         <span>${formatNumber(workout.weight_kg)} kg</span>
         <span>${formatNumber(workout.calories_burned)} kcal</span>
       </div>
+      <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
     </li>
   `).join("");
+
+  bindWorkoutDeleteButtons(list);
 }
 
 function resetDoneCounterIfNewDay() {
@@ -1527,7 +1531,54 @@ function localDateKey(date) {
   return `${year}-${month}-${day}`;
 }
 
-function deleteWorkout(id) {
+function bindWorkoutDeleteButtons(container) {
+  container.querySelectorAll(".delete-workout[data-id]").forEach(button => {
+    button.addEventListener("click", () => requestWorkoutDelete(button));
+  });
+}
+
+function requestWorkoutDelete(button) {
+  const id = button.dataset.id;
+
+  if (button.dataset.confirmStep !== "1") {
+    button.dataset.confirmStep = "1";
+    button.classList.add("is-armed");
+    button.textContent = "Click again";
+    button.title = "First confirmation: click again if you really want to delete this saved workout.";
+    setMessage(getDeleteMessageTarget(), "Delete armed. Click the same button again, then confirm the final warning.");
+
+    window.setTimeout(() => {
+      if (button.dataset.confirmStep === "1") {
+        resetDeleteButton(button);
+      }
+    }, 6000);
+    return;
+  }
+
+  const finalConfirm = window.confirm("Final confirmation: permanently delete this saved workout from your history? This cannot be undone.");
+  if (!finalConfirm) {
+    resetDeleteButton(button);
+    setMessage(getDeleteMessageTarget(), "Delete cancelled.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Deleting...";
+  deleteWorkout(id, button);
+}
+
+function resetDeleteButton(button) {
+  button.dataset.confirmStep = "";
+  button.classList.remove("is-armed");
+  button.textContent = "Delete";
+  button.title = "";
+}
+
+function getDeleteMessageTarget() {
+  return document.getElementById("formMessage") || document.getElementById("sessionMessage");
+}
+
+function deleteWorkout(id, button) {
   const formData = new URLSearchParams();
   formData.set("id", id);
 
@@ -1540,8 +1591,17 @@ function deleteWorkout(id) {
       if (!response.ok) throw new Error("Workout could not be deleted");
       return response.text();
     })
-    .then(loadWorkouts)
-    .catch(error => setMessage(document.getElementById("formMessage"), error.message));
+    .then(() => {
+      setMessage(getDeleteMessageTarget(), "Saved workout deleted.");
+      loadWorkouts();
+    })
+    .catch(error => {
+      if (button) {
+        button.disabled = false;
+        resetDeleteButton(button);
+      }
+      setMessage(getDeleteMessageTarget(), error.message);
+    });
 }
 
 function calculateSummary(workouts) {

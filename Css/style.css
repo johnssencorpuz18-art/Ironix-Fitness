@@ -1492,6 +1492,12 @@ label {
   box-shadow: none;
 }
 
+.delete-workout.is-armed {
+  border-color: rgba(255, 214, 102, 0.55);
+  background: rgba(255, 214, 102, 0.16);
+  color: #ffe7a3;
+}
+
 .section-title,
 .panel-title {
   display: flex;
