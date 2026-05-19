@@ -673,6 +673,7 @@ function renderCalendar() {
           ${items.map((item, index) => renderPlannedExercise(day, item, index)).join("")}
         </div>
       ` : '<p>Rest day. Add an exercise below when you want to train.</p>'}
+      <p class="form-message" id="calendarMessage" aria-live="polite"></p>
 
       <section class="calendar-add-panel" aria-label="Add exercise to selected day">
         <div>
@@ -932,6 +933,13 @@ function addExerciseToSession(exercise) {
 function addCalendarDayToSession(day) {
   const items = normalizePlanEntries(weeklyPlan[day] || []);
   if (items.length === 0) return;
+  const invalid = validatePlanDay(items);
+
+  if (invalid) {
+    setMessage(document.getElementById("calendarMessage"), invalid);
+    document.getElementById("calendarMessage")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    return;
+  }
 
   const before = liveSession.length;
   items.forEach(entry => {
@@ -944,6 +952,26 @@ function addCalendarDayToSession(day) {
     localStorage.setItem("ironixPendingSessionMessage", `${items.length} exercises from ${day} loaded. Continue your workout here, enter missing details, then check Done.`);
   }
   window.location.href = "dashboard.php#liveSession";
+}
+
+function validatePlanDay(items) {
+  const missing = items.find(item => {
+    const needsWeight = item.equipment !== "body only";
+    return !item.name ||
+      Number(item.sets) <= 0 ||
+      Number(item.reps) <= 0 ||
+      Number(item.duration) <= 0 ||
+      Number(item.weight) < 0 ||
+      (needsWeight && item.weight === "");
+  });
+
+  if (!missing) return "";
+
+  if (missing.equipment !== "body only" && missing.weight === "") {
+    return `Add the weight for ${missing.name} before loading this day to Live Session. Use 0 only for bodyweight work.`;
+  }
+
+  return `Complete sets, reps, weight, and minutes for ${missing.name} before loading this day to Live Session.`;
 }
 
 function createPlanEntry(exercise, overrides = {}) {
