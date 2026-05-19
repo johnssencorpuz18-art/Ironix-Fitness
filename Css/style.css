@@ -463,6 +463,12 @@ label {
   font-weight: 800;
 }
 
+.planner-nav a.active {
+  border-color: rgba(242, 162, 58, 0.45);
+  background: rgba(242, 162, 58, 0.16);
+  color: var(--text);
+}
+
 .planner-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -471,9 +477,9 @@ label {
   margin-bottom: 22px;
 }
 
-.exercise-workspace {
+.library-workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.75fr);
+  grid-template-columns: minmax(240px, 0.45fr) minmax(0, 1.1fr) minmax(330px, 0.75fr);
   gap: 18px;
   align-items: start;
   margin-bottom: 22px;
@@ -722,6 +728,19 @@ label {
   min-height: 36px;
   padding: 8px 10px;
   width: 100%;
+}
+
+.calendar-day-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.step-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 22px;
 }
 
 .live-session-panel {
@@ -1239,7 +1258,7 @@ label {
   .profile-layout,
   .workouts-layout,
   .setup-planner-grid,
-  .exercise-workspace,
+  .library-workspace,
   .planner-layout,
   .lower-workout-grid,
   .dashboard-workspace,

@@ -1,11 +1,30 @@
-<?php require "require_auth.php"; ?>
+<?php
+require "require_auth.php";
+
+$allowedViews = ["setup", "library", "calendar", "log"];
+$view = $_GET["view"] ?? "setup";
+
+if (!in_array($view, $allowedViews, true)) {
+    $view = "setup";
+}
+
+function view_attr($name) {
+    global $view;
+    return $view === $name ? '' : ' hidden';
+}
+
+function view_class($name) {
+    global $view;
+    return $view === $name ? ' class="active"' : '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=19">
+  <link rel="stylesheet" href="Css/style.css?v=21">
 </head>
 <body class="workouts-body">
   <header>
@@ -17,7 +36,7 @@
       <div>
         <span class="eyebrow">Workout Planner</span>
         <h2>Build a plan around your target muscles.</h2>
-        <p>Choose a training category, inspect exercise demos, schedule your week, and save completed sessions from one page.</p>
+        <p>Set up your split, choose exercises, schedule the week, then finish the workout from the dashboard.</p>
         <a class="button-link progress-link" href="dashboard.php">View Progress</a>
       </div>
 
@@ -29,15 +48,14 @@
     </section>
 
     <section class="planner-nav" aria-label="Workout planner sections">
-      <a href="#setupPlanner">Setup</a>
-      <a href="#exercisePlanner">Exercise Library</a>
-      <a href="#weeklyPlanner">Calendar</a>
+      <a<?php echo view_class("setup"); ?> href="workouts.php?view=setup">Setup</a>
+      <a<?php echo view_class("library"); ?> href="workouts.php?view=library">Exercise Library</a>
+      <a<?php echo view_class("calendar"); ?> href="workouts.php?view=calendar">Weekly Plan</a>
       <a href="dashboard.php#liveSession">Live Session</a>
-      <a href="#workoutLog">Save Workout</a>
-      <a href="#savedHistory">History</a>
+      <a<?php echo view_class("log"); ?> href="workouts.php?view=log">Manual Log</a>
     </section>
 
-    <section class="setup-planner-grid" id="setupPlanner">
+    <section class="setup-planner-grid" id="setupPlanner"<?php echo view_attr("setup"); ?>>
       <section class="panel onboarding-panel" id="onboardingPanel">
         <form id="fitnessProfileForm">
           <div class="section-title">
@@ -109,7 +127,9 @@
           <button type="submit">Generate Plan</button>
         </form>
       </section>
+    </section>
 
+    <section class="library-workspace" id="exercisePlanner"<?php echo view_attr("library"); ?>>
       <aside class="panel planner-controls">
         <div class="panel-title">
           <span class="eyebrow">Target Area</span>
@@ -123,9 +143,7 @@
         <label for="exerciseSearch">Search exercise</label>
         <input id="exerciseSearch" type="search" placeholder="Search by name or equipment">
       </aside>
-    </section>
 
-    <section class="exercise-workspace" id="exercisePlanner">
       <section class="panel exercise-browser">
         <div class="section-title">
           <div>
@@ -156,7 +174,7 @@
       </section>
     </section>
 
-    <section class="planner-layout lower-workout-grid" id="weeklyPlanner">
+    <section class="planner-layout lower-workout-grid" id="weeklyPlanner"<?php echo view_attr("calendar"); ?>>
       <section class="panel calendar-panel">
         <div class="section-title">
           <div>
@@ -177,7 +195,7 @@
       </section>
     </section>
 
-    <section class="workouts-layout compact-workout-log" id="workoutLog">
+    <section class="workouts-layout compact-workout-log" id="workoutLog"<?php echo view_attr("log"); ?>>
       <aside class="panel workout-entry-panel">
         <div class="panel-title">
           <span class="eyebrow">Save Session</span>
@@ -280,8 +298,23 @@
         </section>
       </section>
     </section>
+
+    <div class="step-footer">
+      <?php if ($view === "setup"): ?>
+        <a class="button-link" href="workouts.php?view=library">Next: Choose Exercises</a>
+      <?php elseif ($view === "library"): ?>
+        <a class="button-link secondary" href="workouts.php?view=setup">Back</a>
+        <a class="button-link" href="workouts.php?view=calendar">Next: Weekly Plan</a>
+      <?php elseif ($view === "calendar"): ?>
+        <a class="button-link secondary" href="workouts.php?view=library">Back</a>
+        <a class="button-link" href="dashboard.php#liveSession">Next: Live Session</a>
+      <?php else: ?>
+        <a class="button-link secondary" href="workouts.php?view=calendar">Back</a>
+        <a class="button-link" href="dashboard.php">Go To Dashboard</a>
+      <?php endif; ?>
+    </div>
   </main>
 
-  <script src="Js/app.js?v=19"></script>
+  <script src="Js/app.js?v=21"></script>
 </body>
 </html>

@@ -391,7 +391,9 @@ function setupOnboarding() {
 
   if (!panel || !form) return;
 
-  const shouldShow = new URLSearchParams(window.location.search).get("onboarding") === "1" || !localStorage.getItem("ironixFitnessProfile");
+  const params = new URLSearchParams(window.location.search);
+  const onSetupView = params.get("view") === "setup" || !params.has("view");
+  const shouldShow = params.get("onboarding") === "1" || !localStorage.getItem("ironixFitnessProfile") || onSetupView;
   panel.hidden = !shouldShow;
 
   form.addEventListener("submit", event => {
@@ -399,11 +401,14 @@ function setupOnboarding() {
     const profile = readFitnessProfile();
     localStorage.setItem("ironixFitnessProfile", JSON.stringify(profile));
     buildRecommendedPlan(profile);
-    panel.hidden = true;
-    document.getElementById("weeklyPlanner")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.location.href = "workouts.php?view=calendar";
   });
 
   skip?.addEventListener("click", () => {
+    if (onSetupView) {
+      window.location.href = "workouts.php?view=library";
+      return;
+    }
     panel.hidden = true;
     localStorage.setItem("ironixFitnessProfile", JSON.stringify(readFitnessProfile()));
   });
@@ -626,7 +631,10 @@ function renderCalendar() {
       <article class="calendar-day">
         <h4>${day}</h4>
         ${items.length ? `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : '<p>Rest or add exercises.</p>'}
-        <button type="button" data-day="${day}">Add selected exercise</button>
+        <div class="calendar-day-actions">
+          <button type="button" data-day="${day}">Add selected exercise</button>
+          ${items.length ? `<button type="button" class="secondary-button" data-start-day="${day}">Start / Done</button>` : ""}
+        </div>
       </article>
     `;
   }).join("");
@@ -637,6 +645,12 @@ function renderCalendar() {
       weeklyPlan[day] = [...(weeklyPlan[day] || []), selectedExercise.name];
       saveWeeklyPlan();
       renderCalendar();
+    });
+  });
+
+  calendar.querySelectorAll("button[data-start-day]").forEach(button => {
+    button.addEventListener("click", () => {
+      addCalendarDayToSession(button.dataset.startDay);
     });
   });
 }
@@ -650,7 +664,39 @@ function addExerciseToNextOpenDay(exercise) {
 }
 
 function addExerciseToSession(exercise) {
-  liveSession.push({
+  liveSession.push(createSessionItem(exercise));
+  saveLiveSession();
+  renderLiveSession();
+  setMessage(document.getElementById("formMessage"), `${exercise.name} added to your dashboard session.`);
+}
+
+function addCalendarDayToSession(day) {
+  const items = weeklyPlan[day] || [];
+  if (items.length === 0) return;
+
+  const before = liveSession.length;
+  items.forEach(name => {
+    const exercise = exerciseCatalog.find(item => item.name === name) || {
+      name,
+      muscle: "Full Body",
+      equipment: "body only",
+      sets: 3,
+      reps: 10,
+      category: "Full Body"
+    };
+    liveSession.push(createSessionItem(exercise));
+  });
+
+  saveLiveSession();
+  renderLiveSession();
+  if (liveSession.length > before) {
+    localStorage.setItem("ironixPendingSessionMessage", `${items.length} exercises from ${day} were added. Enter missing weight/details, then check Done.`);
+  }
+  window.location.href = "dashboard.php#liveSession";
+}
+
+function createSessionItem(exercise) {
+  return {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     name: exercise.name,
     muscle: exercise.muscle,
@@ -661,11 +707,9 @@ function addExerciseToSession(exercise) {
     reps: exercise.reps,
     weight: exercise.equipment === "body only" ? 0 : "",
     duration: defaultDurationForExercise(exercise),
+    needsWeight: exercise.equipment !== "body only",
     done: false
-  });
-  saveLiveSession();
-  renderLiveSession();
-  setMessage(document.getElementById("formMessage"), `${exercise.name} added to your dashboard session.`);
+  };
 }
 
 function defaultDurationForExercise(exercise) {
@@ -679,6 +723,11 @@ function renderLiveSession() {
   if (!list) return;
 
   resetDoneCounterIfNewDay();
+  const pendingMessage = localStorage.getItem("ironixPendingSessionMessage");
+  if (pendingMessage) {
+    setMessage(document.getElementById("sessionMessage"), pendingMessage);
+    localStorage.removeItem("ironixPendingSessionMessage");
+  }
   const doneCount = Number(localStorage.getItem("ironixDoneTodayCount") || 0);
   const volume = liveSession.reduce((total, item) => {
     return total + ((Number(item.sets) || 0) * (Number(item.reps) || 0) * (Number(item.weight) || 0));
@@ -706,7 +755,7 @@ function renderLiveSession() {
 
       <div class="session-exercise-main">
         <strong>${index + 1}. ${escapeHtml(item.name)}</strong>
-        <span>${escapeHtml(item.muscle)} | planned ${item.plannedSets}x${item.plannedReps}</span>
+        <span>${escapeHtml(item.muscle)} | planned ${item.plannedSets}x${item.plannedReps}${item.needsWeight && item.weight === "" ? " | enter weight" : ""}</span>
       </div>
 
       <div class="session-input-grid">
@@ -767,10 +816,13 @@ function updateSessionItem(event) {
 
 function saveCheckedSessionItem(item) {
   const message = document.getElementById("sessionMessage");
-  const invalid = !item.name || Number(item.sets) <= 0 || Number(item.reps) <= 0 || Number(item.duration) <= 0 || Number(item.weight) < 0;
+  const missingWeight = item.needsWeight && item.weight === "";
+  const invalid = !item.name || missingWeight || Number(item.sets) <= 0 || Number(item.reps) <= 0 || Number(item.duration) <= 0 || Number(item.weight) < 0;
 
   if (invalid) {
-    setMessage(message, "Check sets, reps, weight, and minutes before marking done.");
+    setMessage(message, missingWeight
+      ? "Enter the weight used before marking this exercise done. Use 0 only for bodyweight work."
+      : "Check sets, reps, weight, and minutes before marking done.");
     renderLiveSession();
     return;
   }
