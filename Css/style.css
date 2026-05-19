@@ -955,7 +955,7 @@ label {
 .demo-human-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .demo-human-panel {
@@ -970,27 +970,26 @@ label {
 }
 
 .demo-human-svg {
-  max-height: 330px;
-  width: min(100%, 210px);
+  max-height: 390px;
+  width: min(100%, 230px);
 }
 
 .demo-human-svg rect:first-child {
   fill: #f5f5f2;
 }
 
-.human-outline {
-  fill: #e6e6e0;
-  stroke: #4b4b4b;
-  stroke-linecap: round;
+.human-silhouette {
+  fill: #e7e7e2;
+  stroke: #3f3f3f;
   stroke-linejoin: round;
-  stroke-width: 2.2;
+  stroke-width: 2.5;
 }
 
 .human-muscle {
-  fill: #b9bab6;
-  stroke: rgba(35, 35, 35, 0.54);
+  fill: #bfc0bc;
+  stroke: rgba(35, 35, 35, 0.5);
   stroke-linejoin: round;
-  stroke-width: 1.4;
+  stroke-width: 1.25;
 }
 
 .human-muscle.is-target {
@@ -1003,6 +1002,21 @@ label {
   stroke: rgba(35, 35, 35, 0.38);
   stroke-linecap: round;
   stroke-width: 1.2;
+}
+
+.demo-instruction-list {
+  background: #fff;
+  border: 1px solid rgba(17, 18, 18, 0.12);
+  border-radius: 8px;
+  color: rgba(17, 18, 18, 0.76);
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 14px 14px 14px 34px;
+}
+
+.demo-instruction-list li {
+  line-height: 1.35;
 }
 
 .demo-muscle-key {
@@ -1027,114 +1041,6 @@ label {
   background: rgba(217, 31, 38, 0.12);
   border-color: rgba(217, 31, 38, 0.45);
   color: #a91319;
-}
-
-.demo-frame {
-  background: #fff;
-  border: 1px solid rgba(17, 18, 18, 0.12);
-  border-radius: 8px;
-  display: grid;
-  gap: 8px;
-  min-width: 0;
-  padding: 10px;
-  position: relative;
-}
-
-.demo-frame-number {
-  align-items: center;
-  background: #d6d6d2;
-  color: #fff;
-  display: inline-grid;
-  font-size: 0.92rem;
-  font-weight: 900;
-  height: 28px;
-  justify-items: center;
-  left: 10px;
-  line-height: 1;
-  position: absolute;
-  top: 10px;
-  width: 28px;
-  z-index: 1;
-}
-
-.demo-frame p {
-  color: rgba(17, 18, 18, 0.72);
-  font-size: 0.78rem;
-  line-height: 1.35;
-  margin: 0;
-}
-
-.demo-pose-svg {
-  aspect-ratio: 200 / 170;
-  width: 100%;
-}
-
-.demo-pose-svg rect:first-child {
-  fill: #fbfbf8;
-}
-
-.demo-floor,
-.demo-equipment {
-  fill: none;
-  stroke: #2b2b2b;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.demo-floor,
-.demo-equipment {
-  stroke-width: 3;
-}
-
-.demo-head,
-.demo-torso,
-.demo-limb,
-.demo-neck,
-.demo-foot,
-.demo-joint {
-  fill: #f7f7f4;
-  stroke: #252525;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.demo-head,
-.demo-torso {
-  stroke-width: 3;
-}
-
-.demo-limb {
-  fill: none;
-  stroke-width: 13;
-}
-
-.demo-neck {
-  fill: none;
-  stroke-width: 7;
-}
-
-.demo-foot,
-.demo-joint {
-  stroke-width: 2;
-}
-
-.demo-target {
-  fill: rgba(217, 31, 38, 0.18);
-  stroke: #d91f26;
-  stroke-width: 2;
-}
-
-.demo-equipment-dot,
-.demo-equipment-box {
-  fill: #2b2b2b;
-}
-
-.demo-motion {
-  fill: none;
-  stroke: #d91f26;
-  stroke-dasharray: 7 6;
-  stroke-linecap: round;
-  stroke-width: 3;
 }
 
 .demo-sheet-footer {

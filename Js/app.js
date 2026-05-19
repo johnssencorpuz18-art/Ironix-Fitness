@@ -1278,15 +1278,9 @@ function renderExerciseDemoSheet(exercise) {
 
       ${renderHumanAnatomyChart(exercise)}
 
-      <div class="demo-frame-grid">
-        ${demoSteps.map((step, index) => `
-          <section class="demo-frame">
-            <span class="demo-frame-number">${index + 1}</span>
-            ${renderExercisePoseSvg(exercise, index)}
-            <p>${escapeHtml(step)}</p>
-          </section>
-        `).join("")}
-      </div>
+      <ol class="demo-instruction-list">
+        ${demoSteps.map(step => `<li>${escapeHtml(step)}</li>`).join("")}
+      </ol>
 
       <footer class="demo-sheet-footer">
         <span><strong>${exercise.sets}</strong> sets</span>
@@ -1315,6 +1309,10 @@ function renderHumanAnatomyChart(exercise) {
           ${renderHumanFigureSvg(target, "back")}
           <span>Back View</span>
         </div>
+        <div class="demo-human-panel">
+          ${renderHumanFigureSvg(target, "side")}
+          <span>Side View</span>
+        </div>
       </div>
       <div class="demo-muscle-key">
         ${["Chest", "Back", "Shoulders", "Biceps", "Triceps", "Core", "Quadriceps", "Hamstrings", "Glutes", "Calves"].map(label => {
@@ -1329,50 +1327,66 @@ function renderHumanAnatomyChart(exercise) {
 function renderHumanFigureSvg(target, side) {
   const cls = name => isTargetMuscle(target, name) ? "is-target" : "";
   const posterior = side === "back";
+  const lateral = side === "side";
+
+  if (lateral) {
+    return `
+      <svg class="demo-human-svg" viewBox="0 0 260 420" role="img" aria-label="Side human anatomy figure">
+        <rect x="0" y="0" width="260" height="420" rx="8"></rect>
+        <path class="human-silhouette" d="M128 18 C151 18 166 36 163 58 C161 74 151 83 138 88 L139 104 C158 109 172 126 178 151 C184 180 178 213 165 236 C157 249 151 262 152 281 L161 356 C164 381 153 403 135 404 C119 405 111 389 115 361 L122 285 C124 270 117 257 108 242 C93 217 86 181 92 151 C97 126 109 110 126 104 L126 88 C112 82 103 70 102 54 C101 34 111 18 128 18 Z"></path>
+        <ellipse class="human-muscle ${cls("shoulders")}" cx="143" cy="119" rx="19" ry="25"></ellipse>
+        <path class="human-muscle ${cls("chest")}" d="M127 129 C146 128 158 141 159 161 C144 166 129 157 121 143 Z"></path>
+        <path class="human-muscle ${cls("back")}" d="M107 124 C121 111 142 113 151 131 C135 140 119 148 105 156 Z"></path>
+        <path class="human-muscle ${cls("core")}" d="M116 151 C136 144 154 153 158 176 C156 199 146 218 132 228 C118 211 111 179 116 151 Z"></path>
+        <path class="human-muscle ${cls("glutes")}" d="M111 226 C135 219 157 231 164 249 C150 263 124 261 106 244 Z"></path>
+        <path class="human-muscle ${cls("quadriceps")}" d="M130 252 C153 264 158 324 145 356 C125 329 116 280 130 252 Z"></path>
+        <path class="human-muscle ${cls("hamstrings")}" d="M108 252 C126 270 128 327 116 356 C100 329 96 278 108 252 Z"></path>
+        <path class="human-muscle ${cls("calves")}" d="M121 350 C143 357 143 393 128 407 C110 389 108 365 121 350 Z"></path>
+        <path class="human-muscle ${cls("biceps")}" d="M158 146 C174 157 179 189 170 212 C153 196 151 166 158 146 Z"></path>
+        <path class="human-muscle ${cls("triceps")}" d="M140 143 C153 157 154 191 143 210 C130 191 130 160 140 143 Z"></path>
+        <path class="human-detail" d="M132 91 C134 154 137 198 133 233"></path>
+        <path class="human-detail" d="M119 167 C136 170 149 171 159 167 M119 185 C136 189 148 189 157 184 M123 203 C137 207 146 207 153 201"></path>
+      </svg>
+    `;
+  }
 
   return `
-    <svg class="demo-human-svg" viewBox="0 0 220 360" role="img" aria-label="${posterior ? "Back" : "Front"} human anatomy figure">
-      <rect x="0" y="0" width="220" height="360" rx="8"></rect>
-      <ellipse class="human-outline" cx="110" cy="34" rx="23" ry="28"></ellipse>
-      <path class="human-outline" d="M90 58 C101 69 119 69 130 58 L132 78 C123 87 97 87 88 78 Z"></path>
-
-      <path class="human-outline" d="M74 80 C91 66 129 66 146 80 C157 104 155 142 141 169 C131 184 89 184 79 169 C65 142 63 104 74 80 Z"></path>
-      <path class="human-outline" d="M78 96 C55 102 43 128 38 160 C35 183 33 207 27 232"></path>
-      <path class="human-outline" d="M142 96 C165 102 177 128 182 160 C185 183 187 207 193 232"></path>
-      <path class="human-outline" d="M86 176 C74 205 70 247 70 308"></path>
-      <path class="human-outline" d="M134 176 C146 205 150 247 150 308"></path>
-      <path class="human-outline" d="M70 308 C67 326 65 342 59 351"></path>
-      <path class="human-outline" d="M150 308 C153 326 155 342 161 351"></path>
+    <svg class="demo-human-svg" viewBox="0 0 260 420" role="img" aria-label="${posterior ? "Back" : "Front"} human anatomy figure">
+      <rect x="0" y="0" width="260" height="420" rx="8"></rect>
+      <path class="human-silhouette" d="M130 16 C154 16 170 34 168 58 C166 77 154 89 139 94 L141 110 C168 114 190 132 200 164 C209 194 205 231 195 258 C187 281 177 306 181 336 L189 386 C193 407 176 416 160 405 C146 394 145 369 143 344 L138 283 C137 272 123 272 122 283 L117 344 C115 369 114 394 100 405 C84 416 67 407 71 386 L79 336 C83 306 73 281 65 258 C55 231 51 194 60 164 C70 132 92 114 119 110 L121 94 C106 89 94 77 92 58 C90 34 106 16 130 16 Z"></path>
 
       ${posterior ? `
-        <path class="human-muscle ${cls("back")}" d="M84 82 C99 76 121 76 136 82 L130 132 C120 147 100 147 90 132 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M69 88 C77 77 91 78 96 89 C91 99 76 101 69 88 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M151 88 C143 77 129 78 124 89 C129 99 144 101 151 88 Z"></path>
-        <path class="human-muscle ${cls("triceps")}" d="M53 118 C65 124 69 151 60 178 C48 169 45 137 53 118 Z"></path>
-        <path class="human-muscle ${cls("triceps")}" d="M167 118 C155 124 151 151 160 178 C172 169 175 137 167 118 Z"></path>
-        <ellipse class="human-muscle ${cls("glutes")}" cx="92" cy="181" rx="20" ry="21"></ellipse>
-        <ellipse class="human-muscle ${cls("glutes")}" cx="128" cy="181" rx="20" ry="21"></ellipse>
-        <path class="human-muscle ${cls("hamstrings")}" d="M80 204 C97 216 99 267 83 294 C68 267 69 224 80 204 Z"></path>
-        <path class="human-muscle ${cls("hamstrings")}" d="M140 204 C123 216 121 267 137 294 C152 267 151 224 140 204 Z"></path>
+        <path class="human-muscle ${cls("back")}" d="M91 103 C112 90 148 90 169 103 C160 139 149 166 130 184 C111 166 100 139 91 103 Z"></path>
+        <path class="human-muscle ${cls("back")}" d="M100 127 C113 133 122 150 126 181 C109 169 96 151 88 132 Z"></path>
+        <path class="human-muscle ${cls("back")}" d="M160 127 C147 133 138 150 134 181 C151 169 164 151 172 132 Z"></path>
+        <path class="human-muscle ${cls("shoulders")}" d="M70 112 C83 93 108 99 114 119 C103 133 80 132 70 112 Z"></path>
+        <path class="human-muscle ${cls("shoulders")}" d="M190 112 C177 93 152 99 146 119 C157 133 180 132 190 112 Z"></path>
+        <path class="human-muscle ${cls("triceps")}" d="M63 145 C83 158 87 201 71 230 C52 210 49 170 63 145 Z"></path>
+        <path class="human-muscle ${cls("triceps")}" d="M197 145 C177 158 173 201 189 230 C208 210 211 170 197 145 Z"></path>
+        <path class="human-muscle ${cls("core")}" d="M106 184 C118 193 142 193 154 184 C153 209 143 227 130 237 C117 227 107 209 106 184 Z"></path>
+        <ellipse class="human-muscle ${cls("glutes")}" cx="109" cy="239" rx="26" ry="29"></ellipse>
+        <ellipse class="human-muscle ${cls("glutes")}" cx="151" cy="239" rx="26" ry="29"></ellipse>
+        <path class="human-muscle ${cls("hamstrings")}" d="M94 274 C119 287 122 354 101 383 C78 347 77 295 94 274 Z"></path>
+        <path class="human-muscle ${cls("hamstrings")}" d="M166 274 C141 287 138 354 159 383 C182 347 183 295 166 274 Z"></path>
       ` : `
-        <ellipse class="human-muscle ${cls("chest")}" cx="95" cy="101" rx="22" ry="17"></ellipse>
-        <ellipse class="human-muscle ${cls("chest")}" cx="125" cy="101" rx="22" ry="17"></ellipse>
-        <path class="human-muscle ${cls("shoulders")}" d="M68 88 C77 76 93 78 98 91 C91 101 76 101 68 88 Z"></path>
-        <path class="human-muscle ${cls("shoulders")}" d="M152 88 C143 76 127 78 122 91 C129 101 144 101 152 88 Z"></path>
-        <path class="human-muscle ${cls("biceps")}" d="M53 118 C66 126 69 153 59 177 C47 165 45 136 53 118 Z"></path>
-        <path class="human-muscle ${cls("biceps")}" d="M167 118 C154 126 151 153 161 177 C173 165 175 136 167 118 Z"></path>
-        <path class="human-muscle ${cls("core")}" d="M91 121 C102 115 118 115 129 121 L126 164 C118 174 102 174 94 164 Z"></path>
-        <path class="human-muscle ${cls("quadriceps")}" d="M79 202 C98 211 102 267 85 295 C67 266 67 222 79 202 Z"></path>
-        <path class="human-muscle ${cls("quadriceps")}" d="M141 202 C122 211 118 267 135 295 C153 266 153 222 141 202 Z"></path>
+        <path class="human-muscle ${cls("chest")}" d="M87 113 C101 96 124 101 128 124 C118 141 95 139 83 124 Z"></path>
+        <path class="human-muscle ${cls("chest")}" d="M173 113 C159 96 136 101 132 124 C142 141 165 139 177 124 Z"></path>
+        <path class="human-muscle ${cls("shoulders")}" d="M69 112 C82 92 107 98 114 118 C102 133 78 132 69 112 Z"></path>
+        <path class="human-muscle ${cls("shoulders")}" d="M191 112 C178 92 153 98 146 118 C158 133 182 132 191 112 Z"></path>
+        <path class="human-muscle ${cls("biceps")}" d="M63 145 C82 157 85 198 69 226 C51 205 49 169 63 145 Z"></path>
+        <path class="human-muscle ${cls("biceps")}" d="M197 145 C178 157 175 198 191 226 C209 205 211 169 197 145 Z"></path>
+        <path class="human-muscle ${cls("core")}" d="M103 142 C120 132 140 132 157 142 C156 187 146 217 130 236 C114 217 104 187 103 142 Z"></path>
+        <path class="human-detail" d="M113 160 H147 M110 179 H150 M112 198 H148 M119 218 H141"></path>
+        <path class="human-muscle ${cls("quadriceps")}" d="M94 274 C119 288 123 354 102 383 C77 347 77 295 94 274 Z"></path>
+        <path class="human-muscle ${cls("quadriceps")}" d="M166 274 C141 288 137 354 158 383 C183 347 183 295 166 274 Z"></path>
       `}
 
-      <path class="human-muscle ${cls("calves")}" d="M72 294 C88 302 87 337 72 348 C60 332 61 309 72 294 Z"></path>
-      <path class="human-muscle ${cls("calves")}" d="M148 294 C132 302 133 337 148 348 C160 332 159 309 148 294 Z"></path>
+      <path class="human-muscle ${cls("calves")}" d="M92 356 C116 363 115 401 97 413 C78 393 78 368 92 356 Z"></path>
+      <path class="human-muscle ${cls("calves")}" d="M168 356 C144 363 145 401 163 413 C182 393 182 368 168 356 Z"></path>
 
-      <path class="human-detail" d="M110 84 V169"></path>
-      <path class="human-detail" d="M91 123 H129 M94 139 H126 M97 155 H123"></path>
-      <path class="human-detail" d="M82 205 C95 223 96 268 84 294"></path>
-      <path class="human-detail" d="M138 205 C125 223 124 268 136 294"></path>
+      <path class="human-detail" d="M130 94 V258"></path>
+      <path class="human-detail" d="M94 275 C112 302 112 352 100 383"></path>
+      <path class="human-detail" d="M166 275 C148 302 148 352 160 383"></path>
     </svg>
   `;
 }
@@ -1384,148 +1398,6 @@ function isTargetMuscle(target, name) {
   if (target === "posterior-chain" && ["back", "glutes", "hamstrings"].includes(name)) return true;
   if (target === "full-body") return true;
   return false;
-}
-
-function renderExercisePoseSvg(exercise, index) {
-  const pose = demoPoseType(exercise);
-  const target = normalizeMuscle(exercise.muscle);
-  const offset = index % 2;
-  const highlight = renderPoseHighlight(target, pose, offset);
-  const equipment = renderPoseEquipment(exercise.equipment, pose, offset);
-
-  const poses = {
-    push: `
-      <path class="demo-floor" d="M28 138 H172"></path>
-      <ellipse class="demo-head" cx="${56 + offset * 10}" cy="${80 + offset * 8}" rx="10" ry="12" transform="rotate(18 ${56 + offset * 10} ${80 + offset * 8})"></ellipse>
-      <path class="demo-torso" d="M70 ${88 + offset * 7} C88 ${88 + offset * 7} 108 ${94 + offset * 7} 122 ${104 + offset * 6} C117 ${112 + offset * 5} 103 ${115 + offset * 5} 86 ${109 + offset * 6} C72 ${104 + offset * 6} 62 ${98 + offset * 7} 70 ${88 + offset * 7} Z"></path>
-      <path class="demo-limb" d="M86 ${101 + offset * 6} L78 132"></path>
-      <path class="demo-limb" d="M103 ${104 + offset * 6} L99 134"></path>
-      <path class="demo-limb" d="M120 ${105 + offset * 6} L145 ${118 + offset * 5} L164 134"></path>
-      <path class="demo-limb" d="M107 ${102 + offset * 6} L132 ${114 + offset * 5} L151 136"></path>
-      <circle class="demo-joint" cx="78" cy="132" r="4"></circle>
-      <circle class="demo-joint" cx="99" cy="134" r="4"></circle>
-    `,
-    squat: `
-      <path class="demo-floor" d="M34 150 H166"></path>
-      <ellipse class="demo-head" cx="93" cy="${42 + offset * 8}" rx="10" ry="12"></ellipse>
-      <path class="demo-neck" d="M93 ${54 + offset * 8} L94 ${63 + offset * 9}"></path>
-      <path class="demo-torso" d="M82 ${62 + offset * 8} C97 ${55 + offset * 9} 112 ${66 + offset * 10} 113 ${88 + offset * 13} C114 ${103 + offset * 8} 103 ${111 + offset * 6} 90 ${102 + offset * 8} C79 ${94 + offset * 10} 72 ${72 + offset * 9} 82 ${62 + offset * 8} Z"></path>
-      <path class="demo-limb" d="M86 ${71 + offset * 9} L63 ${84 + offset * 8}"></path>
-      <path class="demo-limb" d="M104 ${72 + offset * 9} L131 ${83 + offset * 8}"></path>
-      <path class="demo-limb" d="M94 ${101 + offset * 8} L82 ${124 + offset * 5} L62 149"></path>
-      <path class="demo-limb" d="M108 ${100 + offset * 8} L126 ${122 + offset * 4} L145 149"></path>
-      <ellipse class="demo-foot" cx="62" cy="149" rx="11" ry="4"></ellipse>
-      <ellipse class="demo-foot" cx="145" cy="149" rx="11" ry="4"></ellipse>
-    `,
-    pull: `
-      <path class="demo-equipment" d="M38 34 H162"></path>
-      <ellipse class="demo-head" cx="100" cy="${58 + offset * 6}" rx="10" ry="12"></ellipse>
-      <path class="demo-torso" d="M84 ${74 + offset * 5} C96 ${68 + offset * 5} 111 ${68 + offset * 5} 119 ${77 + offset * 5} L116 115 C106 124 92 123 84 115 Z"></path>
-      <path class="demo-limb" d="M87 ${80 + offset * 5} L70 ${49 + offset * 13}"></path>
-      <path class="demo-limb" d="M115 ${80 + offset * 5} L130 ${49 + offset * 13}"></path>
-      <path class="demo-limb" d="M93 116 L78 151"></path>
-      <path class="demo-limb" d="M109 116 L122 151"></path>
-      <ellipse class="demo-foot" cx="78" cy="151" rx="10" ry="4"></ellipse>
-      <ellipse class="demo-foot" cx="122" cy="151" rx="10" ry="4"></ellipse>
-    `,
-    curl: `
-      <path class="demo-floor" d="M46 152 H154"></path>
-      <ellipse class="demo-head" cx="100" cy="38" rx="10" ry="12"></ellipse>
-      <path class="demo-torso" d="M84 56 C96 50 111 51 119 59 L116 98 C106 106 92 106 84 98 Z"></path>
-      <path class="demo-limb" d="M87 66 L74 ${102 - offset * 22}"></path>
-      <path class="demo-limb" d="M113 66 L126 ${102 - offset * 22}"></path>
-      <path class="demo-limb" d="M92 99 L82 150"></path>
-      <path class="demo-limb" d="M108 99 L118 150"></path>
-      <ellipse class="demo-foot" cx="82" cy="150" rx="10" ry="4"></ellipse>
-      <ellipse class="demo-foot" cx="118" cy="150" rx="10" ry="4"></ellipse>
-    `,
-    hinge: `
-      <path class="demo-floor" d="M34 150 H166"></path>
-      <ellipse class="demo-head" cx="${74 + offset * 10}" cy="${55 + offset * 12}" rx="10" ry="12" transform="rotate(25 ${74 + offset * 10} ${55 + offset * 12})"></ellipse>
-      <path class="demo-torso" d="M84 ${64 + offset * 10} C101 ${64 + offset * 10} 122 ${75 + offset * 10} 132 ${89 + offset * 10} C130 ${102 + offset * 9} 119 ${108 + offset * 7} 106 ${98 + offset * 8} C96 ${91 + offset * 8} 83 ${76 + offset * 9} 84 ${64 + offset * 10} Z"></path>
-      <path class="demo-limb" d="M119 ${96 + offset * 8} L146 150"></path>
-      <path class="demo-limb" d="M108 ${100 + offset * 8} L96 150"></path>
-      <path class="demo-limb" d="M111 ${84 + offset * 10} L128 123"></path>
-      <path class="demo-limb" d="M99 ${78 + offset * 10} L108 122"></path>
-      <ellipse class="demo-foot" cx="146" cy="150" rx="11" ry="4"></ellipse>
-      <ellipse class="demo-foot" cx="96" cy="150" rx="11" ry="4"></ellipse>
-    `,
-    core: `
-      <path class="demo-floor" d="M28 144 H172"></path>
-      <ellipse class="demo-head" cx="72" cy="${106 - offset * 18}" rx="10" ry="12" transform="rotate(-18 72 ${106 - offset * 18})"></ellipse>
-      <path class="demo-torso" d="M84 ${110 - offset * 18} C99 ${108 - offset * 16} 114 ${114 - offset * 14} 124 ${126 - offset * 12} C119 ${136 - offset * 8} 104 ${139 - offset * 8} 91 ${132 - offset * 10} C80 ${126 - offset * 13} 76 ${115 - offset * 17} 84 ${110 - offset * 18} Z"></path>
-      <path class="demo-limb" d="M119 ${126 - offset * 12} L152 ${116 - offset * 22}"></path>
-      <path class="demo-limb" d="M116 ${129 - offset * 10} L150 145"></path>
-      <path class="demo-limb" d="M83 ${109 - offset * 18} L62 ${84 - offset * 10}"></path>
-      <path class="demo-limb" d="M91 ${112 - offset * 18} L71 ${91 - offset * 10}"></path>
-      <ellipse class="demo-foot" cx="152" cy="${116 - offset * 22}" rx="10" ry="4"></ellipse>
-      <ellipse class="demo-foot" cx="150" cy="145" rx="10" ry="4"></ellipse>
-    `
-  };
-
-  return `
-    <svg class="demo-pose-svg" viewBox="0 0 200 170" role="img" aria-label="${escapeHtml(exercise.name)} demo pose ${index + 1}">
-      <rect x="0" y="0" width="200" height="170" rx="8"></rect>
-      ${poses[pose]}
-      ${equipment}
-      ${highlight}
-      <path class="demo-motion" d="${demoMotionPath(pose, offset)}"></path>
-    </svg>
-  `;
-}
-
-function demoPoseType(exercise) {
-  const name = exercise.name.toLowerCase();
-  const muscle = exercise.muscle.toLowerCase();
-  if (name.includes("squat") || name.includes("lunge") || (name.includes("press") && ["quadriceps", "glutes", "hamstrings", "calves"].includes(muscle))) return "squat";
-  if (name.includes("push") || name.includes("press") || name.includes("plank") || name.includes("burpee") || name.includes("climber")) return name.includes("plank") || name.includes("climber") ? "core" : "push";
-  if (name.includes("deadlift") || name.includes("swing") || name.includes("hamstring")) return "hinge";
-  if (name.includes("pulldown") || name.includes("row") || name.includes("raise")) return name.includes("raise") && muscle.includes("shoulder") ? "curl" : "pull";
-  if (name.includes("curl") || name.includes("pushdown")) return "curl";
-  if (muscle.includes("abdominal") || muscle.includes("core")) return "core";
-  if (["quadriceps", "hamstrings", "glutes", "calves"].includes(muscle)) return "squat";
-  return "curl";
-}
-
-function renderPoseHighlight(target, pose, offset) {
-  const points = {
-    chest: pose === "push" ? [[98, 101 + offset * 7, 18, 9]] : [[100, 75, 17, 11]],
-    back: [[103, 91 + offset * 5, 19, 17]],
-    shoulders: [[88, 68 + offset * 3, 9, 9], [112, 68 + offset * 3, 9, 9]],
-    biceps: [[77, 93 - offset * 16, 8, 14], [123, 93 - offset * 16, 8, 14]],
-    triceps: [[86, 103 + offset * 5, 8, 14], [106, 105 + offset * 5, 8, 14]],
-    quadriceps: [[115, 124 + offset * 4, 10, 19], [82, 130 + offset * 4, 10, 18]],
-    hamstrings: [[116, 120 + offset * 5, 10, 18], [135, 126 + offset * 5, 10, 18]],
-    calves: [[69, 143, 8, 13], [141, 143, 8, 13]],
-    glutes: [[102, 102 + offset * 6, 15, 11]],
-    core: [[105, 116 - offset * 13, 19, 11]],
-    abdominals: [[105, 116 - offset * 13, 19, 11]],
-    "posterior-chain": [[104, 91 + offset * 5, 18, 15], [116, 120 + offset * 5, 10, 18], [102, 102 + offset * 6, 15, 11]],
-    "full-body": [[100, 78, 17, 11], [105, 115, 18, 11], [86, 130, 10, 18], [126, 130, 10, 18]]
-  };
-  return (points[target] || points.core).map(([cx, cy, rx, ry]) => (
-    `<ellipse class="demo-target" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"></ellipse>`
-  )).join("");
-}
-
-function renderPoseEquipment(equipment, pose, offset) {
-  if (equipment === "barbell") return `<path class="demo-equipment" d="M52 ${104 - offset * 8} H148"></path><circle class="demo-equipment-dot" cx="46" cy="${104 - offset * 8}" r="7"></circle><circle class="demo-equipment-dot" cx="154" cy="${104 - offset * 8}" r="7"></circle>`;
-  if (equipment === "dumbbell") return `<rect class="demo-equipment-box" x="58" y="${91 - offset * 18}" width="21" height="8" rx="2"></rect><rect class="demo-equipment-box" x="121" y="${91 - offset * 18}" width="21" height="8" rx="2"></rect>`;
-  if (equipment === "kettlebells") return `<circle class="demo-equipment-dot" cx="120" cy="${125 - offset * 6}" r="11"></circle><path class="demo-equipment" d="M112 ${116 - offset * 6} Q120 ${106 - offset * 6} 128 ${116 - offset * 6}"></path>`;
-  if (equipment === "cable" || equipment === "machine") return `<path class="demo-equipment" d="M160 28 V148"></path><path class="demo-equipment" d="M160 46 L126 ${pose === "pull" ? 55 + offset * 10 : 91 - offset * 18}"></path>`;
-  return "";
-}
-
-function demoMotionPath(pose, offset) {
-  const paths = {
-    push: `M82 ${75 + offset * 8} C102 ${58 + offset * 3} 128 ${58 + offset * 3} 150 ${76 + offset * 8}`,
-    squat: `M132 ${61 + offset * 7} C148 ${84 + offset * 8} 148 ${112 + offset * 5} 139 137`,
-    pull: `M72 ${50 + offset * 12} C88 ${31 + offset * 9} 112 ${31 + offset * 9} 128 ${50 + offset * 12}`,
-    curl: `M71 ${108 - offset * 22} C70 ${87 - offset * 16} 80 ${70 - offset * 10} 94 ${59 - offset * 7}`,
-    hinge: `M70 ${52 + offset * 12} C95 ${41 + offset * 12} 126 ${53 + offset * 12} 145 ${76 + offset * 10}`,
-    core: `M76 ${96 - offset * 18} C93 ${78 - offset * 17} 120 ${77 - offset * 15} 145 ${95 - offset * 17}`
-  };
-  return paths[pose] || paths.curl;
 }
 
 function suggestRestSeconds(exercise) {
