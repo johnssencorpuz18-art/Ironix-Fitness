@@ -456,7 +456,9 @@ function setupPlanner() {
 
   document.getElementById("startExerciseButton")?.addEventListener("click", () => prefillWorkout(selectedExercise));
   document.getElementById("addToSessionButton")?.addEventListener("click", () => addExerciseToSession(selectedExercise));
-  document.getElementById("addToCalendarButton")?.addEventListener("click", () => addExerciseToNextOpenDay(selectedExercise));
+  document.getElementById("addToCalendarButton")?.addEventListener("click", () => openPlanAddPanel(selectedExercise));
+  document.getElementById("savePlanExerciseButton")?.addEventListener("click", savePlanExerciseToDays);
+  document.getElementById("cancelPlanExerciseButton")?.addEventListener("click", closePlanAddPanel);
   document.getElementById("clearCalendarButton")?.addEventListener("click", () => {
     weeklyPlan = {};
     saveWeeklyPlan();
@@ -596,7 +598,7 @@ function buildRecommendedPlan(profile) {
       const exercises = allowed
         .filter(exercise => exercise.category === button.dataset.category || (button.dataset.category === "Full Body" && exercise.category !== "Mobility"))
         .slice(0, 4)
-        .map(exercise => exercise.name);
+        .map(exercise => createPlanEntry(exercise));
       weeklyPlan[day] = exercises;
       saveWeeklyPlan();
       renderCalendar();
@@ -626,11 +628,15 @@ function renderCalendar() {
   if (!calendar) return;
 
   calendar.innerHTML = dayNames.map(day => {
-    const items = weeklyPlan[day] || [];
+    const items = normalizePlanEntries(weeklyPlan[day] || []);
     return `
       <article class="calendar-day">
         <h4>${day}</h4>
-        ${items.length ? `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : '<p>Rest or add exercises.</p>'}
+        ${items.length ? `
+          <div class="planned-exercise-list">
+            ${items.map((item, index) => renderPlannedExercise(day, item, index)).join("")}
+          </div>
+        ` : '<p>Rest or add exercises.</p>'}
         <div class="calendar-day-actions">
           <button type="button" data-day="${day}">Add selected exercise</button>
           ${items.length ? `<button type="button" class="secondary-button" data-start-day="${day}">Start / Done</button>` : ""}
@@ -642,7 +648,24 @@ function renderCalendar() {
   calendar.querySelectorAll("button[data-day]").forEach(button => {
     button.addEventListener("click", () => {
       const day = button.dataset.day;
-      weeklyPlan[day] = [...(weeklyPlan[day] || []), selectedExercise.name];
+      weeklyPlan[day] = [...normalizePlanEntries(weeklyPlan[day] || []), createPlanEntry(selectedExercise)];
+      saveWeeklyPlan();
+      renderCalendar();
+    });
+  });
+
+  calendar.querySelectorAll("[data-plan-field]").forEach(input => {
+    input.addEventListener("input", updatePlannedExercise);
+    input.addEventListener("change", updatePlannedExercise);
+  });
+
+  calendar.querySelectorAll("[data-remove-plan]").forEach(button => {
+    button.addEventListener("click", () => {
+      const day = button.dataset.day;
+      const index = Number(button.dataset.index);
+      const entries = normalizePlanEntries(weeklyPlan[day] || []);
+      entries.splice(index, 1);
+      weeklyPlan[day] = entries;
       saveWeeklyPlan();
       renderCalendar();
     });
@@ -657,10 +680,109 @@ function renderCalendar() {
 
 function addExerciseToNextOpenDay(exercise) {
   const day = dayNames.find(name => !weeklyPlan[name] || weeklyPlan[name].length < 4) || dayNames[0];
-  weeklyPlan[day] = [...(weeklyPlan[day] || []), exercise.name];
+  weeklyPlan[day] = [...normalizePlanEntries(weeklyPlan[day] || []), createPlanEntry(exercise)];
   saveWeeklyPlan();
   renderCalendar();
   document.getElementById("weeklyPlanner")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderPlannedExercise(day, item, index) {
+  return `
+    <article class="planned-exercise" data-day="${escapeHtml(day)}" data-index="${index}">
+      <div class="planned-exercise-title">
+        <strong>${escapeHtml(item.name)}</strong>
+        <button type="button" class="delete-workout" data-remove-plan="1" data-day="${escapeHtml(day)}" data-index="${index}">Remove</button>
+      </div>
+      <div class="session-input-grid">
+        <label>Sets
+          <input type="number" min="1" data-plan-field="sets" value="${escapeHtml(item.sets)}">
+        </label>
+        <label>Reps
+          <input type="number" min="1" data-plan-field="reps" value="${escapeHtml(item.reps)}">
+        </label>
+        <label>Weight
+          <input type="number" min="0" step="0.5" data-plan-field="weight" value="${escapeHtml(item.weight)}" placeholder="0">
+        </label>
+        <label>Min
+          <input type="number" min="1" data-plan-field="duration" value="${escapeHtml(item.duration)}">
+        </label>
+      </div>
+    </article>
+  `;
+}
+
+function updatePlannedExercise(event) {
+  const row = event.target.closest("[data-day][data-index]");
+  if (!row) return;
+
+  const day = row.dataset.day;
+  const index = Number(row.dataset.index);
+  const entries = normalizePlanEntries(weeklyPlan[day] || []);
+  const entry = entries[index];
+  if (!entry) return;
+
+  entry[event.target.dataset.planField] = event.target.value;
+  weeklyPlan[day] = entries;
+  saveWeeklyPlan();
+}
+
+function openPlanAddPanel(exercise) {
+  const panel = document.getElementById("planAddPanel");
+  if (!panel) {
+    addExerciseToNextOpenDay(exercise);
+    return;
+  }
+
+  selectedExercise = exercise;
+  panel.hidden = false;
+  setText("planAddTitle", exercise.name);
+  document.getElementById("planDayChoices").innerHTML = dayNames.map((day, index) => `
+    <label class="day-check">
+      <input type="checkbox" value="${escapeHtml(day)}" ${index === 0 ? "checked" : ""}>
+      <span>${escapeHtml(day.slice(0, 3))}</span>
+    </label>
+  `).join("");
+  setValue("planSets", exercise.sets);
+  setValue("planReps", exercise.reps);
+  setValue("planWeight", exercise.equipment === "body only" ? 0 : "");
+  setValue("planDuration", defaultDurationForExercise(exercise));
+  setMessage(document.getElementById("planAddMessage"), "");
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function closePlanAddPanel() {
+  const panel = document.getElementById("planAddPanel");
+  if (panel) panel.hidden = true;
+}
+
+function savePlanExerciseToDays() {
+  const checked = [...document.querySelectorAll("#planDayChoices input:checked")].map(input => input.value);
+  const message = document.getElementById("planAddMessage");
+
+  if (checked.length === 0) {
+    setMessage(message, "Choose at least one day.");
+    return;
+  }
+
+  const entry = createPlanEntry(selectedExercise, {
+    sets: document.getElementById("planSets").value,
+    reps: document.getElementById("planReps").value,
+    weight: document.getElementById("planWeight").value,
+    duration: document.getElementById("planDuration").value
+  });
+
+  if (Number(entry.sets) <= 0 || Number(entry.reps) <= 0 || Number(entry.duration) <= 0 || Number(entry.weight) < 0) {
+    setMessage(message, "Enter valid sets, reps, weight, and minutes.");
+    return;
+  }
+
+  checked.forEach(day => {
+    weeklyPlan[day] = [...normalizePlanEntries(weeklyPlan[day] || []), { ...entry }];
+  });
+
+  saveWeeklyPlan();
+  renderCalendar();
+  setMessage(message, `${entry.name} added to ${checked.length} day${checked.length === 1 ? "" : "s"}.`);
 }
 
 function addExerciseToSession(exercise) {
@@ -671,20 +793,12 @@ function addExerciseToSession(exercise) {
 }
 
 function addCalendarDayToSession(day) {
-  const items = weeklyPlan[day] || [];
+  const items = normalizePlanEntries(weeklyPlan[day] || []);
   if (items.length === 0) return;
 
   const before = liveSession.length;
-  items.forEach(name => {
-    const exercise = exerciseCatalog.find(item => item.name === name) || {
-      name,
-      muscle: "Full Body",
-      equipment: "body only",
-      sets: 3,
-      reps: 10,
-      category: "Full Body"
-    };
-    liveSession.push(createSessionItem(exercise));
+  items.forEach(entry => {
+    liveSession.push(createSessionItem(entry));
   });
 
   saveLiveSession();
@@ -693,6 +807,29 @@ function addCalendarDayToSession(day) {
     localStorage.setItem("ironixPendingSessionMessage", `${items.length} exercises from ${day} were added. Enter missing weight/details, then check Done.`);
   }
   window.location.href = "dashboard.php#liveSession";
+}
+
+function createPlanEntry(exercise, overrides = {}) {
+  return {
+    name: exercise.name,
+    muscle: exercise.muscle || "Full Body",
+    equipment: exercise.equipment || "body only",
+    category: exercise.category || "Full Body",
+    sets: overrides.sets ?? exercise.sets ?? 3,
+    reps: overrides.reps ?? exercise.reps ?? 10,
+    weight: overrides.weight ?? (exercise.equipment === "body only" ? 0 : ""),
+    duration: overrides.duration ?? defaultDurationForExercise(exercise)
+  };
+}
+
+function normalizePlanEntries(entries) {
+  return entries.map(item => {
+    if (typeof item === "string") {
+      const exercise = exerciseCatalog.find(exercise => exercise.name === item) || { name: item, muscle: "Full Body", equipment: "body only", category: "Full Body", sets: 3, reps: 10 };
+      return createPlanEntry(exercise);
+    }
+    return createPlanEntry(item, item);
+  });
 }
 
 function createSessionItem(exercise) {
@@ -705,7 +842,7 @@ function createSessionItem(exercise) {
     plannedReps: exercise.reps,
     sets: exercise.sets,
     reps: exercise.reps,
-    weight: exercise.equipment === "body only" ? 0 : "",
+    weight: exercise.weight ?? (exercise.equipment === "body only" ? 0 : ""),
     duration: defaultDurationForExercise(exercise),
     needsWeight: exercise.equipment !== "body only",
     done: false

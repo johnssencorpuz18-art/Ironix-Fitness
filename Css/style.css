@@ -735,6 +735,71 @@ label {
   gap: 8px;
 }
 
+.planned-exercise-list {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.planned-exercise {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.planned-exercise-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.planned-exercise-title strong {
+  overflow-wrap: anywhere;
+}
+
+.plan-add-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px;
+}
+
+.plan-add-panel h4 {
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.day-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+  gap: 8px;
+}
+
+.day-check {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 10px;
+}
+
+.day-check input {
+  width: 16px;
+  min-height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
 .step-footer {
   display: flex;
   flex-wrap: wrap;

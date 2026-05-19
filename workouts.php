@@ -24,7 +24,7 @@ function view_class($name) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=21">
+  <link rel="stylesheet" href="Css/style.css?v=23">
 </head>
 <body class="workouts-body">
   <header>
@@ -168,8 +168,33 @@ function view_class($name) {
           <div class="detail-actions">
             <button type="button" id="startExerciseButton">Manual Log</button>
             <button type="button" class="secondary-button" id="addToSessionButton">Add To Dashboard</button>
-            <button type="button" class="secondary-button" id="addToCalendarButton">Add To Calendar</button>
+            <button type="button" class="secondary-button" id="addToCalendarButton">Add To Workout</button>
           </div>
+
+          <section class="plan-add-panel" id="planAddPanel" hidden>
+            <span class="eyebrow">Add To Weekly Plan</span>
+            <h4 id="planAddTitle">Selected exercise</h4>
+            <div class="day-checkbox-grid" id="planDayChoices"></div>
+            <div class="session-input-grid">
+              <label>Sets
+                <input id="planSets" type="number" min="1">
+              </label>
+              <label>Reps
+                <input id="planReps" type="number" min="1">
+              </label>
+              <label>Weight
+                <input id="planWeight" type="number" min="0" step="0.5" placeholder="0">
+              </label>
+              <label>Min
+                <input id="planDuration" type="number" min="1">
+              </label>
+            </div>
+            <div class="detail-actions">
+              <button type="button" id="savePlanExerciseButton">Save To Plan</button>
+              <button type="button" class="secondary-button" id="cancelPlanExerciseButton">Cancel</button>
+            </div>
+            <p class="form-message" id="planAddMessage" aria-live="polite"></p>
+          </section>
         </div>
       </section>
     </section>
@@ -315,6 +340,6 @@ function view_class($name) {
     </div>
   </main>
 
-  <script src="Js/app.js?v=21"></script>
+  <script src="Js/app.js?v=23"></script>
 </body>
 </html>
