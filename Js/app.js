@@ -612,6 +612,9 @@ function buildRecommendedPlan(profile) {
 
 function filterByEquipment(equipment) {
   if (equipment === "gym") return exerciseCatalog;
+  if (equipment === "mixed") {
+    return exerciseCatalog.filter(exercise => ["body only", "dumbbell", "kettlebells", "barbell"].includes(exercise.equipment));
+  }
   if (equipment === "dumbbell") {
     return exerciseCatalog.filter(exercise => ["dumbbell", "body only"].includes(exercise.equipment));
   }
