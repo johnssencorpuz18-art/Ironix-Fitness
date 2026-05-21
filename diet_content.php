@@ -7,25 +7,6 @@
     </div>
   </section>
 
-  <section class="diet-controls">
-    <input id="foodSearch" type="search" placeholder="Search adobo, sinigang, rice, chicken...">
-    <select id="foodFilter">
-      <option value="all">All foods</option>
-      <option value="filipino">Filipino foods</option>
-      <option value="protein">High protein</option>
-      <option value="carb">Carb source</option>
-      <option value="fatLoss">Fat loss friendly</option>
-    </select>
-  </section>
-
-  <section class="food-grid" id="foodGrid"></section>
-
-  <section class="food-detail-panel" id="foodDetail">
-    <span class="eyebrow">Food Details</span>
-    <h3>Select a food</h3>
-    <p>Click a card to view food calories, protein, carbs, and fats per serving.</p>
-  </section>
-
   <section class="meal-planner panel" id="weeklyMealPlanner">
     <div class="section-title">
       <div>
@@ -108,5 +89,24 @@
         </div>
       </aside>
     </div>
+  </section>
+
+  <section class="diet-controls">
+    <input id="foodSearch" type="search" placeholder="Search adobo, sinigang, rice, chicken...">
+    <select id="foodFilter">
+      <option value="all">All foods</option>
+      <option value="filipino">Filipino foods</option>
+      <option value="protein">High protein</option>
+      <option value="carb">Carb source</option>
+      <option value="fatLoss">Fat loss friendly</option>
+    </select>
+  </section>
+
+  <section class="food-grid" id="foodGrid"></section>
+
+  <section class="food-detail-panel" id="foodDetail">
+    <span class="eyebrow">Food Details</span>
+    <h3>Select a food</h3>
+    <p>Click a card to view food calories, protein, carbs, and fats per serving.</p>
   </section>
 </main>
