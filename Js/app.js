@@ -376,6 +376,7 @@ let selectedPlanDay = localStorage.getItem("ironixSelectedPlanDay") || dayNames[
 let selectedPlanCategory = localStorage.getItem("ironixSelectedPlanCategory") || "Upper Body";
 let weeklyPlan = JSON.parse(localStorage.getItem("ironixWeeklyPlan") || "{}");
 let liveSession = JSON.parse(localStorage.getItem("ironixLiveSession") || "[]");
+let liveSessionTimer = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   setupOnboarding();
@@ -474,6 +475,14 @@ function setupPlanner() {
 }
 
 function setupLiveSession() {
+  const guidanceToggle = document.getElementById("sessionGuidanceToggle");
+  if (guidanceToggle) {
+    guidanceToggle.checked = localStorage.getItem("ironixSessionGuidance") !== "0";
+    guidanceToggle.addEventListener("change", () => {
+      localStorage.setItem("ironixSessionGuidance", guidanceToggle.checked ? "1" : "0");
+    });
+  }
+
   document.getElementById("addSelectedToSessionButton")?.addEventListener("click", () => addExerciseToSession(selectedExercise));
   document.getElementById("clearSessionButton")?.addEventListener("click", () => {
     liveSession = [];
@@ -482,6 +491,11 @@ function setupLiveSession() {
     setMessage(document.getElementById("sessionMessage"), "");
   });
   document.getElementById("saveSessionButton")?.addEventListener("click", saveFinishedSession);
+  document.getElementById("sessionDemoModal")?.addEventListener("click", event => {
+    if (event.target.closest("[data-close-demo]")) {
+      closeSessionDemo();
+    }
+  });
   renderLiveSession();
 }
 
@@ -993,12 +1007,15 @@ function createSessionItem(exercise) {
     name: exercise.name,
     muscle: exercise.muscle,
     equipment: exercise.equipment,
+    category: exercise.category || "Full Body",
     plannedSets: exercise.sets,
     plannedReps: exercise.reps,
     sets: exercise.sets,
     reps: exercise.reps,
     weight: exercise.weight ?? (exercise.equipment === "body only" ? 0 : ""),
     duration: exercise.duration ?? defaultDurationForExercise(exercise),
+    elapsedSeconds: Number(exercise.elapsedSeconds) || 0,
+    timerStartedAt: exercise.timerStartedAt || null,
     needsWeight: exercise.equipment !== "body only",
     done: false
   };
@@ -1018,6 +1035,7 @@ function renderLiveSession() {
   const list = document.getElementById("liveSessionList");
   if (!list) return;
 
+  refreshRunningSessionDurations();
   resetDoneCounterIfNewDay();
   const pendingMessage = localStorage.getItem("ironixPendingSessionMessage");
   if (pendingMessage) {
@@ -1043,7 +1061,7 @@ function renderLiveSession() {
   }
 
   list.innerHTML = liveSession.map((item, index) => `
-    <article class="session-exercise ${item.done ? "is-done" : ""}" data-session-id="${escapeHtml(item.id)}">
+    <article class="session-exercise ${item.done ? "is-done" : ""} ${item.timerStartedAt ? "is-active" : ""}" data-session-id="${escapeHtml(item.id)}">
       <label class="session-check">
         <input type="checkbox" data-session-field="done">
         <span>Done</span>
@@ -1052,6 +1070,7 @@ function renderLiveSession() {
       <div class="session-exercise-main">
         <strong>${index + 1}. ${escapeHtml(item.name)}</strong>
         <span>${escapeHtml(item.muscle)} | planned ${item.plannedSets}x${item.plannedReps}${item.needsWeight && item.weight === "" ? " | enter weight" : ""}</span>
+        <small class="session-timer-readout">${formatElapsedSeconds(sessionElapsedSeconds(item))}</small>
       </div>
 
       <div class="session-input-grid">
@@ -1069,7 +1088,11 @@ function renderLiveSession() {
         </label>
       </div>
 
-      <button type="button" class="delete-workout" data-remove-session="${escapeHtml(item.id)}">Remove</button>
+      <div class="session-row-actions">
+        <button type="button" class="session-start-button ${item.timerStartedAt ? "is-running" : ""}" data-session-timer="${escapeHtml(item.id)}">${item.timerStartedAt ? "Stop" : "Start"}</button>
+        <button type="button" class="secondary-button compact-link" data-session-demo="${escapeHtml(item.id)}">Demo</button>
+        <button type="button" class="delete-workout" data-remove-session="${escapeHtml(item.id)}">Remove</button>
+      </div>
     </article>
   `).join("");
 
@@ -1087,6 +1110,16 @@ function renderLiveSession() {
       renderLiveSession();
     });
   });
+
+  list.querySelectorAll("[data-session-timer]").forEach(button => {
+    button.addEventListener("click", () => toggleSessionTimer(button.dataset.sessionTimer));
+  });
+
+  list.querySelectorAll("[data-session-demo]").forEach(button => {
+    button.addEventListener("click", () => openSessionDemo(button.dataset.sessionDemo));
+  });
+
+  syncLiveTimerInterval();
 }
 
 function updateSessionItem(event) {
@@ -1099,6 +1132,7 @@ function updateSessionItem(event) {
   const field = event.target.dataset.sessionField;
   if (field === "done") {
     if (event.target.checked) {
+      stopSessionTimer(item);
       saveCheckedSessionItem(item);
     }
     return;
@@ -1108,6 +1142,115 @@ function updateSessionItem(event) {
 
   saveLiveSession();
   renderLiveSession();
+}
+
+function toggleSessionTimer(id) {
+  const item = liveSession.find(entry => entry.id === id);
+  if (!item) return;
+
+  if (item.timerStartedAt) {
+    stopSessionTimer(item);
+    saveLiveSession();
+    renderLiveSession();
+    setMessage(document.getElementById("sessionMessage"), `${item.name} stopped at ${formatElapsedSeconds(item.elapsedSeconds)}.`);
+    return;
+  }
+
+  liveSession.forEach(entry => {
+    if (entry.timerStartedAt) {
+      stopSessionTimer(entry);
+    }
+  });
+
+  item.timerStartedAt = Date.now();
+  saveLiveSession();
+  renderLiveSession();
+  setMessage(document.getElementById("sessionMessage"), `${item.name} started.`);
+
+  if (document.getElementById("sessionGuidanceToggle")?.checked) {
+    openSessionDemo(id);
+  }
+}
+
+function stopSessionTimer(item) {
+  if (!item.timerStartedAt) return;
+  item.elapsedSeconds = sessionElapsedSeconds(item);
+  item.timerStartedAt = null;
+  item.duration = Math.max(1, Math.ceil(item.elapsedSeconds / 60));
+}
+
+function refreshRunningSessionDurations() {
+  liveSession.forEach(item => {
+    if (item.timerStartedAt) {
+      item.duration = Math.max(1, Math.ceil(sessionElapsedSeconds(item) / 60));
+    }
+  });
+}
+
+function sessionElapsedSeconds(item) {
+  const base = Number(item.elapsedSeconds) || 0;
+  if (!item.timerStartedAt) return base;
+  return base + Math.max(0, Math.floor((Date.now() - Number(item.timerStartedAt)) / 1000));
+}
+
+function syncLiveTimerInterval() {
+  const hasRunningTimer = liveSession.some(item => item.timerStartedAt);
+  if (hasRunningTimer && !liveSessionTimer) {
+    liveSessionTimer = window.setInterval(tickLiveSessionTimers, 1000);
+  } else if (!hasRunningTimer && liveSessionTimer) {
+    window.clearInterval(liveSessionTimer);
+    liveSessionTimer = null;
+  }
+}
+
+function tickLiveSessionTimers() {
+  let changed = false;
+  liveSession.forEach(item => {
+    if (!item.timerStartedAt) return;
+    const seconds = sessionElapsedSeconds(item);
+    const minutes = Math.max(1, Math.ceil(seconds / 60));
+    item.duration = minutes;
+    changed = true;
+
+    const row = document.querySelector(`[data-session-id="${cssEscape(item.id)}"]`);
+    row?.querySelector(".session-timer-readout")?.replaceChildren(document.createTextNode(formatElapsedSeconds(seconds)));
+    const durationInput = row?.querySelector('[data-session-field="duration"]');
+    if (durationInput && document.activeElement !== durationInput) {
+      durationInput.value = minutes;
+    }
+  });
+
+  if (changed) saveLiveSession();
+}
+
+function formatElapsedSeconds(totalSeconds) {
+  const seconds = Math.max(0, Number(totalSeconds) || 0);
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+  return `${minutes}:${String(remaining).padStart(2, "0")}`;
+}
+
+function cssEscape(value) {
+  if (window.CSS?.escape) return CSS.escape(value);
+  return String(value).replace(/["\\]/g, "\\$&");
+}
+
+function openSessionDemo(id) {
+  const item = liveSession.find(entry => entry.id === id);
+  const modal = document.getElementById("sessionDemoModal");
+  const content = document.getElementById("sessionDemoContent");
+  const title = document.getElementById("sessionDemoTitle");
+  if (!item || !modal || !content) return;
+
+  const exercise = exerciseCatalog.find(entry => entry.name === item.name) || item;
+  if (title) title.textContent = item.name;
+  content.innerHTML = renderExerciseDemoSheet(exercise);
+  modal.hidden = false;
+}
+
+function closeSessionDemo() {
+  const modal = document.getElementById("sessionDemoModal");
+  if (modal) modal.hidden = true;
 }
 
 function saveCheckedSessionItem(item) {
