@@ -6,7 +6,7 @@ set "JAVA_HOME=C:\Program Files\Android\Android Studio\jbr"
 set "ANDROID_HOME=%LOCALAPPDATA%\Android\Sdk"
 set "ADB=%ANDROID_HOME%\platform-tools\adb.exe"
 set "EMULATOR=%ANDROID_HOME%\emulator\emulator.exe"
-set "GRADLE=%USERPROFILE%\.gradle\wrapper\dists\gradle-9.4.1-bin\arn2x92ynaizyzdaamcbpbhtj\gradle-9.4.1\bin\gradle.bat"
+set "GRADLE=%ROOT%gradlew.bat"
 
 cd /d "%ROOT%"
 
