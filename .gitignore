@@ -4,3 +4,7 @@ ironix_cookies.txt
 db_config.php
 vendor/
 node_modules/
+android-app/.gradle/
+android-app/local.properties
+android-app/**/build/
+ironix-android-debug.apk
