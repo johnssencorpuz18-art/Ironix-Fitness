@@ -219,6 +219,34 @@ function setupMealPlanner() {
 
   renderMealPlanner();
   setupMealScheduleClock();
+  loadMealPlanFromServer();
+}
+
+function loadMealPlanFromServer() {
+  fetch("load_meal_plan.php", { headers: { Accept: "application/json" } })
+    .then(response => {
+      if (!response.ok) throw new Error("Meal plan unavailable");
+      return response.json();
+    })
+    .then(data => {
+      if (!data.ok) return;
+      const hasServerPlan = data.plan && Object.keys(data.plan).length > 0;
+      const hasServerDone = data.done && Object.keys(data.done).length > 0;
+      if (hasServerPlan) {
+        weeklyMealPlan = data.plan;
+        localStorage.setItem("ironixWeeklyMealPlan", JSON.stringify(weeklyMealPlan));
+      }
+      if (hasServerDone) {
+        mealDoneDays = data.done;
+        localStorage.setItem("ironixMealDoneDays", JSON.stringify(mealDoneDays));
+      }
+      resetMealDoneIfNewWeek();
+      renderMealPlanner();
+    })
+    .catch(() => {
+      resetMealDoneIfNewWeek();
+      renderMealPlanner();
+    });
 }
 
 function renderMealFoodOptions() {
@@ -547,11 +575,24 @@ function calculateMealTotals(meals) {
 
 function saveMealPlan() {
   localStorage.setItem("ironixWeeklyMealPlan", JSON.stringify(weeklyMealPlan));
+  saveMealPlanToServer();
 }
 
 function saveMealDoneDays() {
   mealDoneDays.__week = currentMealWeekKey();
   localStorage.setItem("ironixMealDoneDays", JSON.stringify(mealDoneDays));
+  saveMealPlanToServer();
+}
+
+function saveMealPlanToServer() {
+  fetch("save_meal_plan.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      plan: weeklyMealPlan,
+      done: mealDoneDays
+    })
+  }).catch(() => {});
 }
 
 function resetMealDoneIfNewWeek() {

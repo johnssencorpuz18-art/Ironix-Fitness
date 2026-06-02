@@ -1,8 +1,10 @@
 <?php
 require "require_auth.php";
 require "db.php";
+require "meal_plan_schema.php";
 
 $userId = current_user_id();
+ensure_meal_plan_table($conn);
 $profileStmt = $conn->prepare("SELECT age, height_cm, weight_kg FROM users WHERE id = ?");
 $profileStmt->bind_param("i", $userId);
 $profileStmt->execute();
@@ -32,6 +34,6 @@ $conn->close();
       "weightKg" => isset($dietProfile["weight_kg"]) ? (float)$dietProfile["weight_kg"] : null
     ]); ?>;
   </script>
-  <script src="Js/diet.js?v=37"></script>
+  <script src="Js/diet.js?v=38"></script>
 </body>
 </html>
