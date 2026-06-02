@@ -59,7 +59,7 @@ CREATE TABLE `workout` (
   `set_counts` int(11) NOT NULL,
   `rep_count` int(11) NOT NULL,
   `weight_kg` float NOT NULL,
-  `duration_minutes` int(11) NOT NULL,
+  `duration_minutes` decimal(6,2) NOT NULL,
   `calories_burned` float NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

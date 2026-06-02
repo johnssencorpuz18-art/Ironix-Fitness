@@ -1280,11 +1280,18 @@ function createSessionItem(exercise) {
     reps: exercise.reps,
     weight: exercise.weight ?? (exercise.equipment === "body only" ? 0 : ""),
     duration: exercise.duration ?? defaultDurationForExercise(exercise),
-    elapsedSeconds: Number(exercise.elapsedSeconds) || 0,
+    elapsedSeconds: sessionSecondsFromExercise(exercise),
     timerStartedAt: exercise.timerStartedAt || null,
     needsWeight: exercise.equipment !== "body only",
     done: false
   };
+}
+
+function sessionSecondsFromExercise(exercise) {
+  if (Object.prototype.hasOwnProperty.call(exercise, "elapsedSeconds")) {
+    return Math.max(0, Math.round(Number(exercise.elapsedSeconds) || 0));
+  }
+  return 0;
 }
 
 function defaultDurationForExercise(exercise) {
@@ -1350,12 +1357,16 @@ function renderLiveSession() {
           <input type="number" min="0" step="0.5" data-session-field="weight" value="${escapeHtml(item.weight)}" placeholder="0">
         </label>
         <label>Min
-          <input type="number" min="1" data-session-field="duration" value="${escapeHtml(item.duration)}">
+          <input type="number" min="0" data-session-field="durationMinutes" value="${escapeHtml(sessionDurationParts(item).minutes)}">
+        </label>
+        <label>Sec
+          <input type="number" min="0" max="59" data-session-field="durationSeconds" value="${escapeHtml(sessionDurationParts(item).seconds)}">
         </label>
       </div>
 
       <div class="session-row-actions">
         <button type="button" class="session-start-button ${item.timerStartedAt ? "is-running" : ""}" data-session-timer="${escapeHtml(item.id)}">${item.timerStartedAt ? "Stop" : "Start"}</button>
+        <button type="button" class="secondary-button compact-link" data-session-reset-time="${escapeHtml(item.id)}">Reset Time</button>
         <button type="button" class="secondary-button compact-link" data-session-demo="${escapeHtml(item.id)}">Demo</button>
         <button type="button" class="delete-workout" data-remove-session="${escapeHtml(item.id)}">Remove</button>
       </div>
@@ -1381,6 +1392,10 @@ function renderLiveSession() {
     button.addEventListener("click", () => toggleSessionTimer(button.dataset.sessionTimer));
   });
 
+  list.querySelectorAll("[data-session-reset-time]").forEach(button => {
+    button.addEventListener("click", () => resetSessionTimer(button.dataset.sessionResetTime));
+  });
+
   list.querySelectorAll("[data-session-demo]").forEach(button => {
     button.addEventListener("click", () => openSessionDemo(button.dataset.sessionDemo));
   });
@@ -1402,6 +1417,8 @@ function updateSessionItem(event) {
       saveCheckedSessionItem(item);
     }
     return;
+  } else if (field === "durationMinutes" || field === "durationSeconds") {
+    updateSessionDurationFromInputs(row, item);
   } else {
     item[field] = event.target.value;
   }
@@ -1419,7 +1436,7 @@ function toggleSessionTimer(id) {
     saveLiveSession();
     renderLiveSession();
     setMessage(document.getElementById("sessionMessage"), `${item.name} stopped at ${formatElapsedSeconds(item.elapsedSeconds)}.`);
-    speakAssist(`${item.name} stopped. Your measured time is ${Math.max(1, Math.ceil(item.elapsedSeconds / 60))} minutes.`);
+    speakAssist(`${item.name} stopped. Your measured time is ${formatDurationForSpeech(item.elapsedSeconds)}.`);
     return;
   }
 
@@ -1444,13 +1461,13 @@ function stopSessionTimer(item) {
   if (!item.timerStartedAt) return;
   item.elapsedSeconds = sessionElapsedSeconds(item);
   item.timerStartedAt = null;
-  item.duration = Math.max(1, Math.ceil(item.elapsedSeconds / 60));
+  item.duration = durationMinutesForSave(item.elapsedSeconds);
 }
 
 function refreshRunningSessionDurations() {
   liveSession.forEach(item => {
     if (item.timerStartedAt) {
-      item.duration = Math.max(1, Math.ceil(sessionElapsedSeconds(item) / 60));
+      item.duration = durationMinutesForSave(sessionElapsedSeconds(item));
     }
   });
 }
@@ -1476,19 +1493,73 @@ function tickLiveSessionTimers() {
   liveSession.forEach(item => {
     if (!item.timerStartedAt) return;
     const seconds = sessionElapsedSeconds(item);
-    const minutes = Math.max(1, Math.ceil(seconds / 60));
-    item.duration = minutes;
+    const parts = splitDurationSeconds(seconds);
+    item.duration = durationMinutesForSave(seconds);
     changed = true;
 
     const row = document.querySelector(`[data-session-id="${cssEscape(item.id)}"]`);
     row?.querySelector(".session-timer-readout")?.replaceChildren(document.createTextNode(formatElapsedSeconds(seconds)));
-    const durationInput = row?.querySelector('[data-session-field="duration"]');
-    if (durationInput && document.activeElement !== durationInput) {
-      durationInput.value = minutes;
+    const minuteInput = row?.querySelector('[data-session-field="durationMinutes"]');
+    const secondInput = row?.querySelector('[data-session-field="durationSeconds"]');
+    if (minuteInput && document.activeElement !== minuteInput) {
+      minuteInput.value = parts.minutes;
+    }
+    if (secondInput && document.activeElement !== secondInput) {
+      secondInput.value = parts.seconds;
     }
   });
 
   if (changed) saveLiveSession();
+}
+
+function resetSessionTimer(id) {
+  const item = liveSession.find(entry => entry.id === id);
+  if (!item) return;
+  item.timerStartedAt = null;
+  item.elapsedSeconds = 0;
+  item.duration = 0;
+  saveLiveSession();
+  renderLiveSession();
+  setMessage(document.getElementById("sessionMessage"), `${item.name} time reset.`);
+}
+
+function updateSessionDurationFromInputs(row, item) {
+  const minutes = Math.max(0, Math.floor(Number(row.querySelector('[data-session-field="durationMinutes"]')?.value) || 0));
+  const rawSeconds = Math.max(0, Math.floor(Number(row.querySelector('[data-session-field="durationSeconds"]')?.value) || 0));
+  const totalSeconds = (minutes * 60) + rawSeconds;
+  item.elapsedSeconds = totalSeconds;
+  item.duration = durationMinutesForSave(totalSeconds);
+  item.timerStartedAt = null;
+}
+
+function sessionDurationParts(item) {
+  return splitDurationSeconds(effectiveSessionSeconds(item));
+}
+
+function effectiveSessionSeconds(item) {
+  const measuredSeconds = sessionElapsedSeconds(item);
+  if (measuredSeconds > 0) return measuredSeconds;
+  return Math.max(0, Math.round((Number(item.duration) || 0) * 60));
+}
+
+function splitDurationSeconds(totalSeconds) {
+  const seconds = Math.max(0, Math.round(Number(totalSeconds) || 0));
+  return {
+    minutes: Math.floor(seconds / 60),
+    seconds: seconds % 60
+  };
+}
+
+function durationMinutesForSave(totalSeconds) {
+  const seconds = Math.max(0, Math.round(Number(totalSeconds) || 0));
+  return seconds > 0 ? Math.max(0.1, Math.round((seconds / 60) * 10) / 10) : 0;
+}
+
+function formatDurationForSpeech(totalSeconds) {
+  const parts = splitDurationSeconds(totalSeconds);
+  if (parts.minutes <= 0) return `${parts.seconds} seconds`;
+  if (parts.seconds <= 0) return `${parts.minutes} ${parts.minutes === 1 ? "minute" : "minutes"}`;
+  return `${parts.minutes} ${parts.minutes === 1 ? "minute" : "minutes"} and ${parts.seconds} seconds`;
 }
 
 function formatElapsedSeconds(totalSeconds) {
@@ -1525,12 +1596,13 @@ function closeSessionDemo() {
 function saveCheckedSessionItem(item) {
   const message = document.getElementById("sessionMessage");
   const missingWeight = item.needsWeight && item.weight === "";
+  item.duration = durationMinutesForSave(effectiveSessionSeconds(item));
   const invalid = !item.name || missingWeight || Number(item.sets) <= 0 || Number(item.reps) <= 0 || Number(item.duration) <= 0 || Number(item.weight) < 0;
 
   if (invalid) {
     setMessage(message, missingWeight
       ? "Enter the weight used before marking this exercise done. Use 0 only for bodyweight work."
-      : "Check sets, reps, weight, and minutes before marking done.");
+      : "Check sets, reps, weight, minutes, and seconds before marking done.");
     renderLiveSession();
     return;
   }
@@ -1598,9 +1670,12 @@ function saveFinishedSession() {
     return;
   }
 
+  finished.forEach(item => {
+    item.duration = durationMinutesForSave(effectiveSessionSeconds(item));
+  });
   const invalid = finished.find(item => !item.name || Number(item.sets) <= 0 || Number(item.reps) <= 0 || Number(item.duration) <= 0 || Number(item.weight) < 0);
   if (invalid) {
-    setMessage(message, "Check sets, reps, weight, and minutes for every finished exercise.");
+    setMessage(message, "Check sets, reps, weight, minutes, and seconds for every finished exercise.");
     return;
   }
 

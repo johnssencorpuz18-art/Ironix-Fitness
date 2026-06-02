@@ -15,12 +15,21 @@ $workout = trim($_POST['workout'] ?? '');
 $sets = (int)($_POST['sets'] ?? 0);
 $reps = (int)($_POST['reps'] ?? 0);
 $weight = (float)($_POST['weight'] ?? 0);
-$duration = (int)($_POST['duration'] ?? 0);
+$duration = (float)($_POST['duration'] ?? 0);
 
 if ($workout === '' || $sets <= 0 || $reps <= 0 || $weight < 0 || $duration <= 0) {
     http_response_code(400);
     echo "Please complete all workout fields";
     exit;
+}
+
+$durationColumn = $conn->query("SHOW COLUMNS FROM workout LIKE 'duration_minutes'");
+if ($durationColumn) {
+    $column = $durationColumn->fetch_assoc();
+    if ($column && stripos($column["Type"], "int") !== false) {
+        $conn->query("ALTER TABLE workout MODIFY duration_minutes DECIMAL(6,2) NOT NULL");
+    }
+    $durationColumn->close();
 }
 
 $profileStmt = $conn->prepare("SELECT weight_kg FROM users WHERE id = ?");
@@ -57,7 +66,7 @@ $sql = "
 ";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("isiidid", $userId, $workout, $sets, $reps, $weight, $duration, $calories);
+$stmt->bind_param("isiiddd", $userId, $workout, $sets, $reps, $weight, $duration, $calories);
 
 if ($stmt->execute()) {
     echo "Workout saved. Estimated active calories: " . round($calories);
