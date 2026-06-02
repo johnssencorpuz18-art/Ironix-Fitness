@@ -713,76 +713,82 @@ main,
   margin: 0;
 }
 
-.innovation-page {
+.coach-grid {
   display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: 18px;
 }
 
-.innovation-focus-panel {
-  padding: 22px;
+.coach-panel,
+.rest-timer-panel {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
 }
 
-.innovation-focus-grid,
-.innovation-grid {
-  display: grid;
+.coach-score {
+  align-items: center;
+  display: flex;
   gap: 12px;
 }
 
-.innovation-focus-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.coach-score strong,
+.rest-timer-panel strong {
+  color: var(--accent-2);
+  font-size: 2rem;
+  line-height: 1;
 }
 
-.innovation-grid {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-
-.innovation-focus-grid article,
-.innovation-card {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  display: grid;
-  gap: 8px;
-  padding: 16px;
-}
-
-.innovation-focus-grid span,
-.innovation-card-head span {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(242, 162, 58, 0.18);
-  color: var(--accent);
-  display: grid;
-  font-weight: 900;
-  place-items: center;
-}
-
-.innovation-focus-grid strong,
-.innovation-card h3 {
-  font-size: 1.08rem;
-  line-height: 1.2;
-}
-
-.innovation-focus-grid p,
-.innovation-card p,
-.innovation-card small {
+.coach-score span,
+.coach-advice,
+.rest-timer-panel p,
+.meal-prep-list span,
+.meal-prep-list small,
+.coach-alert-list span {
   color: var(--muted);
 }
 
-.innovation-card-head {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
+.recovery-input-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
-.innovation-card-head strong {
+.recovery-input-grid select {
+  margin-top: 6px;
+}
+
+.coach-alert-list,
+.meal-prep-list {
+  display: grid;
+  gap: 10px;
+}
+
+.coach-alert-list article,
+.meal-prep-list article,
+.rest-timer-panel {
   border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--accent-2);
-  font-size: 0.78rem;
-  padding: 5px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.coach-alert-list article,
+.meal-prep-list article {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.rest-timer-panel {
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.rest-timer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .login-box {
@@ -2257,6 +2263,7 @@ label {
   .auth-forms,
   .profile-layout,
   .workouts-layout,
+  .coach-grid,
   .setup-planner-grid,
   .library-workspace,
   .planner-layout,

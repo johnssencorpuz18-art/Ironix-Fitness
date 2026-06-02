@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=52">
+  <link rel="stylesheet" href="Css/style.css?v=53">
 </head>
 <body>
   <header>
@@ -23,7 +23,6 @@
       <div class="hero-actions">
         <a class="button-link progress-link" href="workouts.php">Plan Workout</a>
         <a class="button-link secondary" href="live.php">Live Session</a>
-        <a class="button-link secondary" href="innovations.php">Innovation Roadmap</a>
       </div>
     </section>
 
@@ -85,6 +84,55 @@
       </section>
     </section>
 
+    <section class="coach-grid">
+      <section class="panel coach-panel">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">Recovery Coach</span>
+            <h3>Readiness Check</h3>
+          </div>
+        </div>
+        <div class="coach-score">
+          <strong id="recoveryScore">--</strong>
+          <span id="recoveryLabel">Add today check-in</span>
+        </div>
+        <div class="recovery-input-grid">
+          <label>Sleep
+            <select id="sleepQuality">
+              <option value="3">Good</option>
+              <option value="2">Okay</option>
+              <option value="1">Poor</option>
+            </select>
+          </label>
+          <label>Soreness
+            <select id="sorenessLevel">
+              <option value="3">Low</option>
+              <option value="2">Medium</option>
+              <option value="1">High</option>
+            </select>
+          </label>
+          <label>Energy
+            <select id="energyLevel">
+              <option value="3">High</option>
+              <option value="2">Normal</option>
+              <option value="1">Low</option>
+            </select>
+          </label>
+        </div>
+        <p id="recoveryAdvice" class="coach-advice">Answer the check-in to get today&apos;s training intensity suggestion.</p>
+      </section>
+
+      <section class="panel coach-panel">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">Smart Progression</span>
+            <h3>Overload Alerts</h3>
+          </div>
+        </div>
+        <div class="coach-alert-list" id="overloadAlerts"></div>
+      </section>
+    </section>
+
     <section class="dashboard-workspace">
       <section class="panel today-saved-panel">
         <div class="section-title">
@@ -121,6 +169,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=51"></script>
+  <script src="Js/app.js?v=52"></script>
 </body>
 </html>

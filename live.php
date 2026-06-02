@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Live Session</title>
-  <link rel="stylesheet" href="Css/style.css?v=52">
+  <link rel="stylesheet" href="Css/style.css?v=53">
 </head>
 <body>
   <header>
@@ -59,6 +59,20 @@
         </div>
       </div>
 
+      <section class="rest-timer-panel" aria-label="Rest timer">
+        <div>
+          <span class="eyebrow">Rest Timer</span>
+          <strong id="restTimerReadout">0:00</strong>
+          <p id="restTimerLabel">Choose a rest length between sets.</p>
+        </div>
+        <div class="rest-timer-actions">
+          <button type="button" class="secondary-button compact-link" data-rest-start="45">45s</button>
+          <button type="button" class="secondary-button compact-link" data-rest-start="60">60s</button>
+          <button type="button" class="secondary-button compact-link" data-rest-start="90">90s</button>
+          <button type="button" class="delete-workout" id="resetRestTimerButton">Reset</button>
+        </div>
+      </section>
+
       <div class="live-session-list" id="liveSessionList"></div>
       <p class="form-message" id="sessionMessage" aria-live="polite"></p>
     </section>
@@ -78,6 +92,6 @@
     </div>
   </main>
 
-  <script src="Js/app.js?v=51"></script>
+  <script src="Js/app.js?v=52"></script>
 </body>
 </html>

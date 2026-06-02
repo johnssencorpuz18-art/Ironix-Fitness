@@ -91,6 +91,11 @@
         </div>
 
         <div class="meal-monitor-block">
+          <span class="eyebrow">Meal Prep List</span>
+          <div class="meal-prep-list" id="mealPrepList"></div>
+        </div>
+
+        <div class="meal-monitor-block">
           <span class="eyebrow">Selected Day Intake</span>
           <div class="meal-day-totals" id="mealDayTotals"></div>
         </div>

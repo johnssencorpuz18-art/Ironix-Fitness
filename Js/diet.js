@@ -308,6 +308,7 @@ function renderMealPlanner() {
   const grid = document.getElementById("mealSlotGrid");
   const totals = document.getElementById("mealDayTotals");
   const weekTotals = document.getElementById("mealWeekTotals");
+  const mealPrepList = document.getElementById("mealPrepList");
   const result = document.getElementById("mealDayResult");
   const markDoneButton = document.getElementById("markMealDayDoneButton");
 
@@ -357,6 +358,9 @@ function renderMealPlanner() {
       <span>${formatMacro(weeklyTotals.protein)}g protein</span>
     `;
   }
+  if (mealPrepList) {
+    mealPrepList.innerHTML = renderMealPrepList(allWeekMeals);
+  }
   if (result) {
     result.innerHTML = renderDayResult(dayTotals);
   }
@@ -380,6 +384,33 @@ function renderMealPlanner() {
       renderMealPlanner();
     });
   });
+}
+
+function renderMealPrepList(meals) {
+  if (meals.length === 0) {
+    return '<div class="empty-state">Add meals to build a prep list.</div>';
+  }
+
+  const grouped = new Map();
+  meals.forEach(meal => {
+    const key = meal.name;
+    const current = grouped.get(key) || { name: meal.name, serving: meal.serving, servings: 0, protein: 0, calories: 0 };
+    current.servings += Number(meal.servings) || 1;
+    current.protein += (Number(meal.protein) || 0) * (Number(meal.servings) || 1);
+    current.calories += (Number(meal.calories) || 0) * (Number(meal.servings) || 1);
+    grouped.set(key, current);
+  });
+
+  return [...grouped.values()]
+    .sort((a, b) => b.protein - a.protein || b.calories - a.calories)
+    .slice(0, 10)
+    .map(item => `
+      <article>
+        <strong>${escapeHtml(item.name)}</strong>
+        <span>${formatMacro(item.servings)} x ${escapeHtml(item.serving)}</span>
+        <small>${formatMacro(item.calories)} kcal | ${formatMacro(item.protein)}g protein</small>
+      </article>
+    `).join("");
 }
 
 function setupMealScheduleClock() {

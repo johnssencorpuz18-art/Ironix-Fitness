@@ -611,11 +611,14 @@ let selectedPlanCategory = localStorage.getItem("ironixSelectedPlanCategory") ||
 let weeklyPlan = JSON.parse(localStorage.getItem("ironixWeeklyPlan") || "{}");
 let liveSession = JSON.parse(localStorage.getItem("ironixLiveSession") || "[]");
 let liveSessionTimer = null;
+let restTimerInterval = null;
+let restTimerSeconds = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
   setupOnboarding();
   setupPlanner();
   setupLiveSession();
+  setupRecoveryCoach();
   setupExercisePicker();
   setupWorkoutForm();
   loadWorkouts();
@@ -743,6 +746,10 @@ function setupLiveSession() {
     setMessage(document.getElementById("sessionMessage"), "");
   });
   document.getElementById("saveSessionButton")?.addEventListener("click", saveFinishedSession);
+  document.querySelectorAll("[data-rest-start]").forEach(button => {
+    button.addEventListener("click", () => startRestTimer(Number(button.dataset.restStart)));
+  });
+  document.getElementById("resetRestTimerButton")?.addEventListener("click", resetRestTimer);
   document.getElementById("sessionDemoModal")?.addEventListener("click", event => {
     if (event.target.closest("[data-close-demo]")) {
       closeSessionDemo();
@@ -1523,6 +1530,37 @@ function resetSessionTimer(id) {
   setMessage(document.getElementById("sessionMessage"), `${item.name} time reset.`);
 }
 
+function startRestTimer(seconds) {
+  restTimerSeconds = Math.max(0, Number(seconds) || 0);
+  updateRestTimerDisplay();
+  if (restTimerInterval) window.clearInterval(restTimerInterval);
+  restTimerInterval = window.setInterval(() => {
+    restTimerSeconds = Math.max(0, restTimerSeconds - 1);
+    updateRestTimerDisplay();
+    if (restTimerSeconds === 0) {
+      window.clearInterval(restTimerInterval);
+      restTimerInterval = null;
+      setText("restTimerLabel", "Rest complete. Start the next set.");
+      if (localStorage.getItem("ironixVoiceAssist") === "1") {
+        speakAssist("Rest complete. Start your next set.");
+      }
+    }
+  }, 1000);
+  setText("restTimerLabel", `${seconds} second rest started.`);
+}
+
+function resetRestTimer() {
+  if (restTimerInterval) window.clearInterval(restTimerInterval);
+  restTimerInterval = null;
+  restTimerSeconds = 0;
+  updateRestTimerDisplay();
+  setText("restTimerLabel", "Rest timer reset.");
+}
+
+function updateRestTimerDisplay() {
+  setText("restTimerReadout", formatElapsedSeconds(restTimerSeconds));
+}
+
 function updateSessionDurationFromInputs(row, item) {
   const minutes = Math.max(0, Math.floor(Number(row.querySelector('[data-session-field="durationMinutes"]')?.value) || 0));
   const rawSeconds = Math.max(0, Math.floor(Number(row.querySelector('[data-session-field="durationSeconds"]')?.value) || 0));
@@ -2089,6 +2127,7 @@ function renderProgressPage(workouts) {
   setText("progressVolume", `${formatNumber(summary.volume)} kg`);
   setText("progressDays", `${activeDays} ${activeDays === 1 ? "Day" : "Days"}`);
   renderExercisePrGrid(workouts);
+  renderOverloadAlerts(workouts);
 
   if (!recent) return;
 
@@ -2114,6 +2153,83 @@ function renderProgressPage(workouts) {
   `).join("");
 
   bindWorkoutDeleteButtons(recent);
+}
+
+function setupRecoveryCoach() {
+  const inputs = ["sleepQuality", "sorenessLevel", "energyLevel"].map(id => document.getElementById(id)).filter(Boolean);
+  if (inputs.length === 0) return;
+
+  const saved = JSON.parse(localStorage.getItem("ironixRecoveryCheck") || "{}");
+  inputs.forEach(input => {
+    if (saved[input.id]) input.value = saved[input.id];
+    input.addEventListener("change", saveRecoveryCheck);
+  });
+  renderRecoveryScore();
+}
+
+function saveRecoveryCheck() {
+  const check = {
+    sleepQuality: document.getElementById("sleepQuality")?.value || "3",
+    sorenessLevel: document.getElementById("sorenessLevel")?.value || "3",
+    energyLevel: document.getElementById("energyLevel")?.value || "3",
+    date: localDateKey(new Date())
+  };
+  localStorage.setItem("ironixRecoveryCheck", JSON.stringify(check));
+  renderRecoveryScore();
+}
+
+function renderRecoveryScore() {
+  const scoreTarget = document.getElementById("recoveryScore");
+  if (!scoreTarget) return;
+
+  const sleep = Number(document.getElementById("sleepQuality")?.value || 3);
+  const soreness = Number(document.getElementById("sorenessLevel")?.value || 3);
+  const energy = Number(document.getElementById("energyLevel")?.value || 3);
+  const score = Math.round(((sleep + soreness + energy) / 9) * 100);
+  const label = score >= 78 ? "Ready" : score >= 55 ? "Moderate" : "Recover";
+  const advice = score >= 78
+    ? "Train normally. This is a good day for progression if form stays clean."
+    : score >= 55
+      ? "Keep the plan, but reduce load or rest longer if sets feel heavy."
+      : "Use a lighter session, mobility, or rest. Avoid chasing PRs today.";
+
+  setText("recoveryScore", `${score}%`);
+  setText("recoveryLabel", label);
+  setText("recoveryAdvice", advice);
+}
+
+function renderOverloadAlerts(workouts) {
+  const target = document.getElementById("overloadAlerts");
+  if (!target) return;
+
+  if (workouts.length < 3) {
+    target.innerHTML = '<div class="empty-state">Save more workouts to unlock progression alerts.</div>';
+    return;
+  }
+
+  const grouped = new Map();
+  workouts.forEach(workout => {
+    const name = workout.workout_name || "Workout";
+    if (!grouped.has(name)) grouped.set(name, []);
+    grouped.get(name).push(workout);
+  });
+
+  const alerts = [...grouped.entries()].map(([name, rows]) => {
+    const recent = rows.slice(0, 3);
+    const latest = recent[0];
+    const stableSets = recent.every(row => Number(row.set_counts) >= Number(latest.set_counts));
+    const stableReps = recent.every(row => Number(row.rep_count) >= Number(latest.rep_count));
+    const weight = Number(latest.weight_kg) || 0;
+    const suggestion = weight > 0 ? `Try ${formatNumber(weight + 2.5)} kg next time` : "Add reps or a harder variation";
+    return stableSets && stableReps ? { name, suggestion } : null;
+  }).filter(Boolean).slice(0, 5);
+
+  target.innerHTML = alerts.length ? alerts.map(alert => `
+    <article>
+      <strong>${escapeHtml(alert.name)}</strong>
+      <span>${escapeHtml(alert.suggestion)}</span>
+    </article>
+  `).join("") : '<div class="empty-state">No overload alert yet. Keep logging consistent sessions.</div>';
 }
 
 function renderExercisePrGrid(workouts) {
