@@ -8,8 +8,8 @@ $userId = current_user_id();
 ensure_profile_columns($conn);
 
 $stmt = $conn->prepare("
-    SELECT name, email, bio, age, height_cm, weight_kg, fitness_goal, avatar_url,
-           birthday, contact_number, location, gender, activity_level
+    SELECT name, email, bio, age, height_cm, weight_kg, target_weight_kg, body_goal,
+           fitness_goal, avatar_url, birthday, contact_number, location, gender, activity_level
     FROM users
     WHERE id = ?
 ");
@@ -103,6 +103,8 @@ $profileFields = [
     "age",
     "height_cm",
     "weight_kg",
+    "target_weight_kg",
+    "body_goal",
     "fitness_goal",
     "avatar_url",
     "birthday",
@@ -127,6 +129,12 @@ $consistency = min(100, round(($activeDays / 7) * 100));
 function kg_to_lb($value) {
     return round(((float)$value) * 2.20462, 1);
 }
+
+$bodyGoalOptions = ["", "Weight Loss", "Weight Gain", "Maintain Weight", "Recomposition"];
+$currentWeightLb = !empty($user["weight_kg"]) ? kg_to_lb($user["weight_kg"]) : "";
+$targetWeightLb = !empty($user["target_weight_kg"]) ? kg_to_lb($user["target_weight_kg"]) : "";
+$bodyGoalLabel = $user["body_goal"] ?? "";
+$weightGoalDelta = ($currentWeightLb !== "" && $targetWeightLb !== "") ? round(abs((float)$currentWeightLb - (float)$targetWeightLb), 1) : null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,7 +142,7 @@ function kg_to_lb($value) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=53">
+  <link rel="stylesheet" href="Css/style.css?v=54">
 </head>
 <body>
   <header>
@@ -180,8 +188,8 @@ function kg_to_lb($value) {
           <label>Height
             <input name="height_cm" type="number" step="0.1" value="<?php echo htmlspecialchars($user["height_cm"] ?? ""); ?>" placeholder="cm">
           </label>
-          <label>Weight
-            <input name="weight_kg" type="number" step="0.1" value="<?php echo htmlspecialchars($user["weight_kg"] ?? ""); ?>" placeholder="kg">
+          <label>Body Weight
+            <input name="weight_lb" type="number" step="0.1" value="<?php echo htmlspecialchars($currentWeightLb); ?>" placeholder="lb">
           </label>
           <label>Contact Number
             <input name="contact_number" type="tel" value="<?php echo htmlspecialchars($user["contact_number"] ?? ""); ?>" placeholder="+63 900 000 0000">
@@ -212,6 +220,18 @@ function kg_to_lb($value) {
                 </option>
               <?php endforeach; ?>
             </select>
+          </label>
+          <label>Body Goal
+            <select name="body_goal">
+              <?php foreach ($bodyGoalOptions as $option): ?>
+                <option value="<?php echo htmlspecialchars($option); ?>" <?php echo $bodyGoalLabel === $option ? "selected" : ""; ?>>
+                  <?php echo $option === "" ? "Select goal" : htmlspecialchars($option); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+          <label>Target Weight
+            <input name="target_weight_lb" type="number" step="0.1" value="<?php echo htmlspecialchars($targetWeightLb); ?>" placeholder="lb">
           </label>
         </div>
 
@@ -337,8 +357,13 @@ function kg_to_lb($value) {
             </div>
             <div>
               <span>Body Details</span>
-              <strong><?php echo $weightKg ? htmlspecialchars($weightKg) . " kg" : "Weight needed"; ?></strong>
+              <strong><?php echo $currentWeightLb !== "" ? htmlspecialchars($currentWeightLb) . " lb" : "Weight needed"; ?></strong>
               <small><?php echo !empty($user["height_cm"]) ? htmlspecialchars($user["height_cm"]) . " cm height" : "Add height for BMI and better estimates"; ?></small>
+            </div>
+            <div>
+              <span>Weight Goal</span>
+              <strong><?php echo $bodyGoalLabel ? htmlspecialchars($bodyGoalLabel) : "Not set"; ?></strong>
+              <small><?php echo $weightGoalDelta !== null ? htmlspecialchars($weightGoalDelta) . " lb from target" : "Add current and target weight"; ?></small>
             </div>
             <div>
               <span>Profile Info</span>

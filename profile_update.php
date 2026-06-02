@@ -22,6 +22,15 @@ function normalize_date(?string $value): ?string
     return $date && $date->format("Y-m-d") === $value ? $value : null;
 }
 
+function pounds_to_kg(?string $value): ?float
+{
+    $value = trim((string)$value);
+    if ($value === "") {
+        return null;
+    }
+    return round(((float)$value) / 2.20462, 2);
+}
+
 function save_uploaded_avatar(int $userId): ?string
 {
     if (empty($_FILES["avatar_upload"]) || $_FILES["avatar_upload"]["error"] === UPLOAD_ERR_NO_FILE) {
@@ -80,7 +89,9 @@ $name = trim($_POST["name"] ?? "");
 $bio = trim($_POST["bio"] ?? "");
 $age = ($_POST["age"] ?? "") === "" ? null : (int)$_POST["age"];
 $height = ($_POST["height_cm"] ?? "") === "" ? null : (float)$_POST["height_cm"];
-$weight = ($_POST["weight_kg"] ?? "") === "" ? null : (float)$_POST["weight_kg"];
+$weight = array_key_exists("weight_lb", $_POST) ? pounds_to_kg($_POST["weight_lb"]) : (($_POST["weight_kg"] ?? "") === "" ? null : (float)$_POST["weight_kg"]);
+$targetWeight = pounds_to_kg($_POST["target_weight_lb"] ?? "");
+$bodyGoal = null_if_empty($_POST["body_goal"] ?? "");
 $goal = trim($_POST["fitness_goal"] ?? "");
 $birthday = normalize_date($_POST["birthday"] ?? null);
 $contact = null_if_empty($_POST["contact_number"] ?? "");
@@ -105,11 +116,12 @@ if ($name === "") {
 $stmt = $conn->prepare("
     UPDATE users
     SET name = ?, bio = ?, age = ?, height_cm = ?, weight_kg = ?, fitness_goal = ?, avatar_url = ?,
-        birthday = ?, contact_number = ?, location = ?, gender = ?, activity_level = ?
+        birthday = ?, contact_number = ?, location = ?, gender = ?, activity_level = ?,
+        body_goal = ?, target_weight_kg = ?
     WHERE id = ?
 ");
 $stmt->bind_param(
-    "ssiddsssssssi",
+    "ssiddssssssssdi",
     $name,
     $bio,
     $age,
@@ -122,6 +134,8 @@ $stmt->bind_param(
     $location,
     $gender,
     $activityLevel,
+    $bodyGoal,
+    $targetWeight,
     $userId
 );
 

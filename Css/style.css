@@ -719,6 +719,38 @@ main,
   gap: 18px;
 }
 
+.body-goal-panel {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+}
+
+.body-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.body-goal-grid article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.body-goal-grid span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.body-goal-grid strong {
+  font-size: 1.18rem;
+  line-height: 1.2;
+}
+
 .coach-panel,
 .rest-timer-panel {
   display: grid;
@@ -2264,6 +2296,7 @@ label {
   .profile-layout,
   .workouts-layout,
   .coach-grid,
+  .body-goal-grid,
   .setup-planner-grid,
   .library-workspace,
   .planner-layout,

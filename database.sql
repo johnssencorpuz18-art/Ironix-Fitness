@@ -37,6 +37,8 @@ CREATE TABLE `users` (
   `activity_level` varchar(80) DEFAULT NULL,
   `height_cm` float DEFAULT NULL,
   `weight_kg` float DEFAULT NULL,
+  `body_goal` varchar(40) DEFAULT NULL,
+  `target_weight_kg` float DEFAULT NULL,
   `fitness_goal` varchar(100) DEFAULT NULL,
   `avatar_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),

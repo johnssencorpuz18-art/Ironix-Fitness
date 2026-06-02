@@ -1,11 +1,46 @@
-<?php require "require_auth.php"; ?>
+<?php
+require "require_auth.php";
+require "db.php";
+require "profile_schema.php";
+
+$userId = current_user_id();
+ensure_profile_columns($conn);
+$profileStmt = $conn->prepare("SELECT weight_kg, target_weight_kg, body_goal FROM users WHERE id = ?");
+$profileStmt->bind_param("i", $userId);
+$profileStmt->execute();
+$bodyGoalProfile = $profileStmt->get_result()->fetch_assoc() ?: [];
+$profileStmt->close();
+$conn->close();
+
+function dashboard_kg_to_lb($value) {
+    return round(((float)$value) * 2.20462, 1);
+}
+
+$currentWeightLb = !empty($bodyGoalProfile["weight_kg"]) ? dashboard_kg_to_lb($bodyGoalProfile["weight_kg"]) : null;
+$targetWeightLb = !empty($bodyGoalProfile["target_weight_kg"]) ? dashboard_kg_to_lb($bodyGoalProfile["target_weight_kg"]) : null;
+$bodyGoal = $bodyGoalProfile["body_goal"] ?? "";
+$goalDirection = "Set target";
+$remainingLabel = "Add current and target weight";
+
+if ($currentWeightLb !== null && $targetWeightLb !== null) {
+    $difference = round($targetWeightLb - $currentWeightLb, 1);
+    $remainingLabel = abs($difference) . " lb " . ($difference < 0 ? "to lose" : ($difference > 0 ? "to gain" : "at target"));
+    if ($bodyGoal === "") {
+        $goalDirection = $difference < 0 ? "Weight Loss" : ($difference > 0 ? "Weight Gain" : "Maintain Weight");
+    } else {
+        $goalDirection = $bodyGoal;
+    }
+} elseif ($bodyGoal !== "") {
+    $goalDirection = $bodyGoal;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=53">
+  <link rel="stylesheet" href="Css/style.css?v=54">
 </head>
 <body>
   <header>
@@ -82,6 +117,34 @@
           </div>
         </div>
       </section>
+    </section>
+
+    <section class="panel body-goal-panel">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">Body Goal</span>
+          <h3>Weight Loss / Weight Gain</h3>
+        </div>
+        <a class="button-link secondary compact-link" href="profile.php">Edit Goal</a>
+      </div>
+      <div class="body-goal-grid">
+        <article>
+          <span>Current Weight</span>
+          <strong><?php echo $currentWeightLb !== null ? htmlspecialchars($currentWeightLb) . " lb" : "Not set"; ?></strong>
+        </article>
+        <article>
+          <span>Target Weight</span>
+          <strong><?php echo $targetWeightLb !== null ? htmlspecialchars($targetWeightLb) . " lb" : "Not set"; ?></strong>
+        </article>
+        <article>
+          <span>Goal Type</span>
+          <strong><?php echo htmlspecialchars($goalDirection); ?></strong>
+        </article>
+        <article>
+          <span>Remaining</span>
+          <strong><?php echo htmlspecialchars($remainingLabel); ?></strong>
+        </article>
+      </div>
     </section>
 
     <section class="coach-grid">

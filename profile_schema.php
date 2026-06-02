@@ -8,6 +8,8 @@ function ensure_profile_columns(mysqli $conn): void
         "location" => "VARCHAR(120) DEFAULT NULL",
         "gender" => "VARCHAR(40) DEFAULT NULL",
         "activity_level" => "VARCHAR(80) DEFAULT NULL",
+        "body_goal" => "VARCHAR(40) DEFAULT NULL",
+        "target_weight_kg" => "FLOAT DEFAULT NULL",
     ];
 
     foreach ($columns as $column => $definition) {
