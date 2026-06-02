@@ -23,6 +23,10 @@
             <span class="eyebrow">Selected Day</span>
             <h4 id="selectedMealDayTitle">Monday</h4>
           </div>
+          <div class="meal-day-actions">
+            <button type="button" class="secondary-button compact-link" id="markMealDayDoneButton">Mark Day Done</button>
+            <button type="button" class="delete-workout" id="clearSelectedMealDayButton">Clear Day</button>
+          </div>
         </div>
 
         <div class="meal-slot-grid" id="mealSlotGrid"></div>
@@ -75,10 +79,19 @@
       <aside class="meal-monitor-panel" aria-label="Meal plan monitor">
         <span class="eyebrow">Monitor</span>
         <h4>Week Tabs</h4>
+        <div class="weekly-date-panel meal-date-panel">
+          <strong id="weeklyMealLocalDateTime">Today</strong>
+          <p id="weeklyMealLocalDateNote">Default day is based on this device timezone.</p>
+        </div>
         <div class="meal-day-tabs" id="mealDayTabs" role="tablist" aria-label="Meal plan days"></div>
 
         <div class="meal-monitor-block">
-          <span class="eyebrow">Food Eaten Today</span>
+          <span class="eyebrow">Weekly Summary</span>
+          <div class="meal-day-totals" id="mealWeekTotals"></div>
+        </div>
+
+        <div class="meal-monitor-block">
+          <span class="eyebrow">Selected Day Intake</span>
           <div class="meal-day-totals" id="mealDayTotals"></div>
         </div>
 

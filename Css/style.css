@@ -495,6 +495,15 @@ main,
   background: rgba(242, 162, 58, 0.16);
 }
 
+.meal-day-tabs button.is-today {
+  box-shadow: inset 0 0 0 1px rgba(217, 165, 41, 0.42);
+}
+
+.meal-day-tabs button.is-meal-done {
+  border-color: rgba(63, 185, 143, 0.34);
+  background: rgba(63, 185, 143, 0.1);
+}
+
 .meal-day-tabs span {
   font-size: 0.82rem;
   font-weight: 800;
@@ -543,6 +552,22 @@ main,
 .meal-day-head h4 {
   font-size: 1.35rem;
   line-height: 1.2;
+}
+
+.meal-day-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.meal-day-actions button {
+  width: auto;
+}
+
+.meal-date-panel {
+  margin-bottom: 0;
 }
 
 .meal-day-totals {

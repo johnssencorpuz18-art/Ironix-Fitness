@@ -107,8 +107,9 @@ const mealFallbacks = {
   Dessert: ["Fruit Salad", "Halo-Halo", "Leche Flan", "Mango Graham", "Fresh Mango", "Banana"],
   Other: ["Chicken Breast", "Steamed White Rice", "Sweet Potato", "Tuna", "Tilapia", "Brown Rice"]
 };
-let selectedMealDay = localStorage.getItem("ironixSelectedMealDay") || mealDayNames[0];
+let selectedMealDay = localStorage.getItem("ironixSelectedMealDay") || currentMealDayName();
 let weeklyMealPlan = JSON.parse(localStorage.getItem("ironixWeeklyMealPlan") || "{}");
+let mealDoneDays = JSON.parse(localStorage.getItem("ironixMealDoneDays") || "{}");
 
 if (foodGrid && foodSearch && foodFilter) {
   foodSearch.addEventListener("input", renderFoods);
@@ -169,9 +170,14 @@ function setupMealPlanner() {
   const suggestions = document.getElementById("mealSuggestions");
   const addButton = document.getElementById("addMealButton");
   const clearButton = document.getElementById("clearMealPlanButton");
+  const clearSelectedButton = document.getElementById("clearSelectedMealDayButton");
+  const markDoneButton = document.getElementById("markMealDayDoneButton");
 
   if (!tabs || !foodSelect || !addButton) return;
 
+  selectedMealDay = mealDayNames.includes(selectedMealDay) ? selectedMealDay : currentMealDayName();
+  localStorage.setItem("ironixSelectedMealDay", selectedMealDay);
+  resetMealDoneIfNewWeek();
   renderMealFoodOptions();
   renderMealSuggestions();
   foodSearchInput?.addEventListener("input", () => {
@@ -193,11 +199,26 @@ function setupMealPlanner() {
   addButton.addEventListener("click", addMealToSelectedDay);
   clearButton?.addEventListener("click", () => {
     weeklyMealPlan = {};
+    mealDoneDays = {};
     saveMealPlan();
+    saveMealDoneDays();
+    renderMealPlanner();
+  });
+  clearSelectedButton?.addEventListener("click", () => {
+    weeklyMealPlan[selectedMealDay] = [];
+    delete mealDoneDays[selectedMealDay];
+    saveMealPlan();
+    saveMealDoneDays();
+    renderMealPlanner();
+  });
+  markDoneButton?.addEventListener("click", () => {
+    mealDoneDays[selectedMealDay] = !mealDoneDays[selectedMealDay];
+    saveMealDoneDays();
     renderMealPlanner();
   });
 
   renderMealPlanner();
+  setupMealScheduleClock();
 }
 
 function renderMealFoodOptions() {
@@ -286,33 +307,56 @@ function renderMealPlanner() {
   const title = document.getElementById("selectedMealDayTitle");
   const grid = document.getElementById("mealSlotGrid");
   const totals = document.getElementById("mealDayTotals");
+  const weekTotals = document.getElementById("mealWeekTotals");
   const result = document.getElementById("mealDayResult");
+  const markDoneButton = document.getElementById("markMealDayDoneButton");
 
   if (!tabs || !title || !grid || !totals) return;
 
   if (!mealDayNames.includes(selectedMealDay)) {
-    selectedMealDay = mealDayNames[0];
+    selectedMealDay = currentMealDayName();
   }
 
+  const today = currentMealDayName();
   tabs.innerHTML = mealDayNames.map(day => {
     const count = getMealsForDay(day).length;
+    const classes = [
+      day === selectedMealDay ? "active" : "",
+      day === today ? "is-today" : "",
+      mealDoneDays[day] ? "is-meal-done" : ""
+    ].filter(Boolean).join(" ");
     return `
-      <button type="button" class="${day === selectedMealDay ? "active" : ""}" data-meal-day="${day}" role="tab" aria-selected="${day === selectedMealDay ? "true" : "false"}">
+      <button type="button" class="${classes}" data-meal-day="${day}" role="tab" aria-selected="${day === selectedMealDay ? "true" : "false"}">
         <span>${day.slice(0, 3)}</span>
-        <strong>${count}</strong>
+        <strong>${mealDoneDays[day] ? "Done" : count}</strong>
       </button>
     `;
   }).join("");
 
-  title.textContent = selectedMealDay;
+  title.textContent = selectedMealDay === today ? `${selectedMealDay} (Today)` : selectedMealDay;
+  if (markDoneButton) {
+    markDoneButton.textContent = mealDoneDays[selectedMealDay] ? "Undo Done" : "Mark Day Done";
+  }
   const dayMeals = getMealsForDay(selectedMealDay);
   const dayTotals = calculateMealTotals(dayMeals);
+  const allWeekMeals = mealDayNames.flatMap(day => getMealsForDay(day));
+  const totalDaysPlanned = mealDayNames.filter(day => getMealsForDay(day).length > 0).length;
+  const doneCount = mealDayNames.filter(day => mealDoneDays[day]).length;
+  const weeklyTotals = calculateMealTotals(allWeekMeals);
   totals.innerHTML = `
     <span>Food eaten: ${formatMacro(dayTotals.calories)} kcal</span>
     <span>${formatMacro(dayTotals.protein)}g protein</span>
     <span>${formatMacro(dayTotals.carbs)}g carbs</span>
     <span>${formatMacro(dayTotals.fat)}g fat</span>
   `;
+  if (weekTotals) {
+    weekTotals.innerHTML = `
+      <span>${totalDaysPlanned}/7 days planned</span>
+      <span>${doneCount} day${doneCount === 1 ? "" : "s"} done</span>
+      <span>${formatMacro(weeklyTotals.calories)} kcal food</span>
+      <span>${formatMacro(weeklyTotals.protein)}g protein</span>
+    `;
+  }
   if (result) {
     result.innerHTML = renderDayResult(dayTotals);
   }
@@ -336,6 +380,18 @@ function renderMealPlanner() {
       renderMealPlanner();
     });
   });
+}
+
+function setupMealScheduleClock() {
+  updateMealScheduleClock();
+  window.setInterval(updateMealScheduleClock, 60000);
+}
+
+function updateMealScheduleClock() {
+  const target = document.getElementById("weeklyMealLocalDateTime");
+  const note = document.getElementById("weeklyMealLocalDateNote");
+  if (target) target.textContent = formatMealLocalDateTime();
+  if (note) note.textContent = `Default day: ${currentMealDayName()} based on this device timezone.`;
 }
 
 function renderDayResult(dayTotals) {
@@ -460,6 +516,42 @@ function calculateMealTotals(meals) {
 
 function saveMealPlan() {
   localStorage.setItem("ironixWeeklyMealPlan", JSON.stringify(weeklyMealPlan));
+}
+
+function saveMealDoneDays() {
+  mealDoneDays.__week = currentMealWeekKey();
+  localStorage.setItem("ironixMealDoneDays", JSON.stringify(mealDoneDays));
+}
+
+function resetMealDoneIfNewWeek() {
+  if (mealDoneDays.__week !== currentMealWeekKey()) {
+    mealDoneDays = { __week: currentMealWeekKey() };
+    saveMealDoneDays();
+  }
+}
+
+function currentMealDayName(date = new Date()) {
+  const jsDay = date.getDay();
+  const mondayIndex = jsDay === 0 ? 6 : jsDay - 1;
+  return mealDayNames[mondayIndex] || mealDayNames[0];
+}
+
+function currentMealWeekKey(date = new Date()) {
+  const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const day = copy.getDay() || 7;
+  copy.setDate(copy.getDate() - day + 1);
+  return `${copy.getFullYear()}-${String(copy.getMonth() + 1).padStart(2, "0")}-${String(copy.getDate()).padStart(2, "0")}`;
+}
+
+function formatMealLocalDateTime(date = new Date()) {
+  return date.toLocaleString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
 }
 
 function formatMacro(value) {
