@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Ironix power avatar">
+  <rect width="240" height="240" rx="120" fill="#101216"/>
+  <circle cx="120" cy="120" r="108" fill="#f2a23a" opacity=".18"/>
+  <path d="M58 174c11-42 36-67 62-67s51 25 62 67c-18 20-38 31-62 31s-44-11-62-31Z" fill="#dfe5ef"/>
+  <circle cx="120" cy="64" r="31" fill="#dfe5ef"/>
+  <path d="M76 122c10-20 25-31 44-31s34 11 44 31l-16 16c-9-12-18-18-28-18s-19 6-28 18Z" fill="#f2a23a"/>
+  <path d="M41 146h178v17H41zM24 138h26v34H24zM210 138h26v34h-26z" fill="#f5f7fb"/>
+</svg>

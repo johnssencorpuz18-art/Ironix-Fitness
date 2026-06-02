@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Ironix runner avatar">
+  <rect width="240" height="240" rx="120" fill="#101216"/>
+  <circle cx="120" cy="120" r="108" fill="#3fb98f" opacity=".18"/>
+  <circle cx="126" cy="57" r="29" fill="#f5f7fb"/>
+  <path d="M97 101c17-14 43-13 60 3l-16 55 31 40h-30l-28-33-26 33H58l45-61Z" fill="#f5f7fb"/>
+  <path d="M85 117 54 96l13-20 35 24Zm57 3 37 9-6 23-44-11Z" fill="#3fb98f"/>
+  <path d="M87 197h112v14H87z" fill="#f2a23a"/>
+</svg>

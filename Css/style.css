@@ -379,6 +379,7 @@ main,
 }
 
 .profile-form input,
+.profile-form select,
 .profile-form textarea {
   margin-top: 4px;
   min-height: 38px;
@@ -398,6 +399,72 @@ main,
 
 .profile-form button {
   margin-top: 4px;
+}
+
+.avatar-picker {
+  display: grid;
+  gap: 8px;
+}
+
+.avatar-picker > span,
+.profile-form-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.avatar-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.avatar-choice {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  min-height: 112px;
+  padding: 8px;
+  place-items: center;
+  text-align: center;
+}
+
+.avatar-choice input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.avatar-choice img,
+.avatar-choice-custom span {
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(242, 162, 58, 0.22);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  object-fit: cover;
+}
+
+.avatar-choice-custom span {
+  color: var(--accent);
+  display: grid;
+  font-size: 0.76rem;
+  font-weight: 900;
+  place-items: center;
+  text-transform: uppercase;
+}
+
+.avatar-choice strong {
+  font-size: 0.82rem;
+  line-height: 1.15;
+}
+
+.avatar-choice:has(input:checked) {
+  border-color: rgba(242, 162, 58, 0.58);
+  background: rgba(242, 162, 58, 0.14);
 }
 
 .meal-planner {

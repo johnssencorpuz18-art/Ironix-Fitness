@@ -1,10 +1,18 @@
 <?php
 require "require_auth.php";
 require "db.php";
+require "profile_schema.php";
+require "profile_avatars.php";
 
 $userId = current_user_id();
+ensure_profile_columns($conn);
 
-$stmt = $conn->prepare("SELECT name, email, bio, age, height_cm, weight_kg, fitness_goal, avatar_url FROM users WHERE id = ?");
+$stmt = $conn->prepare("
+    SELECT name, email, bio, age, height_cm, weight_kg, fitness_goal, avatar_url,
+           birthday, contact_number, location, gender, activity_level
+    FROM users
+    WHERE id = ?
+");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -83,14 +91,30 @@ $recent = $recentStmt->get_result();
 $heightM = !empty($user["height_cm"]) ? ((float)$user["height_cm"] / 100) : 0;
 $weightKg = !empty($user["weight_kg"]) ? (float)$user["weight_kg"] : 0;
 $bmi = ($heightM > 0 && $weightKg > 0) ? $weightKg / ($heightM * $heightM) : null;
-$profileFields = ["bio", "age", "height_cm", "weight_kg", "fitness_goal", "avatar_url"];
+$defaultAvatars = default_profile_avatars();
+$defaultAvatarPaths = default_profile_avatar_paths();
+$currentAvatar = $user["avatar_url"] ?? "";
+$hasDefaultAvatar = in_array($currentAvatar, $defaultAvatarPaths, true);
+$profileFields = [
+    "bio",
+    "age",
+    "height_cm",
+    "weight_kg",
+    "fitness_goal",
+    "avatar_url",
+    "birthday",
+    "contact_number",
+    "location",
+    "gender",
+    "activity_level",
+];
 $completedFields = 1;
 foreach ($profileFields as $field) {
     if (!empty($user[$field])) {
         $completedFields++;
     }
 }
-$profileCompletion = round(($completedFields / 7) * 100);
+$profileCompletion = round(($completedFields / (count($profileFields) + 1)) * 100);
 $workouts = (int)$stats["workouts"];
 $activeDays = (int)$stats["active_days"];
 $avgVolume = $workouts > 0 ? round($stats["volume_total"] / $workouts) : 0;
@@ -103,7 +127,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=49">
+  <link rel="stylesheet" href="Css/style.css?v=50">
 </head>
 <body>
   <header>
@@ -128,7 +152,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
     </section>
 
     <section class="profile-layout">
-      <form class="panel profile-form" action="profile_update.php" method="POST">
+      <form class="panel profile-form" action="profile_update.php" method="POST" enctype="multipart/form-data">
         <div class="panel-title">
           <div>
             <span class="eyebrow">Details</span>
@@ -140,6 +164,9 @@ $consistency = min(100, round(($activeDays / 7) * 100));
           <label>Name
             <input name="name" value="<?php echo htmlspecialchars($user["name"]); ?>" required>
           </label>
+          <label>Birthday
+            <input name="birthday" type="date" value="<?php echo htmlspecialchars($user["birthday"] ?? ""); ?>">
+          </label>
           <label>Age
             <input name="age" type="number" value="<?php echo htmlspecialchars($user["age"] ?? ""); ?>">
           </label>
@@ -148,6 +175,36 @@ $consistency = min(100, round(($activeDays / 7) * 100));
           </label>
           <label>Weight
             <input name="weight_kg" type="number" step="0.1" value="<?php echo htmlspecialchars($user["weight_kg"] ?? ""); ?>" placeholder="kg">
+          </label>
+          <label>Contact Number
+            <input name="contact_number" type="tel" value="<?php echo htmlspecialchars($user["contact_number"] ?? ""); ?>" placeholder="+63 900 000 0000">
+          </label>
+          <label>Location
+            <input name="location" value="<?php echo htmlspecialchars($user["location"] ?? ""); ?>" placeholder="City or province">
+          </label>
+          <label>Gender
+            <select name="gender">
+              <?php
+                $genderOptions = ["", "Male", "Female", "Prefer not to say", "Other"];
+                foreach ($genderOptions as $option):
+              ?>
+                <option value="<?php echo htmlspecialchars($option); ?>" <?php echo ($user["gender"] ?? "") === $option ? "selected" : ""; ?>>
+                  <?php echo $option === "" ? "Select gender" : htmlspecialchars($option); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </label>
+          <label>Activity Level
+            <select name="activity_level">
+              <?php
+                $activityOptions = ["", "Sedentary", "Lightly active", "Moderately active", "Very active", "Athlete"];
+                foreach ($activityOptions as $option):
+              ?>
+                <option value="<?php echo htmlspecialchars($option); ?>" <?php echo ($user["activity_level"] ?? "") === $option ? "selected" : ""; ?>>
+                  <?php echo $option === "" ? "Select activity" : htmlspecialchars($option); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
           </label>
         </div>
 
@@ -159,8 +216,37 @@ $consistency = min(100, round(($activeDays / 7) * 100));
           <textarea name="bio" rows="2" placeholder="Training focus, limits, or notes"><?php echo htmlspecialchars($user["bio"] ?? ""); ?></textarea>
         </label>
 
-        <label>Profile Image URL
-          <input name="avatar_url" value="<?php echo htmlspecialchars($user["avatar_url"] ?? ""); ?>" placeholder="https://...">
+        <div class="avatar-picker">
+          <span>Profile Image</span>
+          <div class="avatar-choice-grid">
+            <?php foreach ($defaultAvatars as $avatar): ?>
+              <label class="avatar-choice">
+                <input
+                  type="radio"
+                  name="avatar_choice"
+                  value="<?php echo htmlspecialchars($avatar["path"]); ?>"
+                  <?php echo $currentAvatar === $avatar["path"] || ($currentAvatar === "" && $avatar["path"] === $defaultAvatars[0]["path"]) ? "checked" : ""; ?>
+                >
+                <img src="<?php echo htmlspecialchars($avatar["path"]); ?>" alt="<?php echo htmlspecialchars($avatar["label"]); ?> avatar">
+                <strong><?php echo htmlspecialchars($avatar["label"]); ?></strong>
+              </label>
+            <?php endforeach; ?>
+
+            <label class="avatar-choice avatar-choice-custom">
+              <input type="radio" name="avatar_choice" value="" <?php echo !$hasDefaultAvatar && $currentAvatar !== "" ? "checked" : ""; ?>>
+              <span>Custom</span>
+              <strong>Upload or URL</strong>
+            </label>
+          </div>
+        </div>
+
+        <label>Upload Photo
+          <input name="avatar_upload" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+          <small class="profile-form-note">PNG, JPG, WebP, or GIF. Max 3 MB.</small>
+        </label>
+
+        <label>Custom Image URL
+          <input name="avatar_url" value="<?php echo htmlspecialchars(!$hasDefaultAvatar ? $currentAvatar : ""); ?>" placeholder="https://... or uploaded path">
         </label>
 
         <button type="submit">Save Profile</button>
@@ -246,6 +332,16 @@ $consistency = min(100, round(($activeDays / 7) * 100));
               <span>Body Details</span>
               <strong><?php echo $weightKg ? htmlspecialchars($weightKg) . " kg" : "Weight needed"; ?></strong>
               <small><?php echo !empty($user["height_cm"]) ? htmlspecialchars($user["height_cm"]) . " cm height" : "Add height for BMI and better estimates"; ?></small>
+            </div>
+            <div>
+              <span>Profile Info</span>
+              <strong><?php echo !empty($user["activity_level"]) ? htmlspecialchars($user["activity_level"]) : "Activity needed"; ?></strong>
+              <small><?php echo !empty($user["location"]) ? htmlspecialchars($user["location"]) : "Add location for local planning context"; ?></small>
+            </div>
+            <div>
+              <span>Contact</span>
+              <strong><?php echo !empty($user["contact_number"]) ? htmlspecialchars($user["contact_number"]) : "Not added"; ?></strong>
+              <small><?php echo !empty($user["birthday"]) ? "Birthday: " . htmlspecialchars($user["birthday"]) : "Add birthday for a complete profile"; ?></small>
             </div>
           </div>
         </section>

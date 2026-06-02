@@ -2,15 +2,99 @@
 
 require "require_auth.php";
 require "db.php";
+require "profile_schema.php";
+require "profile_avatars.php";
+
+function null_if_empty(string $value): ?string
+{
+    $value = trim($value);
+    return $value === "" ? null : $value;
+}
+
+function normalize_date(?string $value): ?string
+{
+    $value = trim((string)$value);
+    if ($value === "") {
+        return null;
+    }
+
+    $date = DateTime::createFromFormat("Y-m-d", $value);
+    return $date && $date->format("Y-m-d") === $value ? $value : null;
+}
+
+function save_uploaded_avatar(int $userId): ?string
+{
+    if (empty($_FILES["avatar_upload"]) || $_FILES["avatar_upload"]["error"] === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($_FILES["avatar_upload"]["error"] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo "Avatar upload failed. Try a smaller image.";
+        exit;
+    }
+
+    if ($_FILES["avatar_upload"]["size"] > 3 * 1024 * 1024) {
+        http_response_code(400);
+        echo "Avatar upload must be 3 MB or smaller.";
+        exit;
+    }
+
+    $tmpPath = $_FILES["avatar_upload"]["tmp_name"];
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file($tmpPath);
+    $allowed = [
+        "image/jpeg" => "jpg",
+        "image/png" => "png",
+        "image/webp" => "webp",
+        "image/gif" => "gif",
+    ];
+
+    if (!isset($allowed[$mime])) {
+        http_response_code(400);
+        echo "Avatar must be a JPG, PNG, WebP, or GIF image.";
+        exit;
+    }
+
+    $directory = __DIR__ . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR . "avatars";
+    if (!is_dir($directory)) {
+        mkdir($directory, 0755, true);
+    }
+
+    $filename = "user-" . $userId . "-" . bin2hex(random_bytes(8)) . "." . $allowed[$mime];
+    $target = $directory . DIRECTORY_SEPARATOR . $filename;
+
+    if (!move_uploaded_file($tmpPath, $target)) {
+        http_response_code(500);
+        echo "Could not save avatar upload.";
+        exit;
+    }
+
+    return "uploads/avatars/" . $filename;
+}
 
 $userId = current_user_id();
+ensure_profile_columns($conn);
+
 $name = trim($_POST["name"] ?? "");
 $bio = trim($_POST["bio"] ?? "");
-$age = $_POST["age"] === "" ? null : (int)$_POST["age"];
-$height = $_POST["height_cm"] === "" ? null : (float)$_POST["height_cm"];
-$weight = $_POST["weight_kg"] === "" ? null : (float)$_POST["weight_kg"];
+$age = ($_POST["age"] ?? "") === "" ? null : (int)$_POST["age"];
+$height = ($_POST["height_cm"] ?? "") === "" ? null : (float)$_POST["height_cm"];
+$weight = ($_POST["weight_kg"] ?? "") === "" ? null : (float)$_POST["weight_kg"];
 $goal = trim($_POST["fitness_goal"] ?? "");
-$avatar = trim($_POST["avatar_url"] ?? "");
+$birthday = normalize_date($_POST["birthday"] ?? null);
+$contact = null_if_empty($_POST["contact_number"] ?? "");
+$location = null_if_empty($_POST["location"] ?? "");
+$gender = null_if_empty($_POST["gender"] ?? "");
+$activityLevel = null_if_empty($_POST["activity_level"] ?? "");
+
+$avatarChoice = trim($_POST["avatar_choice"] ?? "");
+$customAvatar = trim($_POST["avatar_url"] ?? "");
+$avatar = in_array($avatarChoice, default_profile_avatar_paths(), true) ? $avatarChoice : $customAvatar;
+$uploadedAvatar = save_uploaded_avatar($userId);
+if ($uploadedAvatar !== null) {
+    $avatar = $uploadedAvatar;
+}
 
 if ($name === "") {
     http_response_code(400);
@@ -20,10 +104,26 @@ if ($name === "") {
 
 $stmt = $conn->prepare("
     UPDATE users
-    SET name = ?, bio = ?, age = ?, height_cm = ?, weight_kg = ?, fitness_goal = ?, avatar_url = ?
+    SET name = ?, bio = ?, age = ?, height_cm = ?, weight_kg = ?, fitness_goal = ?, avatar_url = ?,
+        birthday = ?, contact_number = ?, location = ?, gender = ?, activity_level = ?
     WHERE id = ?
 ");
-$stmt->bind_param("ssidsssi", $name, $bio, $age, $height, $weight, $goal, $avatar, $userId);
+$stmt->bind_param(
+    "ssiddsssssssi",
+    $name,
+    $bio,
+    $age,
+    $height,
+    $weight,
+    $goal,
+    $avatar,
+    $birthday,
+    $contact,
+    $location,
+    $gender,
+    $activityLevel,
+    $userId
+);
 
 if ($stmt->execute()) {
     $_SESSION["user_name"] = $name;

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Ironix default avatar">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f2a23a"/>
+      <stop offset="1" stop-color="#3fb98f"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="120" fill="#101216"/>
+  <circle cx="120" cy="120" r="108" fill="url(#bg)" opacity=".22"/>
+  <circle cx="120" cy="72" r="34" fill="#f5f7fb"/>
+  <path d="M68 184c6-39 35-62 52-62s46 23 52 62c-17 17-35 25-52 25s-35-8-52-25Z" fill="#f5f7fb"/>
+  <path d="M54 135h172v22H54zM28 128h30v36H28zM212 128h30v36h-30z" fill="#f2a23a"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Ironix focus avatar">
+  <rect width="240" height="240" rx="120" fill="#101216"/>
+  <circle cx="120" cy="120" r="108" fill="#f5f7fb" opacity=".08"/>
+  <circle cx="120" cy="66" r="32" fill="#f5f7fb"/>
+  <path d="M73 189c5-43 28-69 47-69s42 26 47 69c-14 14-30 21-47 21s-33-7-47-21Z" fill="#f5f7fb"/>
+  <path d="M88 132h64v20H88z" fill="#f2a23a"/>
+  <path d="m70 79 15-15 19 19-15 15Zm126 0-15-15-19 19 15 15Z" fill="#3fb98f"/>
+</svg>
