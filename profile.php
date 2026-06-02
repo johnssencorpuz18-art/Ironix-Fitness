@@ -127,7 +127,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=50">
+  <link rel="stylesheet" href="Css/style.css?v=52">
 </head>
 <body>
   <header>

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=50">
+  <link rel="stylesheet" href="Css/style.css?v=52">
 </head>
 <body>
   <header>
@@ -23,6 +23,7 @@
       <div class="hero-actions">
         <a class="button-link progress-link" href="workouts.php">Plan Workout</a>
         <a class="button-link secondary" href="live.php">Live Session</a>
+        <a class="button-link secondary" href="innovations.php">Innovation Roadmap</a>
       </div>
     </section>
 
