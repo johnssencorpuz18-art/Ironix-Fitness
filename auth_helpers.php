@@ -25,6 +25,7 @@ function render_nav($active = "") {
     if ($member) {
         echo '<li><a ' . ($active === "progress" ? 'class="active"' : '') . ' href="dashboard.php">Dashboard</a></li>';
         echo '<li><a ' . ($active === "workouts" ? 'class="active"' : '') . ' href="workouts.php">Plan</a></li>';
+        echo '<li><a ' . ($active === "live" ? 'class="active"' : '') . ' href="live.php">Live</a></li>';
         echo '<li><a ' . ($active === "diet" ? 'class="active"' : '') . ' href="diet.php">Diet</a></li>';
         echo '<li><a ' . ($active === "bmi" ? 'class="active"' : '') . ' href="bmi.php">BMI</a></li>';
         echo '<li><a ' . ($active === "community" ? 'class="active"' : '') . ' href="community.php">Community</a></li>';

@@ -369,10 +369,244 @@ const exerciseCatalog = [
   }
 ];
 
+exerciseCatalog.push(
+  {
+    name: "Dumbbell Fly",
+    category: "Upper Body",
+    muscle: "Chest",
+    equipment: "dumbbell",
+    level: "intermediate",
+    sets: 3,
+    reps: 12,
+    steps: ["Lie back with dumbbells over chest.", "Keep elbows softly bent.", "Open arms until chest stretches.", "Squeeze chest to bring weights back together."]
+  },
+  {
+    name: "Chest Dip",
+    category: "Upper Body",
+    muscle: "Chest",
+    equipment: "body only",
+    level: "advanced",
+    sets: 3,
+    reps: 8,
+    steps: ["Support yourself on parallel bars.", "Lean chest slightly forward.", "Lower until shoulders stay comfortable.", "Press back up with control."]
+  },
+  {
+    name: "Pull-Up",
+    category: "Upper Body",
+    muscle: "Back",
+    equipment: "body only",
+    level: "advanced",
+    sets: 4,
+    reps: 6,
+    steps: ["Hang with shoulders set down.", "Brace and pull chest toward the bar.", "Drive elbows toward ribs.", "Lower to a full controlled hang."]
+  },
+  {
+    name: "Single-Arm Dumbbell Row",
+    category: "Upper Body",
+    muscle: "Back",
+    equipment: "dumbbell",
+    level: "beginner",
+    sets: 3,
+    reps: 12,
+    steps: ["Support one hand on a bench.", "Keep back flat and hips square.", "Row dumbbell toward hip.", "Lower without twisting."]
+  },
+  {
+    name: "Face Pull",
+    category: "Upper Body",
+    muscle: "Shoulders",
+    equipment: "cable",
+    level: "beginner",
+    sets: 3,
+    reps: 15,
+    steps: ["Set cable around face height.", "Pull rope toward forehead.", "Keep elbows high.", "Return slowly with shoulders down."]
+  },
+  {
+    name: "Arnold Press",
+    category: "Upper Body",
+    muscle: "Shoulders",
+    equipment: "dumbbell",
+    level: "intermediate",
+    sets: 3,
+    reps: 10,
+    steps: ["Start dumbbells in front of shoulders.", "Rotate palms outward as you press.", "Finish overhead with ribs down.", "Lower through the same path."]
+  },
+  {
+    name: "Hammer Curl",
+    category: "Upper Body",
+    muscle: "Biceps",
+    equipment: "dumbbell",
+    level: "beginner",
+    sets: 3,
+    reps: 12,
+    steps: ["Hold dumbbells with thumbs up.", "Keep elbows by your sides.", "Curl without swinging.", "Lower until arms are straight."]
+  },
+  {
+    name: "Skull Crusher",
+    category: "Upper Body",
+    muscle: "Triceps",
+    equipment: "dumbbell",
+    level: "intermediate",
+    sets: 3,
+    reps: 10,
+    steps: ["Lie back with weights over shoulders.", "Keep upper arms mostly still.", "Lower weights beside your head.", "Extend elbows to finish."]
+  },
+  {
+    name: "Front Squat",
+    category: "Lower Body",
+    muscle: "Quadriceps",
+    equipment: "barbell",
+    level: "advanced",
+    sets: 4,
+    reps: 6,
+    steps: ["Rack bar on front shoulders.", "Keep elbows high and brace.", "Squat between hips.", "Stand tall through midfoot."]
+  },
+  {
+    name: "Bulgarian Split Squat",
+    category: "Lower Body",
+    muscle: "Quadriceps",
+    equipment: "dumbbell",
+    level: "intermediate",
+    sets: 3,
+    reps: 10,
+    steps: ["Place rear foot on bench.", "Keep front foot planted.", "Lower until front thigh works hard.", "Drive up without bouncing."]
+  },
+  {
+    name: "Hip Thrust",
+    category: "Lower Body",
+    muscle: "Glutes",
+    equipment: "barbell",
+    level: "beginner",
+    sets: 4,
+    reps: 10,
+    steps: ["Set upper back on bench.", "Place bar over hips.", "Drive hips up and squeeze glutes.", "Lower under control."]
+  },
+  {
+    name: "Walking Lunge",
+    category: "Lower Body",
+    muscle: "Glutes",
+    equipment: "dumbbell",
+    level: "beginner",
+    sets: 3,
+    reps: 12,
+    steps: ["Step forward with control.", "Lower both knees safely.", "Push through front foot.", "Alternate steps forward."]
+  },
+  {
+    name: "Standing Calf Raise",
+    category: "Lower Body",
+    muscle: "Calves",
+    equipment: "machine",
+    level: "beginner",
+    sets: 4,
+    reps: 15,
+    steps: ["Stand tall on the platform.", "Lower heels for a stretch.", "Rise onto toes.", "Pause briefly at the top."]
+  },
+  {
+    name: "Hanging Knee Raise",
+    category: "Core",
+    muscle: "Abdominals",
+    equipment: "body only",
+    level: "intermediate",
+    sets: 3,
+    reps: 12,
+    steps: ["Hang from a bar.", "Brace before moving.", "Raise knees toward ribs.", "Lower without swinging."]
+  },
+  {
+    name: "Pallof Press",
+    category: "Core",
+    muscle: "Core",
+    equipment: "cable",
+    level: "beginner",
+    sets: 3,
+    reps: 12,
+    steps: ["Stand side-on to cable.", "Hold handle at chest.", "Press straight out resisting rotation.", "Return to chest under control."]
+  },
+  {
+    name: "Cable Woodchop",
+    category: "Core",
+    muscle: "Obliques",
+    equipment: "cable",
+    level: "intermediate",
+    sets: 3,
+    reps: 12,
+    steps: ["Set cable high or low.", "Brace hips and ribs.", "Rotate through trunk with control.", "Return slowly."]
+  },
+  {
+    name: "Kettlebell Swing",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "kettlebells",
+    level: "intermediate",
+    sets: 5,
+    reps: 15,
+    steps: ["Hinge the kettlebell back.", "Snap hips forward.", "Let arms guide, not lift.", "Keep spine neutral."]
+  },
+  {
+    name: "Jump Rope",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "body only",
+    level: "beginner",
+    sets: 5,
+    reps: 60,
+    steps: ["Stand tall with elbows near ribs.", "Turn rope from wrists.", "Bounce lightly on toes.", "Keep rhythm steady."]
+  },
+  {
+    name: "Box Jump",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "body only",
+    level: "intermediate",
+    sets: 4,
+    reps: 8,
+    steps: ["Stand close to a stable box.", "Dip hips and swing arms.", "Jump and land softly.", "Step down before repeating."]
+  },
+  {
+    name: "Battle Rope Waves",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "machine",
+    level: "intermediate",
+    sets: 4,
+    reps: 30,
+    steps: ["Hold rope ends in athletic stance.", "Brace your trunk.", "Alternate fast arm waves.", "Keep breathing steady."]
+  },
+  {
+    name: "Treadmill Intervals",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "machine",
+    level: "beginner",
+    sets: 6,
+    reps: 1,
+    steps: ["Warm up first.", "Run hard for the work interval.", "Walk or jog during recovery.", "Repeat while posture stays tall."]
+  },
+  {
+    name: "Assault Bike Sprint",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "machine",
+    level: "advanced",
+    sets: 8,
+    reps: 1,
+    steps: ["Set a strong seated position.", "Drive arms and legs together.", "Sprint for the work interval.", "Recover before the next round."]
+  },
+  {
+    name: "Rowing Machine",
+    category: "Conditioning",
+    muscle: "Full Body",
+    equipment: "machine",
+    level: "beginner",
+    sets: 5,
+    reps: 2,
+    steps: ["Push with legs first.", "Lean back slightly.", "Pull handle to lower ribs.", "Return arms, body, then legs."]
+  }
+);
+
 const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 let selectedExercise = exerciseCatalog[0];
 let selectedCategory = "Upper Body";
-let selectedPlanDay = localStorage.getItem("ironixSelectedPlanDay") || dayNames[0];
+let selectedLevel = "All";
+let selectedPlanDay = new URLSearchParams(window.location.search).get("view") === "calendar" ? currentDayName() : (localStorage.getItem("ironixSelectedPlanDay") || currentDayName());
 let selectedPlanCategory = localStorage.getItem("ironixSelectedPlanCategory") || "Upper Body";
 let weeklyPlan = JSON.parse(localStorage.getItem("ironixWeeklyPlan") || "{}");
 let liveSession = JSON.parse(localStorage.getItem("ironixLiveSession") || "[]");
@@ -385,6 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupExercisePicker();
   setupWorkoutForm();
   loadWorkouts();
+  setupLocalScheduleClock();
 });
 
 function setupOnboarding() {
@@ -435,6 +670,7 @@ function readFitnessProfile() {
 function setupPlanner() {
   const tabs = document.getElementById("categoryTabs");
   const muscleSelect = document.getElementById("muscleSelect");
+  const levelSelect = document.getElementById("levelSelect");
   const search = document.getElementById("exerciseSearch");
 
   if (!tabs || !muscleSelect) return;
@@ -455,6 +691,10 @@ function setupPlanner() {
   });
 
   muscleSelect.addEventListener("change", renderExerciseCards);
+  levelSelect?.addEventListener("change", () => {
+    selectedLevel = levelSelect.value;
+    renderExerciseCards();
+  });
   search?.addEventListener("input", renderExerciseCards);
 
   document.getElementById("startExerciseButton")?.addEventListener("click", () => prefillWorkout(selectedExercise));
@@ -480,6 +720,18 @@ function setupLiveSession() {
     guidanceToggle.checked = localStorage.getItem("ironixSessionGuidance") !== "0";
     guidanceToggle.addEventListener("change", () => {
       localStorage.setItem("ironixSessionGuidance", guidanceToggle.checked ? "1" : "0");
+    });
+  }
+  const voiceToggle = document.getElementById("sessionVoiceToggle");
+  if (voiceToggle) {
+    voiceToggle.checked = localStorage.getItem("ironixVoiceAssist") === "1";
+    voiceToggle.addEventListener("change", () => {
+      localStorage.setItem("ironixVoiceAssist", voiceToggle.checked ? "1" : "0");
+      if (voiceToggle.checked) {
+        speakAssist("Voice assist is on. I will cue your workout starts, stops, and form guidance.");
+      } else {
+        stopAssistVoice();
+      }
     });
   }
 
@@ -516,6 +768,7 @@ function renderExerciseCards() {
   const count = document.getElementById("exerciseCount");
   const title = document.getElementById("exerciseBrowserTitle");
   const muscle = document.getElementById("muscleSelect")?.value || "All";
+  const level = document.getElementById("levelSelect")?.value || selectedLevel;
   const query = (document.getElementById("exerciseSearch")?.value || "").toLowerCase();
 
   if (!grid) return;
@@ -523,8 +776,9 @@ function renderExerciseCards() {
   const exercises = exerciseCatalog.filter(exercise => {
     const categoryMatch = exercise.category === selectedCategory;
     const muscleMatch = muscle === "All" || exercise.muscle === muscle;
+    const levelMatch = level === "All" || exercise.level === level;
     const queryMatch = !query || `${exercise.name} ${exercise.muscle} ${exercise.equipment}`.toLowerCase().includes(query);
-    return categoryMatch && muscleMatch && queryMatch;
+    return categoryMatch && muscleMatch && levelMatch && queryMatch;
   });
 
   if (title) title.textContent = muscle === "All" ? `${selectedCategory} exercises` : `${muscle} exercises`;
@@ -534,7 +788,7 @@ function renderExerciseCards() {
     <article class="exercise-card">
       <div class="exercise-card-content">
         <h4>${escapeHtml(exercise.name)}</h4>
-        <p>${escapeHtml(exercise.muscle)} | ${exercise.sets} x ${exercise.reps}</p>
+        <p>${escapeHtml(exercise.muscle)} | ${escapeHtml(exercise.level)} | ${exercise.sets} x ${exercise.reps}</p>
         <button type="button" data-exercise="${escapeHtml(exercise.name)}">View Demo</button>
       </div>
     </article>
@@ -556,7 +810,7 @@ function renderExerciseDetail(exercise, shouldScroll = true) {
     diagram.innerHTML = renderExerciseDemoSheet(exercise);
   }
 
-  setText("exerciseMeta", `${exercise.muscle} | ${exercise.equipment}`);
+  setText("exerciseMeta", `${exercise.muscle} | ${exercise.level} | ${exercise.equipment}`);
   setText("exerciseName", exercise.name);
   setText("exerciseSummary", `${exercise.sets} sets x ${exercise.reps} reps.`);
 
@@ -639,12 +893,15 @@ function renderCalendar() {
   if (!calendar) return;
 
   if (!dayNames.includes(selectedPlanDay)) {
-    selectedPlanDay = dayNames[0];
+    selectedPlanDay = currentDayName();
   }
 
   const day = selectedPlanDay;
   const items = normalizePlanEntries(weeklyPlan[day] || []);
   const planCategories = [...new Set(exerciseCatalog.map(exercise => exercise.category))];
+  const today = new Date();
+  const currentDay = currentDayName(today);
+  const currentIndex = dayNames.indexOf(currentDay);
 
   if (!planCategories.includes(selectedPlanCategory)) {
     selectedPlanCategory = planCategories[0];
@@ -654,13 +911,22 @@ function renderCalendar() {
   const planSelectedExercise = planCategoryExercises.find(exercise => exercise.name === selectedExercise.name) || planCategoryExercises[0] || selectedExercise;
 
   calendar.innerHTML = `
+    <div class="weekly-date-panel">
+      <span class="eyebrow">Local Schedule</span>
+      <strong id="weeklyLocalDateTime">${escapeHtml(formatLocalDateTime(today))}</strong>
+      <p id="weeklyLocalDateNote">Default day: ${escapeHtml(currentDay)} based on this device timezone.</p>
+    </div>
+
     <div class="calendar-tabs" role="tablist" aria-label="Weekly plan days">
-      ${dayNames.map(name => `
-        <button type="button" class="${name === day ? "active" : ""}" data-plan-tab="${escapeHtml(name)}" role="tab" aria-selected="${name === day ? "true" : "false"}">
+      ${dayNames.map((name, index) => {
+        const isPastDone = index < currentIndex;
+        const isToday = name === currentDay;
+        return `
+        <button type="button" class="${name === day ? "active" : ""} ${isToday ? "is-today" : ""} ${isPastDone ? "is-auto-done" : ""}" data-plan-tab="${escapeHtml(name)}" role="tab" aria-selected="${name === day ? "true" : "false"}">
           <span>${escapeHtml(name.slice(0, 3))}</span>
-          <strong>${normalizePlanEntries(weeklyPlan[name] || []).length}</strong>
+          <strong>${isPastDone ? "Done" : normalizePlanEntries(weeklyPlan[name] || []).length}</strong>
         </button>
-      `).join("")}
+      `;}).join("")}
     </div>
 
     <article class="calendar-day calendar-day-focused">
@@ -931,7 +1197,7 @@ function addExerciseToSession(exercise) {
   liveSession.push(createSessionItem(exercise));
   saveLiveSession();
   renderLiveSession();
-  setMessage(document.getElementById("formMessage"), `${exercise.name} added to your dashboard session.`);
+  setMessage(document.getElementById("formMessage"), `${exercise.name} added to your live session.`);
 }
 
 function addCalendarDayToSession(day) {
@@ -955,7 +1221,7 @@ function addCalendarDayToSession(day) {
   if (liveSession.length > before) {
     localStorage.setItem("ironixPendingSessionMessage", `${items.length} exercises from ${day} loaded. Continue your workout here, enter missing details, then check Done.`);
   }
-  window.location.href = "dashboard.php#liveSession";
+  window.location.href = "live.php";
 }
 
 function validatePlanDay(items) {
@@ -1153,6 +1419,7 @@ function toggleSessionTimer(id) {
     saveLiveSession();
     renderLiveSession();
     setMessage(document.getElementById("sessionMessage"), `${item.name} stopped at ${formatElapsedSeconds(item.elapsedSeconds)}.`);
+    speakAssist(`${item.name} stopped. Your measured time is ${Math.max(1, Math.ceil(item.elapsedSeconds / 60))} minutes.`);
     return;
   }
 
@@ -1166,6 +1433,7 @@ function toggleSessionTimer(id) {
   saveLiveSession();
   renderLiveSession();
   setMessage(document.getElementById("sessionMessage"), `${item.name} started.`);
+  speakSessionCue(item, "start");
 
   if (document.getElementById("sessionGuidanceToggle")?.checked) {
     openSessionDemo(id);
@@ -1246,6 +1514,7 @@ function openSessionDemo(id) {
   if (title) title.textContent = item.name;
   content.innerHTML = renderExerciseDemoSheet(exercise);
   modal.hidden = false;
+  speakSessionCue(exercise, "demo");
 }
 
 function closeSessionDemo() {
@@ -1267,6 +1536,7 @@ function saveCheckedSessionItem(item) {
   }
 
   setMessage(message, `Saving ${item.name}...`);
+  speakAssist(`${item.name} complete. Saving your progress.`);
   saveWorkoutEntry({
     workout: item.name,
     sets: item.sets,
@@ -1286,6 +1556,33 @@ function saveCheckedSessionItem(item) {
       setMessage(message, error.message);
       renderLiveSession();
     });
+}
+
+function speakSessionCue(exercise, mode) {
+  if (localStorage.getItem("ironixVoiceAssist") !== "1") return;
+  const cues = formCuesForExercise(exercise);
+  const intro = mode === "demo"
+    ? `${exercise.name} form guidance.`
+    : `Starting ${exercise.name}.`;
+  speakAssist(`${intro} ${cues.join(" ")}`);
+}
+
+function speakAssist(message) {
+  if (!("speechSynthesis" in window)) {
+    setMessage(document.getElementById("sessionMessage"), "Voice assist is not supported in this browser.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(message);
+  utterance.rate = 0.92;
+  utterance.pitch = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopAssistVoice() {
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
 }
 
 function saveLiveSession() {
@@ -1716,6 +2013,7 @@ function renderProgressPage(workouts) {
   setText("progressWorkouts", `${summary.workouts} ${summary.workouts === 1 ? "Session" : "Sessions"}`);
   setText("progressVolume", `${formatNumber(summary.volume)} kg`);
   setText("progressDays", `${activeDays} ${activeDays === 1 ? "Day" : "Days"}`);
+  renderExercisePrGrid(workouts);
 
   if (!recent) return;
 
@@ -1743,10 +2041,50 @@ function renderProgressPage(workouts) {
   bindWorkoutDeleteButtons(recent);
 }
 
+function renderExercisePrGrid(workouts) {
+  const grid = document.getElementById("exercisePrGrid");
+  if (!grid) return;
+
+  if (workouts.length === 0) {
+    grid.innerHTML = '<div class="empty-state">No PRs yet. Complete a live session or save a workout to start tracking.</div>';
+    return;
+  }
+
+  const records = new Map();
+  workouts.forEach(workout => {
+    const name = workout.workout_name || "Workout";
+    const weight = Number(workout.weight_kg) || 0;
+    const volume = (Number(workout.set_counts) || 0) * (Number(workout.rep_count) || 0) * weight;
+    const existing = records.get(name);
+    if (!existing || weight > existing.weight || (weight === existing.weight && volume > existing.volume)) {
+      records.set(name, {
+        name,
+        weight,
+        volume,
+        sets: Number(workout.set_counts) || 0,
+        reps: Number(workout.rep_count) || 0,
+        date: workout.created_at || ""
+      });
+    }
+  });
+
+  const rows = [...records.values()]
+    .sort((a, b) => b.weight - a.weight || b.volume - a.volume)
+    .slice(0, 12);
+
+  grid.innerHTML = rows.map(record => `
+    <article class="exercise-pr-card">
+      <span>${escapeHtml(record.name)}</span>
+      <strong>${formatNumber(record.weight)} kg</strong>
+      <p>${record.sets} sets x ${record.reps} reps | best set weight</p>
+      <small>${escapeHtml(record.date)}</small>
+    </article>
+  `).join("");
+}
+
 function renderTodayWorkouts(workouts) {
   const list = document.getElementById("todayWorkoutList");
   const count = document.getElementById("todayWorkoutCount");
-  if (!list) return;
 
   const todayKey = localDateKey(new Date());
   const today = workouts.filter(workout => String(workout.created_at || "").slice(0, 10) === todayKey);
@@ -1760,6 +2098,8 @@ function renderTodayWorkouts(workouts) {
   }
 
   renderTodayProgress(today);
+
+  if (!list) return;
 
   if (today.length === 0) {
     list.innerHTML = '<li class="empty-state">No completed exercises saved today.</li>';
@@ -1806,6 +2146,33 @@ function localDateKey(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function currentDayName(date = new Date()) {
+  const jsDay = date.getDay();
+  const mondayIndex = jsDay === 0 ? 6 : jsDay - 1;
+  return dayNames[mondayIndex] || dayNames[0];
+}
+
+function formatLocalDateTime(date = new Date()) {
+  return date.toLocaleString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function setupLocalScheduleClock() {
+  if (!document.getElementById("calendarGrid")) return;
+  window.setInterval(() => {
+    const target = document.getElementById("weeklyLocalDateTime");
+    const note = document.getElementById("weeklyLocalDateNote");
+    if (target) target.textContent = formatLocalDateTime();
+    if (note) note.textContent = `Default day: ${currentDayName()} based on this device timezone.`;
+  }, 60000);
 }
 
 function bindWorkoutDeleteButtons(container) {

@@ -1,7 +1,7 @@
 <?php
 require "require_auth.php";
 
-$allowedViews = ["setup", "library", "calendar", "log"];
+$allowedViews = ["setup", "library", "calendar", "live", "log"];
 $view = $_GET["view"] ?? "setup";
 
 if (!in_array($view, $allowedViews, true)) {
@@ -24,7 +24,7 @@ function view_class($name) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Workouts</title>
-  <link rel="stylesheet" href="Css/style.css?v=48">
+  <link rel="stylesheet" href="Css/style.css?v=49">
 </head>
 <body class="workouts-body">
   <header>
@@ -51,7 +51,7 @@ function view_class($name) {
       <a<?php echo view_class("setup"); ?> href="workouts.php?view=setup">Setup</a>
       <a<?php echo view_class("library"); ?> href="workouts.php?view=library">Exercise Library</a>
       <a<?php echo view_class("calendar"); ?> href="workouts.php?view=calendar">Weekly Plan</a>
-      <a href="dashboard.php#liveSession">Live Session</a>
+      <a<?php echo view_class("live"); ?> href="live.php">Live Session</a>
       <a<?php echo view_class("log"); ?> href="workouts.php?view=log">Manual Log</a>
     </section>
 
@@ -141,6 +141,14 @@ function view_class($name) {
         <label for="muscleSelect">Target muscle</label>
         <select id="muscleSelect"></select>
 
+        <label for="levelSelect">Training level</label>
+        <select id="levelSelect">
+          <option value="All">All levels</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+
         <label for="exerciseSearch">Search exercise</label>
         <input id="exerciseSearch" type="search" placeholder="Search by name or equipment">
       </aside>
@@ -168,7 +176,7 @@ function view_class($name) {
           <ol id="exerciseSteps"></ol>
           <div class="detail-actions">
             <button type="button" id="startExerciseButton">Manual Log</button>
-            <button type="button" class="secondary-button" id="addToSessionButton">Add To Dashboard</button>
+            <button type="button" class="secondary-button" id="addToSessionButton">Add To Live</button>
             <button type="button" class="secondary-button" id="addToCalendarButton">Add To Workout</button>
           </div>
 
@@ -299,7 +307,7 @@ function view_class($name) {
 
             <div class="summary-card">
               <span class="card-mark">03</span>
-              <span>Total Volume</span>
+              <span>Total Weight Lifted</span>
               <strong id="totalVolume">0 kg</strong>
             </div>
 
@@ -333,7 +341,7 @@ function view_class($name) {
         <a class="button-link" href="workouts.php?view=calendar">Next: Weekly Plan</a>
       <?php elseif ($view === "calendar"): ?>
         <a class="button-link secondary" href="workouts.php?view=library">Back</a>
-        <a class="button-link" href="dashboard.php#liveSession">Next: Live Session</a>
+        <a class="button-link" href="live.php">Next: Live Session</a>
       <?php else: ?>
         <a class="button-link secondary" href="workouts.php?view=calendar">Back</a>
         <a class="button-link" href="dashboard.php">Go To Dashboard</a>
@@ -341,6 +349,6 @@ function view_class($name) {
     </div>
   </main>
 
-  <script src="Js/app.js?v=49"></script>
+  <script src="Js/app.js?v=50"></script>
 </body>
 </html>

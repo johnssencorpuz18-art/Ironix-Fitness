@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Progress</title>
-  <link rel="stylesheet" href="Css/style.css?v=48">
+  <link rel="stylesheet" href="Css/style.css?v=49">
 </head>
 <body>
   <header>
@@ -20,7 +20,10 @@
         <p class="subtitle">Your totals update from the workouts you save in the workout dashboard.</p>
       </div>
 
-      <a class="button-link progress-link" href="workouts.php">Plan Workout</a>
+      <div class="hero-actions">
+        <a class="button-link progress-link" href="workouts.php">Plan Workout</a>
+        <a class="button-link secondary" href="live.php">Live Session</a>
+      </div>
     </section>
 
     <section class="progress-split">
@@ -41,7 +44,7 @@
           </div>
 
           <div class="stat-card">
-            <h3>Total Volume</h3>
+            <h3>Total Weight Lifted</h3>
             <p id="progressVolume">0 kg</p>
           </div>
 
@@ -69,7 +72,7 @@
           </div>
 
           <div class="stat-card">
-            <h3>Volume Today</h3>
+            <h3>Weight Lifted Today</h3>
             <p id="todayProgressVolume">0 kg</p>
           </div>
 
@@ -82,56 +85,6 @@
     </section>
 
     <section class="dashboard-workspace">
-      <section class="panel live-session-panel dashboard-session-panel" id="liveSession">
-        <div class="section-title">
-          <div>
-            <span class="eyebrow">Today's Workout</span>
-            <h3>Live Session</h3>
-          </div>
-          <div class="session-actions">
-            <label class="guidance-toggle">
-              <input type="checkbox" id="sessionGuidanceToggle">
-              <span>Show Demo On Start</span>
-            </label>
-            <a class="button-link secondary compact-link" href="workouts.php?view=calendar">Weekly Plan</a>
-            <a class="button-link secondary compact-link" href="workouts.php?view=library">Add Exercises</a>
-            <button type="button" class="secondary-button" id="clearSessionButton">Clear</button>
-          </div>
-        </div>
-
-        <div class="session-status-grid">
-          <div>
-            <span>Queued</span>
-            <strong id="sessionExerciseCount">0</strong>
-          </div>
-          <div>
-            <span>Done Today</span>
-            <strong id="sessionDoneCount">0</strong>
-          </div>
-          <div>
-            <span>Queued Volume</span>
-            <strong id="sessionVolume">0 kg</strong>
-          </div>
-        </div>
-
-        <div class="live-session-list" id="liveSessionList"></div>
-        <p class="form-message" id="sessionMessage" aria-live="polite"></p>
-      </section>
-
-      <div class="demo-modal" id="sessionDemoModal" hidden>
-        <div class="demo-modal-backdrop" data-close-demo="1"></div>
-        <section class="demo-modal-panel" role="dialog" aria-modal="true" aria-labelledby="sessionDemoTitle">
-          <div class="section-title">
-            <div>
-              <span class="eyebrow">Guided Demo</span>
-              <h3 id="sessionDemoTitle">Exercise Form</h3>
-            </div>
-            <button type="button" class="secondary-button compact-link" data-close-demo="1">Close</button>
-          </div>
-          <div id="sessionDemoContent"></div>
-        </section>
-      </div>
-
       <section class="panel today-saved-panel">
         <div class="section-title">
           <div>
@@ -155,8 +108,18 @@
 
       <ul class="workout-list" id="progressRecent"></ul>
     </section>
+
+    <section class="panel exercise-pr-panel">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">Exercise PRs</span>
+          <h3>Best Weight By Exercise</h3>
+        </div>
+      </div>
+      <div class="exercise-pr-grid" id="exercisePrGrid"></div>
+    </section>
   </main>
 
-  <script src="Js/app.js?v=49"></script>
+  <script src="Js/app.js?v=50"></script>
 </body>
 </html>

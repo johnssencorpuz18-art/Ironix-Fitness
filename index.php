@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IRONIX Fitness</title>
-  <link rel="stylesheet" href="Css/style.css?v=48">
+  <link rel="stylesheet" href="Css/style.css?v=49">
 </head>
 <body>
   <header>
@@ -14,9 +14,8 @@
 
   <main class="hero">
     <section class="hero-text">
-      <img class="hero-logo" src="Assets/ironix-logo.svg" alt="Ironix - Stronger Every Day">
       <span class="eyebrow">Training Platform</span>
-      <h2>Build strength with every session tracked.</h2>
+      <h2>IRONIX Fitness</h2>
       <p>Log workouts, calculate BMI, review progress, compare leaderboards, and keep diet choices in one focused IRONIX workspace.</p>
       <div class="hero-actions">
         <a class="button-link" href="auth.php#signup">Get Started</a>

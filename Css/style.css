@@ -118,7 +118,7 @@ header {
 
 nav {
   width: min(1180px, calc(100% - 32px));
-  min-height: 76px;
+  min-height: 86px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -137,9 +137,9 @@ nav {
 
 .brand-logo img {
   display: block;
-  height: 54px;
+  height: 72px;
   object-fit: contain;
-  width: 132px;
+  width: 180px;
 }
 
 .brand-logo:hover,
@@ -223,11 +223,15 @@ main,
 }
 
 .hero-logo {
-  display: block;
+  display: none;
   height: auto;
   margin: 0 0 22px;
   max-width: min(420px, 100%);
   width: 100%;
+}
+
+.compact-hero {
+  min-height: auto;
 }
 
 .hero-text h2,
@@ -1131,6 +1135,15 @@ label {
   background: rgba(242, 162, 58, 0.16);
 }
 
+.calendar-tabs button.is-today {
+  box-shadow: inset 0 0 0 1px rgba(217, 165, 41, 0.42);
+}
+
+.calendar-tabs button.is-auto-done {
+  border-color: rgba(63, 185, 143, 0.34);
+  background: rgba(63, 185, 143, 0.1);
+}
+
 .calendar-tabs span {
   font-size: 0.82rem;
   font-weight: 800;
@@ -1139,6 +1152,26 @@ label {
 .calendar-tabs strong {
   color: var(--accent-2);
   font-size: 1rem;
+}
+
+.weekly-date-panel {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 14px;
+}
+
+.weekly-date-panel strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.weekly-date-panel p {
+  color: var(--muted);
+  margin: 0;
 }
 
 .calendar-day-focused {
@@ -1650,6 +1683,42 @@ label {
 .stat-card p {
   font-size: clamp(1.45rem, 3vw, 2rem);
   line-height: 1.1;
+}
+
+.exercise-pr-panel {
+  margin-top: 22px;
+}
+
+.exercise-pr-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.exercise-pr-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+}
+
+.exercise-pr-card span {
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.exercise-pr-card strong {
+  color: var(--accent-2);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.exercise-pr-card p,
+.exercise-pr-card small {
+  color: var(--muted);
+  margin: 0;
 }
 
 .card-mark {

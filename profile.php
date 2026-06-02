@@ -103,7 +103,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile - IRONIX</title>
-  <link rel="stylesheet" href="Css/style.css?v=48">
+  <link rel="stylesheet" href="Css/style.css?v=49">
 </head>
 <body>
   <header>
@@ -209,7 +209,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
             <p><?php echo (int)$stats["sets_total"]; ?></p>
           </div>
           <div class="stat-card">
-            <h3>Total Volume</h3>
+            <h3>Total Weight Lifted</h3>
             <p><?php echo round($stats["volume_total"]); ?> kg</p>
           </div>
           <div class="stat-card">
