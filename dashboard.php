@@ -44,8 +44,8 @@
           </div>
 
           <div class="stat-card">
-            <h3>Total Weight Lifted</h3>
-            <p id="progressVolume">0 kg</p>
+            <h3>Best Exercise PR</h3>
+            <p id="progressVolume">0 lb</p>
           </div>
 
           <div class="stat-card">
@@ -72,8 +72,8 @@
           </div>
 
           <div class="stat-card">
-            <h3>Weight Lifted Today</h3>
-            <p id="todayProgressVolume">0 kg</p>
+            <h3>Best PR Today</h3>
+            <p id="todayProgressVolume">0 lb</p>
           </div>
 
           <div class="stat-card">
@@ -169,6 +169,6 @@
     </section>
   </main>
 
-  <script src="Js/app.js?v=52"></script>
+  <script src="Js/app.js?v=53"></script>
 </body>
 </html>

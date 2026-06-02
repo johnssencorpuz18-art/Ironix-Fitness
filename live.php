@@ -54,8 +54,8 @@
           <strong id="sessionDoneCount">0</strong>
         </div>
         <div>
-          <span>Queued Lift</span>
-          <strong id="sessionVolume">0 kg</strong>
+          <span>Queued Best Weight</span>
+          <strong id="sessionVolume">0 lb</strong>
         </div>
       </div>
 
@@ -92,6 +92,6 @@
     </div>
   </main>
 
-  <script src="Js/app.js?v=52"></script>
+  <script src="Js/app.js?v=53"></script>
 </body>
 </html>

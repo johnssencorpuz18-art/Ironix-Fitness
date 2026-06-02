@@ -23,6 +23,7 @@ $statsStmt = $conn->prepare("
         COUNT(*) AS workouts,
         COALESCE(SUM(set_counts), 0) AS sets_total,
         COALESCE(SUM(set_counts * rep_count * weight_kg), 0) AS volume_total,
+        COALESCE(MAX(weight_kg), 0) AS best_weight,
         COALESCE(SUM(calories_burned), 0) AS calories_total,
         COUNT(DISTINCT DATE(created_at)) AS active_days
     FROM workout
@@ -38,6 +39,7 @@ $weekStmt = $conn->prepare("
         COUNT(*) AS workouts_week,
         COALESCE(SUM(set_counts), 0) AS sets_week,
         COALESCE(SUM(set_counts * rep_count * weight_kg), 0) AS volume_week,
+        COALESCE(MAX(weight_kg), 0) AS best_week_weight,
         COALESCE(SUM(calories_burned), 0) AS calories_week
     FROM workout
     WHERE user_id = ?
@@ -53,11 +55,12 @@ $bestStmt = $conn->prepare("
         workout_name,
         COUNT(*) AS sessions,
         COALESCE(SUM(set_counts * rep_count * weight_kg), 0) AS total_volume,
+        COALESCE(MAX(weight_kg), 0) AS best_weight,
         MAX(created_at) AS last_done
     FROM workout
     WHERE user_id = ?
     GROUP BY workout_name
-    ORDER BY total_volume DESC, sessions DESC
+    ORDER BY best_weight DESC, total_volume DESC, sessions DESC
     LIMIT 1
 ");
 $bestStmt->bind_param("i", $userId);
@@ -120,6 +123,10 @@ $activeDays = (int)$stats["active_days"];
 $avgVolume = $workouts > 0 ? round($stats["volume_total"] / $workouts) : 0;
 $avgCalories = $workouts > 0 ? round($stats["calories_total"] / $workouts) : 0;
 $consistency = min(100, round(($activeDays / 7) * 100));
+
+function kg_to_lb($value) {
+    return round(((float)$value) * 2.20462, 1);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -295,8 +302,8 @@ $consistency = min(100, round(($activeDays / 7) * 100));
             <p><?php echo (int)$stats["sets_total"]; ?></p>
           </div>
           <div class="stat-card">
-            <h3>Total Weight Lifted</h3>
-            <p><?php echo round($stats["volume_total"]); ?> kg</p>
+            <h3>Best Exercise PR</h3>
+            <p><?php echo kg_to_lb($stats["best_weight"]); ?> lb</p>
           </div>
           <div class="stat-card">
             <h3>Calories</h3>
@@ -316,17 +323,17 @@ $consistency = min(100, round(($activeDays / 7) * 100));
             <div>
               <span>This Week</span>
               <strong><?php echo (int)$weekStats["workouts_week"]; ?> workouts</strong>
-              <small><?php echo round($weekStats["volume_week"]); ?> kg volume | <?php echo round($weekStats["calories_week"]); ?> kcal</small>
+              <small><?php echo kg_to_lb($weekStats["best_week_weight"]); ?> lb best PR | <?php echo round($weekStats["calories_week"]); ?> kcal</small>
             </div>
             <div>
               <span>Average Session</span>
-              <strong><?php echo $avgVolume; ?> kg volume</strong>
-              <small><?php echo $avgCalories; ?> kcal per saved workout</small>
+              <strong><?php echo $avgCalories; ?> kcal</strong>
+              <small>Average workout calories burned per saved session</small>
             </div>
             <div>
               <span>Top Exercise</span>
               <strong><?php echo $topExercise ? htmlspecialchars($topExercise["workout_name"]) : "No data yet"; ?></strong>
-              <small><?php echo $topExercise ? round($topExercise["total_volume"]) . " kg total volume" : "Save workouts to reveal your strongest movement"; ?></small>
+              <small><?php echo $topExercise ? kg_to_lb($topExercise["best_weight"]) . " lb best set weight" : "Save workouts to reveal your strongest movement"; ?></small>
             </div>
             <div>
               <span>Body Details</span>
@@ -368,7 +375,7 @@ $consistency = min(100, round(($activeDays / 7) * 100));
                 <div class="workout-metrics">
                   <span><?php echo (int)$row["set_counts"]; ?> sets</span>
                   <span><?php echo (int)$row["rep_count"]; ?> reps</span>
-                  <span><?php echo htmlspecialchars($row["weight_kg"]); ?> kg</span>
+                  <span><?php echo kg_to_lb($row["weight_kg"]); ?> lb</span>
                   <span><?php echo round($row["calories_burned"]); ?> kcal</span>
                 </div>
               </li>

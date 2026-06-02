@@ -972,7 +972,7 @@ function renderCalendar() {
           <label>Reps
             <input id="calendarReps" type="number" min="1" value="${escapeHtml(planSelectedExercise.reps)}">
           </label>
-          <label>Weight
+          <label>Weight (lb)
             <input id="calendarWeight" type="number" min="0" step="0.5" value="${planSelectedExercise.equipment === "body only" ? "0" : ""}" placeholder="0">
           </label>
           <label>Min
@@ -1113,7 +1113,7 @@ function renderPlannedExercise(day, item, index) {
         <label>Reps
           <input type="number" min="1" data-plan-field="reps" value="${escapeHtml(item.reps)}">
         </label>
-        <label>Weight
+        <label>Weight (lb)
           <input type="number" min="0" step="0.5" data-plan-field="weight" value="${escapeHtml(item.weight)}" placeholder="0">
         </label>
         <label>Min
@@ -1323,13 +1323,11 @@ function renderLiveSession() {
     localStorage.removeItem("ironixPendingSessionMessage");
   }
   const doneCount = Number(localStorage.getItem("ironixDoneTodayCount") || 0);
-  const volume = liveSession.reduce((total, item) => {
-    return total + ((Number(item.sets) || 0) * (Number(item.reps) || 0) * (Number(item.weight) || 0));
-  }, 0);
+  const queuedBestWeight = liveSession.reduce((best, item) => Math.max(best, Number(item.weight) || 0), 0);
 
   setText("sessionExerciseCount", liveSession.length);
   setText("sessionDoneCount", doneCount);
-  setText("sessionVolume", `${formatNumber(volume)} kg`);
+  setText("sessionVolume", `${formatNumber(queuedBestWeight)} lb`);
 
   if (liveSession.length === 0) {
     list.innerHTML = `
@@ -1360,7 +1358,7 @@ function renderLiveSession() {
         <label>Reps
           <input type="number" min="1" data-session-field="reps" value="${escapeHtml(item.reps)}">
         </label>
-        <label>Weight
+        <label>Weight (lb)
           <input type="number" min="0" step="0.5" data-session-field="weight" value="${escapeHtml(item.weight)}" placeholder="0">
         </label>
         <label>Min
@@ -1755,7 +1753,7 @@ function saveWorkoutEntry(fields) {
   formData.set("workout", fields.workout);
   formData.set("sets", fields.sets);
   formData.set("reps", fields.reps);
-  formData.set("weight", fields.weight || "0");
+  formData.set("weight", lbToKg(fields.weight || "0"));
   formData.set("duration", fields.duration);
 
   return fetch("save_workout.php", {
@@ -2096,7 +2094,7 @@ function renderWorkoutList(workouts) {
       <div class="workout-metrics">
         <span>${Number(workout.set_counts)} sets</span>
         <span>${Number(workout.rep_count)} reps</span>
-        <span>${formatNumber(workout.weight_kg)} kg</span>
+        <span>${formatWeightLb(workout.weight_kg)}</span>
         <span>Workout burned: ${formatNumber(workout.calories_burned)} kcal</span>
       </div>
       <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
@@ -2110,7 +2108,7 @@ function renderWorkoutSummary(workouts) {
   const summary = calculateSummary(workouts);
   setText("totalWorkouts", summary.workouts);
   setText("totalSets", summary.sets);
-  setText("totalVolume", `${formatNumber(summary.volume)} kg`);
+  setText("totalVolume", formatBestWeightLabel(workouts));
   setText("totalCalories", `${formatNumber(summary.calories)} kcal`);
 }
 
@@ -2124,7 +2122,7 @@ function renderProgressPage(workouts) {
 
   setText("progressCalories", `${formatNumber(summary.calories)} kcal`);
   setText("progressWorkouts", `${summary.workouts} ${summary.workouts === 1 ? "Session" : "Sessions"}`);
-  setText("progressVolume", `${formatNumber(summary.volume)} kg`);
+  setText("progressVolume", formatBestWeightLabel(workouts));
   setText("progressDays", `${activeDays} ${activeDays === 1 ? "Day" : "Days"}`);
   renderExercisePrGrid(workouts);
   renderOverloadAlerts(workouts);
@@ -2145,7 +2143,7 @@ function renderProgressPage(workouts) {
       <div class="workout-metrics">
         <span>${Number(workout.set_counts)} sets</span>
         <span>${Number(workout.rep_count)} reps</span>
-        <span>${formatNumber(workout.weight_kg)} kg</span>
+        <span>${formatWeightLb(workout.weight_kg)}</span>
         <span>Workout burned: ${formatNumber(workout.calories_burned)} kcal</span>
       </div>
       <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
@@ -2219,8 +2217,8 @@ function renderOverloadAlerts(workouts) {
     const latest = recent[0];
     const stableSets = recent.every(row => Number(row.set_counts) >= Number(latest.set_counts));
     const stableReps = recent.every(row => Number(row.rep_count) >= Number(latest.rep_count));
-    const weight = Number(latest.weight_kg) || 0;
-    const suggestion = weight > 0 ? `Try ${formatNumber(weight + 2.5)} kg next time` : "Add reps or a harder variation";
+    const weightLb = kgToLb(Number(latest.weight_kg) || 0);
+    const suggestion = weightLb > 0 ? `Try ${formatNumber(weightLb + 5)} lb next time` : "Add reps or a harder variation";
     return stableSets && stableReps ? { name, suggestion } : null;
   }).filter(Boolean).slice(0, 5);
 
@@ -2266,7 +2264,7 @@ function renderExercisePrGrid(workouts) {
   grid.innerHTML = rows.map(record => `
     <article class="exercise-pr-card">
       <span>${escapeHtml(record.name)}</span>
-      <strong>${formatNumber(record.weight)} kg</strong>
+      <strong>${formatWeightLb(record.weight)}</strong>
       <p>${record.sets} sets x ${record.reps} reps | best set weight</p>
       <small>${escapeHtml(record.date)}</small>
     </article>
@@ -2306,7 +2304,7 @@ function renderTodayWorkouts(workouts) {
       <div class="workout-metrics">
         <span>${Number(workout.set_counts)} sets</span>
         <span>${Number(workout.rep_count)} reps</span>
-        <span>${formatNumber(workout.weight_kg)} kg</span>
+        <span>${formatWeightLb(workout.weight_kg)}</span>
         <span>Workout burned: ${formatNumber(workout.calories_burned)} kcal</span>
       </div>
       <button type="button" class="delete-workout" data-id="${Number(workout.id)}">Delete</button>
@@ -2320,7 +2318,7 @@ function renderTodayProgress(today) {
   const summary = calculateSummary(today);
   setText("todayProgressCalories", `${formatNumber(summary.calories)} kcal`);
   setText("todayProgressWorkouts", `${summary.workouts} ${summary.workouts === 1 ? "Exercise" : "Exercises"}`);
-  setText("todayProgressVolume", `${formatNumber(summary.volume)} kg`);
+  setText("todayProgressVolume", formatBestWeightLabel(today));
   setText("todayProgressSets", `${summary.sets} ${summary.sets === 1 ? "Set" : "Sets"}`);
 }
 
@@ -2451,6 +2449,26 @@ function calculateSummary(workouts) {
     summary.calories += calories;
     return summary;
   }, { workouts: 0, sets: 0, volume: 0, calories: 0 });
+}
+
+function bestWeightKg(workouts) {
+  return workouts.reduce((best, workout) => Math.max(best, Number(workout.weight_kg) || 0), 0);
+}
+
+function formatBestWeightLabel(workouts) {
+  return formatWeightLb(bestWeightKg(workouts));
+}
+
+function kgToLb(value) {
+  return (Number(value) || 0) * 2.20462;
+}
+
+function lbToKg(value) {
+  return ((Number(value) || 0) / 2.20462).toFixed(2);
+}
+
+function formatWeightLb(valueKg) {
+  return `${formatNumber(kgToLb(valueKg))} lb`;
 }
 
 function setValue(id, value) {

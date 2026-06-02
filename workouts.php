@@ -257,7 +257,7 @@ function view_class($name) {
 
           <div class="form-pair">
             <div class="form-field">
-              <label for="weight">Weight (kg)</label>
+              <label for="weight">Weight (lb)</label>
               <input id="weight" name="weight" type="number" min="0" step="0.5" placeholder="60" required>
             </div>
 
@@ -307,8 +307,8 @@ function view_class($name) {
 
             <div class="summary-card">
               <span class="card-mark">03</span>
-              <span>Total Weight Lifted</span>
-              <strong id="totalVolume">0 kg</strong>
+              <span>Best Exercise PR</span>
+              <strong id="totalVolume">0 lb</strong>
             </div>
 
             <div class="summary-card">
@@ -349,6 +349,6 @@ function view_class($name) {
     </div>
   </main>
 
-  <script src="Js/app.js?v=52"></script>
+  <script src="Js/app.js?v=53"></script>
 </body>
 </html>
