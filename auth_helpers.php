@@ -18,7 +18,7 @@ function render_nav($active = "") {
     $member = is_logged_in();
 
     echo '<nav>';
-    echo '<a class="brand-logo" href="index.php" aria-label="Ironix home"><img src="Assets/ironix-logo.svg?v=2" alt="Ironix"></a>';
+    echo '<a class="brand-logo" href="index.php" aria-label="Ironix home"><img src="Assets/ironix-logo.svg?v=3" alt="Ironix"></a>';
     echo '<ul>';
     echo '<li><a ' . ($active === "home" ? 'class="active"' : '') . ' href="index.php">Home</a></li>';
 

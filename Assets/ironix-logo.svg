@@ -1,49 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" role="img" aria-labelledby="title desc">
   <title id="title">Ironix logo</title>
-  <desc id="desc">A single Ironix fitness logo with a barbell, metallic wordmark, and gold X mark.</desc>
+  <desc id="desc">A compact Ironix fitness logo with a barbell, bulky metallic wordmark, and dynamic gold X mark.</desc>
   <defs>
     <linearGradient id="steel" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#fff8e9"/>
-      <stop offset=".24" stop-color="#b9b2a7"/>
-      <stop offset=".5" stop-color="#f7f0df"/>
-      <stop offset=".78" stop-color="#6b675f"/>
-      <stop offset="1" stop-color="#d9d1c5"/>
+      <stop offset="0" stop-color="#fff9e8"/>
+      <stop offset=".18" stop-color="#b7b0a5"/>
+      <stop offset=".42" stop-color="#f6edda"/>
+      <stop offset=".68" stop-color="#625e57"/>
+      <stop offset="1" stop-color="#ddd4c8"/>
+    </linearGradient>
+    <linearGradient id="steelDark" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#3d3d3f"/>
+      <stop offset=".55" stop-color="#0d0e11"/>
+      <stop offset="1" stop-color="#262629"/>
     </linearGradient>
     <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#fff0a1"/>
-      <stop offset=".34" stop-color="#f7b422"/>
-      <stop offset=".74" stop-color="#a66a05"/>
-      <stop offset="1" stop-color="#ffd761"/>
+      <stop offset="0" stop-color="#fff0a2"/>
+      <stop offset=".26" stop-color="#f9bd2f"/>
+      <stop offset=".7" stop-color="#a86c07"/>
+      <stop offset="1" stop-color="#ffd85f"/>
     </linearGradient>
-    <filter id="depth" x="-8%" y="-18%" width="116%" height="140%">
-      <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#000" flood-opacity=".62"/>
+    <filter id="depth" x="-12%" y="-24%" width="124%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#000" flood-opacity=".68"/>
+    </filter>
+    <filter id="hardShadow" x="-10%" y="-18%" width="120%" height="136%">
+      <feDropShadow dx="4" dy="7" stdDeviation="2" flood-color="#000" flood-opacity=".7"/>
     </filter>
   </defs>
 
-  <rect width="760" height="260" fill="transparent"/>
-  <ellipse cx="380" cy="106" rx="285" ry="82" fill="#f2a23a" opacity=".18"/>
+  <rect width="620" height="190" fill="transparent"/>
+  <ellipse cx="313" cy="87" rx="240" ry="58" fill="#f2a23a" opacity=".2"/>
+  <path d="M60 139 H520 L566 52 H118 Z" fill="#0e1014" opacity=".72"/>
 
   <g filter="url(#depth)">
-    <g transform="translate(66 34)">
-      <rect x="0" y="62" width="628" height="18" rx="9" fill="url(#steel)"/>
-      <g fill="#0d0e11" stroke="url(#steel)" stroke-width="6">
-        <rect x="10" y="29" width="28" height="84" rx="7"/>
-        <rect x="43" y="18" width="34" height="106" rx="8"/>
-        <rect x="551" y="18" width="34" height="106" rx="8"/>
-        <rect x="594" y="29" width="28" height="84" rx="7"/>
+    <g transform="translate(39 24)">
+      <rect x="0" y="55" width="540" height="19" rx="9.5" fill="url(#steel)" stroke="#111" stroke-width="3"/>
+      <g fill="url(#steelDark)" stroke="url(#steel)" stroke-width="5">
+        <rect x="4" y="34" width="24" height="61" rx="6"/>
+        <rect x="31" y="23" width="30" height="83" rx="7"/>
+        <rect x="64" y="13" width="34" height="103" rx="8"/>
+        <rect x="442" y="13" width="34" height="103" rx="8"/>
+        <rect x="481" y="23" width="30" height="83" rx="7"/>
+        <rect x="514" y="34" width="24" height="61" rx="6"/>
       </g>
     </g>
 
-    <g transform="translate(292 14)">
-      <path d="M0 26 H124 L102 56 H77 V142 H102 L124 172 H0 L23 142 H48 V56 H23 Z" fill="url(#steel)" stroke="#151515" stroke-width="7" stroke-linejoin="round"/>
-      <path d="M162 42 H210 L252 95 L303 42 H353 L279 126 L356 224 H306 L250 157 L198 224 H150 L226 126 Z" fill="url(#steel)" stroke="#151515" stroke-width="7" stroke-linejoin="round"/>
-      <path d="M210 178 L340 31 L365 48 L234 196 Z" fill="url(#gold)" stroke="#745005" stroke-width="6" stroke-linejoin="round"/>
+    <g transform="translate(210 8)" filter="url(#hardShadow)">
+      <path d="M0 19 H100 L82 44 H61 V122 H82 L100 148 H0 L19 122 H40 V44 H19 Z" fill="url(#steel)" stroke="#111" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M120 29 H163 L202 77 L248 29 H294 L230 98 L300 176 H254 L201 120 L156 176 H111 L180 98 Z" fill="url(#steel)" stroke="#111" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M162 150 L283 17 L309 33 L187 167 Z" fill="url(#gold)" stroke="#735000" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M203 78 L221 99 L204 118 L186 98 Z" fill="#151515" opacity=".42"/>
     </g>
   </g>
 
-  <g transform="translate(54 171)" filter="url(#depth)">
-    <text x="0" y="55" font-family="Impact, Arial Black, sans-serif" font-size="76" font-style="italic" letter-spacing="2" fill="url(#steel)" stroke="#101010" stroke-width="4">IRON</text>
-    <text x="452" y="55" font-family="Impact, Arial Black, sans-serif" font-size="78" font-style="italic" letter-spacing="0" fill="url(#gold)" stroke="#745005" stroke-width="4">X</text>
-    <text x="164" y="87" font-family="Arial Black, Arial, sans-serif" font-size="22" letter-spacing="8" fill="#f7b422">STRONGER EVERY DAY</text>
+  <g transform="translate(46 112) skewX(-9)" filter="url(#hardShadow)">
+    <text x="0" y="50" font-family="Impact, Arial Black, sans-serif" font-size="74" font-style="italic" letter-spacing="0" fill="url(#steel)" stroke="#0b0b0c" stroke-width="5">IRON</text>
+    <text x="330" y="52" font-family="Impact, Arial Black, sans-serif" font-size="78" font-style="italic" letter-spacing="0" fill="url(#gold)" stroke="#745005" stroke-width="5">X</text>
+  </g>
+
+  <g transform="translate(128 176)">
+    <rect x="0" y="-16" width="306" height="2" fill="#f7b422" opacity=".72"/>
+    <text x="17" y="0" font-family="Arial Black, Arial, sans-serif" font-size="16" letter-spacing="6" fill="#f7b422">STRONGER EVERY DAY</text>
   </g>
 </svg>
